@@ -1,0 +1,593 @@
+<title>나만의 위스키 저장고</title>
+<style>
+:root{
+  --bg:#f3ece0; --bg-panel:#fffdf9; --bg-panel-2:#ece1cc; --border:#ddcda9;
+  --text:#251c11; --text-muted:#6c5c42; --text-faint:#8f7f5f;
+  --accent:#a8621f; --accent-strong:#7d4614; --accent-soft:#f0dcb8;
+  --gold:#9c7a2e; --danger:#a13f2e;
+  --st-own-bg:#e4ecd6; --st-own-fg:#4a6b2f;
+  --st-open-bg:#f3e6c9; --st-open-fg:#8a5a12;
+  --st-done-bg:#ece1d5; --st-done-fg:#6c5c42;
+  --st-wish-bg:#e6e1f2; --st-wish-fg:#5a4a8a;
+  --shadow: 0 1px 2px rgba(60,35,10,.06), 0 10px 28px rgba(60,35,10,.07);
+  --overlay: rgba(37,28,17,.45);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#161008; --bg-panel:#201709; --bg-panel-2:#2a1e0f; --border:#3d2c15;
+    --text:#f2e6d1; --text-muted:#bba885; --text-faint:#8f7d5e;
+    --accent:#e29a45; --accent-strong:#f4b565; --accent-soft:#3a2a10;
+    --gold:#d8b862; --danger:#e2735c;
+    --st-own-bg:#2b3a1c; --st-own-fg:#a8c88a;
+    --st-open-bg:#3a2c10; --st-open-fg:#e0b256;
+    --st-done-bg:#2a2418; --st-done-fg:#b3a488;
+    --st-wish-bg:#241f38; --st-wish-fg:#b3a4e0;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 30px rgba(0,0,0,.4);
+    --overlay: rgba(10,7,3,.65);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161008; --bg-panel:#201709; --bg-panel-2:#2a1e0f; --border:#3d2c15;
+  --text:#f2e6d1; --text-muted:#bba885; --text-faint:#8f7d5e;
+  --accent:#e29a45; --accent-strong:#f4b565; --accent-soft:#3a2a10;
+  --gold:#d8b862; --danger:#e2735c;
+  --st-own-bg:#2b3a1c; --st-own-fg:#a8c88a;
+  --st-open-bg:#3a2c10; --st-open-fg:#e0b256;
+  --st-done-bg:#2a2418; --st-done-fg:#b3a488;
+  --st-wish-bg:#241f38; --st-wish-fg:#b3a4e0;
+  --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 30px rgba(0,0,0,.4);
+  --overlay: rgba(10,7,3,.65);
+}
+:root[data-theme="light"]{
+  --bg:#f3ece0; --bg-panel:#fffdf9; --bg-panel-2:#ece1cc; --border:#ddcda9;
+  --text:#251c11; --text-muted:#6c5c42; --text-faint:#8f7f5f;
+  --accent:#a8621f; --accent-strong:#7d4614; --accent-soft:#f0dcb8;
+  --gold:#9c7a2e; --danger:#a13f2e;
+  --st-own-bg:#e4ecd6; --st-own-fg:#4a6b2f;
+  --st-open-bg:#f3e6c9; --st-open-fg:#8a5a12;
+  --st-done-bg:#ece1d5; --st-done-fg:#6c5c42;
+  --st-wish-bg:#e6e1f2; --st-wish-fg:#5a4a8a;
+  --shadow: 0 1px 2px rgba(60,35,10,.06), 0 10px 28px rgba(60,35,10,.07);
+  --overlay: rgba(37,28,17,.45);
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg); color:var(--text);
+  font-family: -apple-system,"Segoe UI","Pretendard","Apple SD Gothic Neo",sans-serif;
+  line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:0 20px 90px;}
+
+.hero{
+  padding:52px 20px 34px; border-bottom:1px solid var(--border); margin-bottom:32px;
+  background: radial-gradient(600px 200px at 15% 0%, var(--accent-soft), transparent 60%);
+}
+.hero-inner{max-width:1080px; margin:0 auto;}
+.eyebrow{font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:12px;}
+h1{
+  font-family: Georgia,"Iowan Old Style","Noto Serif KR",serif;
+  font-size:clamp(28px,4.4vw,44px); line-height:1.16; margin:0 0 12px; letter-spacing:-.01em; text-wrap:balance;
+}
+.hero p.sub{font-size:15.5px; color:var(--text-muted); max-width:600px; margin:0 0 26px;}
+
+.stat-row{display:flex; flex-wrap:wrap; gap:26px;}
+.stat{min-width:110px;}
+.stat .n{font-variant-numeric:tabular-nums; font-size:25px; font-weight:700; color:var(--accent-strong); font-family:Georgia,serif;}
+.stat .l{font-size:12px; color:var(--text-faint); margin-top:2px;}
+
+.section-head{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:4px;}
+h2.section-title{font-family:Georgia,"Iowan Old Style","Noto Serif KR",serif; font-size:21px; margin:0 0 4px; letter-spacing:-.01em;}
+.section-sub{color:var(--text-muted); font-size:13.5px; margin:0 0 18px;}
+
+.btn{
+  font-size:13.5px; font-weight:700; padding:9px 16px; border-radius:8px; border:1px solid transparent;
+  cursor:pointer; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-family:inherit; transition:filter .12s ease;
+}
+.btn:hover{filter:brightness(1.06);}
+.btn-primary{background:var(--accent); color:#fff;}
+.btn-ghost{background:var(--bg-panel); color:var(--text-muted); border-color:var(--border);}
+.btn-small{padding:5px 10px; font-size:12px; border-radius:6px;}
+.btn-danger-text{background:transparent; color:var(--danger); border-color:transparent; padding:5px 8px;}
+
+/* filter chips */
+.chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px;}
+.chip{
+  font-size:13px; font-weight:600; padding:7px 14px; border-radius:20px;
+  border:1px solid var(--border); background:var(--bg-panel); color:var(--text-muted);
+  cursor:pointer; user-select:none; transition:all .12s ease;
+}
+.chip.active{background:var(--accent); border-color:var(--accent); color:#fff;}
+
+/* bottle grid */
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; margin-bottom:20px;}
+.card{
+  background:var(--bg-panel); border:1px solid var(--border); border-radius:12px;
+  padding:20px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px; position:relative;
+}
+.card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+.card-name{font-family:Georgia,"Noto Serif KR",serif; font-size:17px; font-weight:700; line-height:1.3;}
+.card-dist{font-size:12.5px; color:var(--text-faint); margin-top:2px;}
+.badges-col{display:flex; flex-direction:column; align-items:flex-end; gap:6px;}
+.status{font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; white-space:nowrap;}
+.status.own{background:var(--st-own-bg); color:var(--st-own-fg);}
+.status.open{background:var(--st-open-bg); color:var(--st-open-fg);}
+.status.done{background:var(--st-done-bg); color:var(--st-done-fg);}
+.status.wish{background:var(--st-wish-bg); color:var(--st-wish-fg);}
+.src-tag{font-size:10px; color:var(--text-faint);}
+
+.card-meta{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12.5px; color:var(--text-muted); font-variant-numeric:tabular-nums;}
+.card-meta b{color:var(--text);}
+
+.ratings{display:flex; gap:16px; padding:10px 0; border-top:1px dashed var(--border); border-bottom:1px dashed var(--border);}
+.rating-block .label{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--text-faint);}
+.rating-block .val{font-family:Georgia,serif; font-size:20px; font-weight:700; color:var(--gold); font-variant-numeric:tabular-nums;}
+
+.card-note{font-size:13px; color:var(--text-muted); line-height:1.6;}
+.card-trivia{
+  font-size:12.5px; color:var(--text-muted); background:var(--bg-panel-2);
+  border-radius:8px; padding:9px 11px; line-height:1.55;
+}
+.card-trivia .lbl{color:var(--accent-strong); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.06em; margin-right:5px;}
+
+.card-actions{display:flex; gap:6px; justify-content:flex-end; margin-top:-2px;}
+
+/* empty state */
+.empty{
+  border:1px dashed var(--border); border-radius:12px; padding:44px 24px; text-align:center;
+  color:var(--text-faint); font-size:14px; background:var(--bg-panel);
+}
+.empty b{color:var(--text-muted);}
+
+/* events */
+.timeline{display:flex; flex-direction:column; gap:0; border-left:2px solid var(--border); margin-left:6px; padding-left:22px;}
+.tl-item{position:relative; padding:0 0 22px;}
+.tl-item::before{content:""; position:absolute; left:-28px; top:4px; width:10px; height:10px; border-radius:50%; background:var(--accent); border:2px solid var(--bg);}
+.tl-date{font-size:11.5px; color:var(--text-faint); font-variant-numeric:tabular-nums; letter-spacing:.02em;}
+.tl-title{font-family:Georgia,"Noto Serif KR",serif; font-weight:700; font-size:15.5px; margin:2px 0 4px;}
+.tl-note{font-size:13px; color:var(--text-muted);}
+.tl-actions{display:flex; gap:6px; margin-top:6px;}
+
+.note-box{
+  font-size:12.5px; color:var(--text-faint); background:var(--bg-panel-2); border-radius:8px;
+  padding:11px 13px; margin:14px 0 26px; line-height:1.65;
+}
+.note-box b{color:var(--text-muted);}
+
+.footnote{margin-top:44px; padding-top:20px; border-top:1px solid var(--border); font-size:12px; color:var(--text-faint); line-height:1.7; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center;}
+
+/* modal */
+.modal-overlay{
+  position:fixed; inset:0; background:var(--overlay); display:none; align-items:center; justify-content:center;
+  padding:20px; z-index:50;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--bg-panel); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow);
+  width:100%; max-width:480px; max-height:88vh; overflow-y:auto; padding:24px 24px 20px;
+}
+.modal h3{font-family:Georgia,"Noto Serif KR",serif; font-size:19px; margin:0 0 16px;}
+.field{margin-bottom:13px;}
+.field label{display:block; font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:5px;}
+.field input, .field select, .field textarea{
+  width:100%; padding:9px 11px; border-radius:8px; border:1px solid var(--border);
+  background:var(--bg); color:var(--text); font-size:14px; font-family:inherit;
+}
+.field textarea{resize:vertical; min-height:56px;}
+.field-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:18px;}
+.toast{
+  position:fixed; bottom:22px; left:50%; transform:translateX(-50%); background:var(--text); color:var(--bg);
+  padding:10px 18px; border-radius:8px; font-size:13px; z-index:60; opacity:0; pointer-events:none; transition:opacity .2s ease;
+}
+.toast.show{opacity:1;}
+</style>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Personal Cellar Book</div>
+    <h1>나만의 위스키 저장고</h1>
+    <p class="sub">보유·오픈·시음한 위스키를 기록하는 개인 컬렉션 노트. 여기서 직접 추가하거나, 채팅으로 "이 위스키 추가해줘"라고 말해도 돼요.</p>
+    <div class="stat-row" id="stat-row"></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="section-head">
+    <div>
+      <h2 class="section-title">컬렉션</h2>
+      <p class="section-sub">보유중 · 오픈됨 · 다 마심 · 위시리스트로 구분해서 볼 수 있어요.</p>
+    </div>
+    <button class="btn btn-primary" id="add-bottle-btn">+ 위스키 추가</button>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+
+  <div class="note-box">
+    직접 추가한 항목은 <b>이 브라우저</b>에 저장돼요(다른 기기·브라우저에는 안 보여요). 영구히 남기거나 다른 기기에서도 보고 싶으면 아래 <b>내보내기</b>로 백업 파일을 받아서 망고한테 전달해주세요 — 채팅으로 등록한 항목으로 옮겨드릴게요.
+  </div>
+
+  <div class="section-head">
+    <div>
+      <h2 class="section-title">위스키 행사 기록</h2>
+      <p class="section-sub">참여한 시음회·페스티벌·행사를 시간순으로 기록해요.</p>
+    </div>
+    <button class="btn btn-primary" id="add-event-btn">+ 행사 추가</button>
+  </div>
+  <div id="events-wrap"></div>
+
+  <div class="footnote">
+    <span>카에루몰에서 낙찰받은 병은 <b style="color:var(--text-muted)">카에루몰 위스키 체크</b> 조사 결과와 연결해서 자동으로 채워넣을 수도 있어요 — 원하면 말해주세요.</span>
+    <button class="btn btn-ghost" id="export-btn">⭳ 내 추가분 내보내기</button>
+  </div>
+
+</div>
+
+<!-- 위스키 추가/수정 모달 -->
+<div class="modal-overlay" id="bottle-modal-overlay">
+  <div class="modal">
+    <h3 id="bottle-modal-title">위스키 추가</h3>
+    <form id="bottle-form">
+      <div class="field"><label>이름 *</label><input type="text" id="f-name" required placeholder="예: 글렌파클라스 25년 바이오하자드"></div>
+      <div class="field-row">
+        <div class="field"><label>증류소</label><input type="text" id="f-distillery" placeholder="예: Glenfarclas"></div>
+        <div class="field"><label>도수(%)</label><input type="text" id="f-abv" placeholder="예: 51.6"></div>
+      </div>
+      <div class="field"><label>연산/빈티지</label><input type="text" id="f-age" placeholder="예: 25년 / 2006 Vintage"></div>
+      <div class="field-row">
+        <div class="field"><label>구매처</label><input type="text" id="f-store" placeholder="예: 카에루몰"></div>
+        <div class="field"><label>구매가(원)</label><input type="number" id="f-price" placeholder="예: 144000"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>구매일</label><input type="date" id="f-boughtAt"></div>
+        <div class="field"><label>상태</label>
+          <select id="f-status">
+            <option value="own">보유중</option>
+            <option value="open">오픈됨</option>
+            <option value="done">다 마심</option>
+            <option value="wish">위시리스트</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>내 평점</label><input type="text" id="f-myRating" placeholder="예: 8.5"></div>
+        <div class="field"><label>WhiskyBase 평점</label><input type="text" id="f-wbRating" placeholder="예: 89.07"></div>
+      </div>
+      <div class="field"><label>시음노트</label><textarea id="f-note" placeholder="향/맛/피니시 등 자유롭게"></textarea></div>
+      <div class="field"><label>깨알지식</label><textarea id="f-trivia" placeholder="이 위스키에 얽힌 이야기나 배경지식"></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="bottle-cancel-btn">취소</button>
+        <button type="submit" class="btn btn-primary">저장</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 행사 추가/수정 모달 -->
+<div class="modal-overlay" id="event-modal-overlay">
+  <div class="modal">
+    <h3 id="event-modal-title">행사 추가</h3>
+    <form id="event-form">
+      <div class="field"><label>행사명 *</label><input type="text" id="e-title" required placeholder="예: 2026 서울 위스키 페스티벌"></div>
+      <div class="field"><label>날짜</label><input type="date" id="e-date"></div>
+      <div class="field"><label>메모</label><textarea id="e-note" placeholder="시음한 것, 인상 깊었던 것 등"></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="event-cancel-btn">취소</button>
+        <button type="submit" class="btn btn-primary">저장</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── 채팅(망고)이 관리하는 "공식" 데이터. 직접 편집 후 같은 경로로 재배포하면 모두에게 반영됨.
+const SEED_BOTTLES = [];
+const SEED_EVENTS = [];
+
+// ── 사용자가 페이지에서 직접 추가한 데이터는 이 브라우저의 localStorage에만 저장됨.
+const LS_BOTTLES = "mango_whisky_bottles_v1";
+const LS_EVENTS = "mango_whisky_events_v1";
+
+const STATUS_LABEL = {own:"보유중", open:"오픈됨", done:"다 마심", wish:"위시리스트"};
+
+function loadLS(key){ try{ return JSON.parse(localStorage.getItem(key) || "[]"); }catch(e){ return []; } }
+function saveLS(key, arr){ localStorage.setItem(key, JSON.stringify(arr)); }
+function uid(){ return "u_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+function allBottles(){
+  return [
+    ...SEED_BOTTLES.map(b=>({...b, _src:"seed"})),
+    ...loadLS(LS_BOTTLES).map(b=>({...b, _src:"user"}))
+  ];
+}
+function allEvents(){
+  return [
+    ...SEED_EVENTS.map(e=>({...e, _src:"seed"})),
+    ...loadLS(LS_EVENTS).map(e=>({...e, _src:"user"}))
+  ];
+}
+
+function fmtWon(n){ return n ? Number(n).toLocaleString("ko-KR") + "원" : ""; }
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2200);
+}
+
+let currentFilter = "all";
+
+function renderAll(){
+  renderStats();
+  renderChips();
+  renderGrid(currentFilter);
+  renderEvents();
+}
+
+function renderStats(){
+  const bottles = allBottles();
+  const events = allEvents();
+  const total = bottles.length;
+  const owned = bottles.filter(b=>b.status==="own"||b.status==="open").length;
+  const spent = bottles.reduce((s,b)=> s + (Number(b.price)||0), 0);
+  const rated = bottles.filter(b=>b.myRating);
+  const avg = rated.length ? (rated.reduce((s,b)=>s+Number(b.myRating),0)/rated.length).toFixed(1) : "–";
+  const stats = [
+    [total, "전체 기록"],
+    [owned, "보유 중"],
+    [spent ? fmtWon(spent) : "–", "누적 구매액"],
+    [avg, "내 평균 평점"],
+    [events.length, "참여 행사"]
+  ];
+  document.getElementById("stat-row").innerHTML = stats.map(([n,l])=>
+    `<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+}
+
+function renderChips(){
+  const bottles = allBottles();
+  const counts = {all:bottles.length};
+  ["own","open","done","wish"].forEach(s=> counts[s] = bottles.filter(b=>b.status===s).length);
+  const chips = [["all","전체"],["own","보유중"],["open","오픈됨"],["done","다마심"],["wish","위시리스트"]];
+  const el = document.getElementById("chips");
+  el.innerHTML = chips.map(([key,label])=>
+    `<div class="chip ${key===currentFilter?'active':''}" data-filter="${key}">${label} <span style="opacity:.6">${counts[key]}</span></div>`).join("");
+  el.querySelectorAll(".chip").forEach(chip=>{
+    chip.addEventListener("click", ()=>{
+      currentFilter = chip.dataset.filter;
+      renderChips();
+      renderGrid(currentFilter);
+    });
+  });
+}
+
+function renderGrid(filter){
+  filter = filter || "all";
+  const bottles = allBottles();
+  const list = filter==="all" ? bottles : bottles.filter(b=>b.status===filter);
+  const grid = document.getElementById("grid");
+  if(!list.length){
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1;">
+      아직 기록된 위스키가 없어요.<br>위 <b>+ 위스키 추가</b> 버튼을 누르거나, <b>망고한테 "이 위스키 추가해줘"</b>라고 말해보세요.
+    </div>`;
+    return;
+  }
+  grid.innerHTML = list.map(b=>`
+    <div class="card">
+      <div class="card-top">
+        <div>
+          <div class="card-name">${escapeHtml(b.name)}</div>
+          <div class="card-dist">${escapeHtml(b.distillery || "")}${b.abv ? " · " + escapeHtml(String(b.abv)) + "%" : ""}${b.age ? " · " + escapeHtml(b.age) : ""}</div>
+        </div>
+        <div class="badges-col">
+          <span class="status ${b.status}">${STATUS_LABEL[b.status] || b.status}</span>
+          <span class="src-tag">${b._src === "user" ? "내가 등록" : "채팅으로 등록"}</span>
+        </div>
+      </div>
+      <div class="card-meta">
+        ${b.store ? `<span><b>${escapeHtml(b.store)}</b>에서 구매</span>` : ""}
+        ${b.price ? `<span>${fmtWon(b.price)}</span>` : ""}
+        ${b.boughtAt ? `<span>${escapeHtml(b.boughtAt)}</span>` : ""}
+      </div>
+      ${(b.myRating || b.wbRating) ? `
+      <div class="ratings">
+        ${b.myRating ? `<div class="rating-block"><div class="label">내 평점</div><div class="val">${escapeHtml(String(b.myRating))}</div></div>` : ""}
+        ${b.wbRating ? `<div class="rating-block"><div class="label">WhiskyBase</div><div class="val">${escapeHtml(String(b.wbRating))}</div></div>` : ""}
+      </div>` : ""}
+      ${b.note ? `<div class="card-note">${escapeHtml(b.note)}</div>` : ""}
+      ${b.trivia ? `<div class="card-trivia"><span class="lbl">깨알지식</span>${escapeHtml(b.trivia)}</div>` : ""}
+      ${b._src === "user" ? `
+      <div class="card-actions">
+        <button class="btn btn-small btn-ghost" data-edit-bottle="${b.id}">수정</button>
+        <button class="btn btn-small btn-danger-text" data-del-bottle="${b.id}">삭제</button>
+      </div>` : ""}
+    </div>
+  `).join("");
+
+  grid.querySelectorAll("[data-edit-bottle]").forEach(btn=>{
+    btn.addEventListener("click", ()=> openBottleForm(loadLS(LS_BOTTLES).find(x=>x.id===btn.dataset.editBottle)));
+  });
+  grid.querySelectorAll("[data-del-bottle]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if(!confirm("이 위스키 기록을 삭제할까요?")) return;
+      const arr = loadLS(LS_BOTTLES).filter(x=>x.id!==btn.dataset.delBottle);
+      saveLS(LS_BOTTLES, arr);
+      showToast("삭제했어요.");
+      renderAll();
+    });
+  });
+}
+
+function renderEvents(){
+  const events = allEvents();
+  const wrap = document.getElementById("events-wrap");
+  if(!events.length){
+    wrap.innerHTML = `<div class="empty">아직 기록된 행사가 없어요. 위 <b>+ 행사 추가</b> 버튼으로 남겨보세요.</div>`;
+    return;
+  }
+  const sorted = [...events].sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+  wrap.innerHTML = `<div class="timeline">${sorted.map(e=>`
+    <div class="tl-item">
+      <div class="tl-date">${escapeHtml(e.date || "")} <span style="opacity:.6">· ${e._src==="user" ? "내가 등록" : "채팅으로 등록"}</span></div>
+      <div class="tl-title">${escapeHtml(e.title)}</div>
+      ${e.note ? `<div class="tl-note">${escapeHtml(e.note)}</div>` : ""}
+      ${e._src === "user" ? `
+      <div class="tl-actions">
+        <button class="btn btn-small btn-ghost" data-edit-event="${e.id}">수정</button>
+        <button class="btn btn-small btn-danger-text" data-del-event="${e.id}">삭제</button>
+      </div>` : ""}
+    </div>
+  `).join("")}</div>`;
+
+  wrap.querySelectorAll("[data-edit-event]").forEach(btn=>{
+    btn.addEventListener("click", ()=> openEventForm(loadLS(LS_EVENTS).find(x=>x.id===btn.dataset.editEvent)));
+  });
+  wrap.querySelectorAll("[data-del-event]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if(!confirm("이 행사 기록을 삭제할까요?")) return;
+      const arr = loadLS(LS_EVENTS).filter(x=>x.id!==btn.dataset.delEvent);
+      saveLS(LS_EVENTS, arr);
+      showToast("삭제했어요.");
+      renderAll();
+    });
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+// ── 위스키 추가/수정 모달
+const bottleOverlay = document.getElementById("bottle-modal-overlay");
+const bottleForm = document.getElementById("bottle-form");
+let editingBottleId = null;
+
+function openBottleForm(existing){
+  editingBottleId = existing ? existing.id : null;
+  document.getElementById("bottle-modal-title").textContent = existing ? "위스키 수정" : "위스키 추가";
+  document.getElementById("f-name").value = existing?.name || "";
+  document.getElementById("f-distillery").value = existing?.distillery || "";
+  document.getElementById("f-abv").value = existing?.abv || "";
+  document.getElementById("f-age").value = existing?.age || "";
+  document.getElementById("f-store").value = existing?.store || "";
+  document.getElementById("f-price").value = existing?.price || "";
+  document.getElementById("f-boughtAt").value = existing?.boughtAt || "";
+  document.getElementById("f-status").value = existing?.status || "own";
+  document.getElementById("f-myRating").value = existing?.myRating || "";
+  document.getElementById("f-wbRating").value = existing?.wbRating || "";
+  document.getElementById("f-note").value = existing?.note || "";
+  document.getElementById("f-trivia").value = existing?.trivia || "";
+  bottleOverlay.classList.add("open");
+  document.getElementById("f-name").focus();
+}
+function closeBottleForm(){ bottleOverlay.classList.remove("open"); editingBottleId = null; }
+
+document.getElementById("add-bottle-btn").addEventListener("click", ()=> openBottleForm(null));
+document.getElementById("bottle-cancel-btn").addEventListener("click", closeBottleForm);
+bottleOverlay.addEventListener("click", (e)=>{ if(e.target === bottleOverlay) closeBottleForm(); });
+
+bottleForm.addEventListener("submit", (e)=>{
+  e.preventDefault();
+  const name = document.getElementById("f-name").value.trim();
+  if(!name) return;
+  const obj = {
+    id: editingBottleId || uid(),
+    name,
+    distillery: document.getElementById("f-distillery").value.trim(),
+    abv: document.getElementById("f-abv").value.trim(),
+    age: document.getElementById("f-age").value.trim(),
+    store: document.getElementById("f-store").value.trim(),
+    price: document.getElementById("f-price").value.trim(),
+    boughtAt: document.getElementById("f-boughtAt").value,
+    status: document.getElementById("f-status").value,
+    myRating: document.getElementById("f-myRating").value.trim(),
+    wbRating: document.getElementById("f-wbRating").value.trim(),
+    note: document.getElementById("f-note").value.trim(),
+    trivia: document.getElementById("f-trivia").value.trim()
+  };
+  const arr = loadLS(LS_BOTTLES);
+  const idx = arr.findIndex(x=>x.id===obj.id);
+  if(idx>=0) arr[idx] = obj; else arr.push(obj);
+  saveLS(LS_BOTTLES, arr);
+  showToast(editingBottleId ? "수정했어요." : "추가했어요.");
+  closeBottleForm();
+  renderAll();
+});
+
+// ── 행사 추가/수정 모달
+const eventOverlay = document.getElementById("event-modal-overlay");
+const eventForm = document.getElementById("event-form");
+let editingEventId = null;
+
+function openEventForm(existing){
+  editingEventId = existing ? existing.id : null;
+  document.getElementById("event-modal-title").textContent = existing ? "행사 수정" : "행사 추가";
+  document.getElementById("e-title").value = existing?.title || "";
+  document.getElementById("e-date").value = existing?.date || "";
+  document.getElementById("e-note").value = existing?.note || "";
+  eventOverlay.classList.add("open");
+  document.getElementById("e-title").focus();
+}
+function closeEventForm(){ eventOverlay.classList.remove("open"); editingEventId = null; }
+
+document.getElementById("add-event-btn").addEventListener("click", ()=> openEventForm(null));
+document.getElementById("event-cancel-btn").addEventListener("click", closeEventForm);
+eventOverlay.addEventListener("click", (e)=>{ if(e.target === eventOverlay) closeEventForm(); });
+
+eventForm.addEventListener("submit", (e)=>{
+  e.preventDefault();
+  const title = document.getElementById("e-title").value.trim();
+  if(!title) return;
+  const obj = {
+    id: editingEventId || uid(),
+    title,
+    date: document.getElementById("e-date").value,
+    note: document.getElementById("e-note").value.trim()
+  };
+  const arr = loadLS(LS_EVENTS);
+  const idx = arr.findIndex(x=>x.id===obj.id);
+  if(idx>=0) arr[idx] = obj; else arr.push(obj);
+  saveLS(LS_EVENTS, arr);
+  showToast(editingEventId ? "수정했어요." : "추가했어요.");
+  closeEventForm();
+  renderAll();
+});
+
+// ── 내보내기 (downloads capability)
+document.getElementById("export-btn").addEventListener("click", async ()=>{
+  if(!window.claude || !window.claude.downloads){
+    showToast("이 화면에서는 내보내기를 쓸 수 없어요.");
+    return;
+  }
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    bottles: loadLS(LS_BOTTLES),
+    events: loadLS(LS_EVENTS)
+  };
+  if(!payload.bottles.length && !payload.events.length){
+    showToast("내보낼 항목이 없어요 — 먼저 추가해보세요.");
+    return;
+  }
+  const today = new Date().toISOString().slice(0,10);
+  try{
+    await window.claude.downloads.save({
+      filename: `위스키저장고_백업_${today}.json`,
+      data: JSON.stringify(payload, null, 2)
+    });
+    showToast("백업 파일을 저장했어요. 망고한테 보내주면 정식 등록해줄게요!");
+  }catch(err){
+    if(err && err.code === "declined"){
+      showToast("내보내기를 취소했어요.");
+    }else{
+      showToast("내보내기에 실패했어요: " + (err?.message || "알 수 없는 오류"));
+    }
+  }
+});
+
+renderAll();
+</script>

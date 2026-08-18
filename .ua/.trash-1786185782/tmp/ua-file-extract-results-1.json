@@ -1,0 +1,126 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [
+    "경동로ENG재무/index.html",
+    "내위스키컬렉션/index.html",
+    "위스키체크/reports/2026-08-06_리포트.html",
+    "위스키체크/reports/2026-08-08_리포트.html"
+  ],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 3,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 3
+    }
+  },
+  "results": [
+    {
+      "path": ".claude/settings.local.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 45,
+      "nonEmptyLines": 45,
+      "sections": [
+        {
+          "heading": "permissions",
+          "level": 1,
+          "line": 2
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "CLAUDE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 49,
+      "nonEmptyLines": 38,
+      "sections": [
+        {
+          "heading": "CLAUDE.md",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "프로젝트 개요",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "작업 방식 (Karpathy Guidelines)",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "1. 코딩 전에 생각하기",
+          "level": 3,
+          "line": 20
+        },
+        {
+          "heading": "2. 단순함 우선",
+          "level": 3,
+          "line": 26
+        },
+        {
+          "heading": "3. 수술적 변경",
+          "level": 3,
+          "line": 33
+        },
+        {
+          "heading": "4. 목표 지향 실행",
+          "level": 3,
+          "line": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "위스키체크/LOG.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 54,
+      "nonEmptyLines": 40,
+      "sections": [
+        {
+          "heading": "카에루몰 위스키 체크 — 작업 로그",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "2026-08-08",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "2026-08-06",
+          "level": 2,
+          "line": 33
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,724 @@
+<title>카에루몰 위스키 경매 메리트 리포트</title>
+<style>
+:root{
+  --bg:#f2ece0; --bg-panel:#ffffff; --bg-panel-2:#ece3d1; --border:#ddd0b6;
+  --text:#241b12; --text-muted:#6b5d47; --text-faint:#8c7d63;
+  --accent:#a85a20; --accent-strong:#7d3f13; --accent-soft:#f0dcc0;
+  --flag-bid:#a8431f; --flag-bid-bg:#f6e0d5;
+  --merit:#4f6b38; --merit-bg:#e4ecd7;
+  --rating-high:#4f6b38; --rating-mid:#93701c; --rating-low:#8c7d63;
+  --shadow: 0 1px 2px rgba(60,40,10,.06), 0 8px 24px rgba(60,40,10,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#161209; --bg-panel:#1f1810; --bg-panel-2:#271e13; --border:#3c2f1c;
+    --text:#f1e6d3; --text-muted:#b8a685; --text-faint:#8f7d5e;
+    --accent:#e3993f; --accent-strong:#f4b565; --accent-soft:#3a2a14;
+    --flag-bid:#e2703c; --flag-bid-bg:#3a2314;
+    --merit:#93b46e; --merit-bg:#293519;
+    --rating-high:#93b46e; --rating-mid:#e0bb5a; --rating-low:#8f7d5e;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161209; --bg-panel:#1f1810; --bg-panel-2:#271e13; --border:#3c2f1c;
+  --text:#f1e6d3; --text-muted:#b8a685; --text-faint:#8f7d5e;
+  --accent:#e3993f; --accent-strong:#f4b565; --accent-soft:#3a2a14;
+  --flag-bid:#e2703c; --flag-bid-bg:#3a2314;
+  --merit:#93b46e; --merit-bg:#293519;
+  --rating-high:#93b46e; --rating-mid:#e0bb5a; --rating-low:#8f7d5e;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.35);
+}
+:root[data-theme="light"]{
+  --bg:#f2ece0; --bg-panel:#ffffff; --bg-panel-2:#ece3d1; --border:#ddd0b6;
+  --text:#241b12; --text-muted:#6b5d47; --text-faint:#8c7d63;
+  --accent:#a85a20; --accent-strong:#7d3f13; --accent-soft:#f0dcc0;
+  --flag-bid:#a8431f; --flag-bid-bg:#f6e0d5;
+  --merit:#4f6b38; --merit-bg:#e4ecd7;
+  --rating-high:#4f6b38; --rating-mid:#93701c; --rating-low:#8c7d63;
+  --shadow: 0 1px 2px rgba(60,40,10,.06), 0 8px 24px rgba(60,40,10,.05);
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg); color:var(--text);
+  font-family: -apple-system, "Segoe UI", "Pretendard", "Apple SD Gothic Neo", sans-serif;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1040px; margin:0 auto; padding:0 20px 80px;}
+
+.hero{
+  padding:56px 20px 40px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:40px;
+}
+.hero-inner{max-width:1040px; margin:0 auto;}
+.eyebrow{
+  font-size:12.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); font-weight:700; margin-bottom:14px;
+}
+h1{
+  font-family: Georgia, "Iowan Old Style", "Noto Serif KR", serif;
+  font-size:clamp(28px,4.2vw,42px); line-height:1.18; margin:0 0 14px;
+  text-wrap:balance; letter-spacing:-.01em;
+}
+.hero p.sub{
+  font-size:16px; color:var(--text-muted); max-width:640px; margin:0 0 28px;
+}
+.stat-row{display:flex; flex-wrap:wrap; gap:28px;}
+.stat{min-width:120px;}
+.stat .n{
+  font-variant-numeric:tabular-nums; font-size:26px; font-weight:700; color:var(--accent-strong);
+  font-family: Georgia, serif;
+}
+.stat .l{font-size:12.5px; color:var(--text-faint); margin-top:2px;}
+
+h2.section-title{
+  font-family: Georgia, "Iowan Old Style", "Noto Serif KR", serif;
+  font-size:22px; margin:0 0 6px; letter-spacing:-.01em;
+}
+.section-sub{color:var(--text-muted); font-size:14px; margin:0 0 22px;}
+
+/* top picks */
+.picks-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:14px; margin-bottom:56px;
+}
+.pick-card{
+  background:var(--bg-panel); border:1px solid var(--border); border-radius:10px;
+  padding:18px 18px 16px; box-shadow:var(--shadow); position:relative;
+}
+.pick-rank{
+  position:absolute; top:14px; right:16px; font-family:Georgia,serif;
+  font-size:13px; color:var(--text-faint); font-variant-numeric:tabular-nums;
+}
+.pick-name{font-size:15.5px; font-weight:700; margin:0 26px 10px 0; line-height:1.35;}
+.pick-meta{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;}
+.pick-price{
+  font-variant-numeric:tabular-nums; font-size:15px; font-weight:700; color:var(--accent-strong);
+}
+.pick-note{font-size:13px; color:var(--text-muted);}
+.badges{display:flex; gap:6px; flex-wrap:wrap;}
+.badge{
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:11.5px; font-weight:700; padding:3px 8px; border-radius:20px;
+  font-variant-numeric:tabular-nums;
+}
+.badge.rating{background:var(--merit-bg); color:var(--rating-high);}
+.badge.bid{background:var(--flag-bid-bg); color:var(--flag-bid);}
+.badge.zero{background:var(--bg-panel-2); color:var(--text-faint);}
+
+/* distillery sections */
+.dist-list{display:flex; flex-direction:column; gap:10px; margin-bottom:20px;}
+details.dist{
+  background:var(--bg-panel); border:1px solid var(--border); border-radius:10px;
+  overflow:hidden;
+}
+details.dist[open]{box-shadow:var(--shadow);}
+summary.dist-head{
+  list-style:none; cursor:pointer; padding:16px 20px;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  flex-wrap:wrap;
+}
+summary.dist-head::-webkit-details-marker{display:none;}
+summary.dist-head .name-wrap{display:flex; align-items:baseline; gap:10px;}
+summary.dist-head .dname{
+  font-family:Georgia,"Noto Serif KR",serif; font-size:18px; font-weight:700;
+}
+summary.dist-head .dcount{font-size:12.5px; color:var(--text-faint);}
+summary.dist-head .chev{
+  font-size:13px; color:var(--text-faint); transition:transform .15s ease;
+}
+details.dist[open] summary .chev{transform:rotate(90deg);}
+.dist-note{font-size:12.5px; color:var(--text-faint); padding:0 20px 8px; margin-top:-6px;}
+.dist-body{padding:0 20px 22px;}
+
+h4.tbl-label{
+  font-size:12px; text-transform:uppercase; letter-spacing:.09em;
+  color:var(--text-faint); margin:18px 0 8px; font-weight:700;
+}
+h4.tbl-label.hot{color:var(--flag-bid);}
+
+.tbl-scroll{overflow-x:auto; border:1px solid var(--border); border-radius:8px;}
+table{width:100%; border-collapse:collapse; font-size:13.5px; min-width:560px;}
+thead th{
+  text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--text-faint); background:var(--bg-panel-2);
+  padding:9px 12px; white-space:nowrap; font-weight:700;
+}
+tbody td{
+  padding:9px 12px; border-top:1px solid var(--border); vertical-align:top;
+}
+tbody tr:hover{background:var(--bg-panel-2);}
+td.name{max-width:340px;}
+td.num{font-variant-numeric:tabular-nums; white-space:nowrap;}
+td.krw{color:var(--text-faint); font-size:12px; display:block;}
+.rate{font-variant-numeric:tabular-nums; font-weight:700;}
+.rate.high{color:var(--rating-high);}
+.rate.mid{color:var(--rating-mid);}
+.rate.low{color:var(--rating-low);}
+.rate.none{color:var(--text-faint); font-weight:400;}
+.bidn{font-variant-numeric:tabular-nums; font-weight:700;}
+.bidn.hot{color:var(--flag-bid);}
+.bidn.zero{color:var(--text-faint); font-weight:400;}
+
+.footnote{
+  margin-top:50px; padding-top:24px; border-top:1px solid var(--border);
+  font-size:12.5px; color:var(--text-faint); line-height:1.7;
+}
+.footnote strong{color:var(--text-muted);}
+</style>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">카에루몰 · 야후옥션 재팬 스캔</div>
+    <h1>위스키 경매 메리트 리포트</h1>
+    <p class="sub">지정 14개 증류소/보틀러를 대상으로 현재가 53,000엔 이하 매물을 전수 확인하고, 입찰 5건 이상 상품은 가격과 무관하게 별도로 표시했습니다. 병별 WhiskyBase 평점을 대조해 가격 대비 평점이 좋은 순으로 정리했습니다.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="n">14</div><div class="l">조사 증류소/보틀러</div></div>
+      <div class="stat"><div class="n">2,100+</div><div class="l">확인한 경매 매물 수</div></div>
+      <div class="stat"><div class="n">≤ ¥53,000</div><div class="l">예산 기준 (현재가)</div></div>
+      <div class="stat"><div class="n">≥ 5회</div><div class="l">고입찰 플래그 기준</div></div>
+      <div class="stat"><div class="n">100엔 ≈ 962원</div><div class="l">적용 환율 (매수 기준)</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <h2 class="section-title">🏆 전체 메리트 TOP 12</h2>
+  <p class="section-sub">14개 증류소를 통틀어 "예산 대비 평점"이 가장 돋보이는 매물. 입찰이 이미 붙은 &ldquo;인기 매물&rdquo;과 아직 아무도 안 건드린 &ldquo;숨은 매물&rdquo;을 함께 실었습니다.</p>
+  <div class="picks-grid">
+
+    <div class="pick-card"><div class="pick-rank">01</div>
+      <div class="pick-name">스프링뱅크 1994 빈티지 31년 (시리즈 2탄)</div>
+      <div class="pick-price">¥57,000<span style="color:var(--text-faint);font-weight:400;"> (약 549,000원)</span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 93.00</span>
+        <span class="badge bid">입찰 5</span>
+      </div>
+      <div class="pick-note">이번 조사 전체 최고 평점. 예산선 근처지만 즉결가는 349,000엔 — 낙찰가는 훨씬 낮게 끝날 가능성.</div>
+    </div>
+
+    <div class="pick-card"><div class="pick-rank">02</div>
+      <div class="pick-name">라프로이그 1998 21년 호그스헤드 &ldquo;더 님프&rdquo;</div>
+      <div class="pick-price">¥15,700<span style="color:var(--text-faint);font-weight:400;"> (약 151,000원)</span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 90.50</span>
+        <span class="badge bid">입찰 12</span>
+      </div>
+      <div class="pick-note">21년 캐스크스트렝스급이 2만엔이 안 되는 가격대. 경쟁 치열해 최종가는 오를 전망.</div>
+    </div>
+
+    <div class="pick-card"><div class="pick-rank">03</div>
+      <div class="pick-name">맥캘란 25년 빈티지 2018 셰리오크 (나무상자)</div>
+      <div class="pick-price">¥13,050<span style="color:var(--text-faint);font-weight:400;"> (약 126,000원)</span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 90.44</span>
+        <span class="badge bid">입찰 17</span>
+      </div>
+      <div class="pick-note">25년산이 1만엔대라는 것 자체가 이례적. 경쟁 심해 지켜볼 가치.</div>
+    </div>
+
+    <div class="pick-card"><div class="pick-rank">04</div>
+      <div class="pick-name">글렌파클라스 25년 CS 바이오하자드(레지던트이블) 기념병</div>
+      <div class="pick-price">¥15,000<span style="color:var(--text-faint);font-weight:400;"> (약 144,000원)</span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 89.00</span>
+        <span class="badge bid">입찰 12</span>
+      </div>
+      <div class="pick-note">정규 25년(WB 87.16)보다 평점이 높은데 가격은 3분의 1 이하. 최우선 추천.</div>
+    </div>
+
+    <div class="pick-card"><div class="pick-rank">05</div>
+      <div class="pick-name">칸모어 비퀘스트 보모어 1991 26년 (나무상자)</div>
+      <div class="pick-price">¥30,500 – 31,500<span style="color:var(--text-faint);font-weight:400;"> (약 294,000원~)</span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 89.45</span>
+        <span class="badge bid">입찰 14~16</span>
+      </div>
+      <div class="pick-note">26년 숙성 치고 가격이 합리적. 매물 2건 모두 관심도 높음.</div>
+    </div>
+
+    <div class="pick-card"><div class="pick-rank">06</div>
+      <div class="pick-name">글렌파클라스 패밀리캐스크 No.3418 (2006, 셰리뱃)</div>
+      <div class="pick-price">¥27,000<span style="color:var(--text-faint);font-weight:400;"> (약 260,000원)</span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 89.07</span>
+        <span class="badge zero">무입찰</span>
+      </div>
+      <div class="pick-note">아무도 안 건드린 셰리뱃 싱글캐스크가 89점대. 숨은 매물 1순위.</div>
+    </div>
+
+    <div class="pick-card"><div class="pick-rank">07</div>
+      <div class="pick-name">아케시 Rikka(立夏) 2025</div>
+      <div class="pick-price">¥22,990 – 26,013<span style="color:var(--text-faint);font-weight:400;"></span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 89.11</span>
+        <span class="badge zero">무입찰</span>
+      </div>
+      <div class="pick-note">아케시 전체 라인업 중 최고 평점인데 경쟁 없이 예산 내 확보 가능.</div>
+    </div>
+
+    <div class="pick-card"><div class="pick-rank">08</div>
+      <div class="pick-name">Glen Grant 1998 24년 젬스톤 호그스헤드 58.1%</div>
+      <div class="pick-price">¥25,000<span style="color:var(--text-faint);font-weight:400;"> (약 241,000원)</span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 88.50</span>
+        <span class="badge zero">무입찰</span>
+      </div>
+      <div class="pick-note">24년 숙성 독립병입이 무입찰. 저평가 구간.</div>
+    </div>
+
+    <div class="pick-card"><div class="pick-rank">09</div>
+      <div class="pick-name">글렌드로낙 1995 19년 싱글캐스크 PX 55.2%</div>
+      <div class="pick-price">¥15,000<span style="color:var(--text-faint);font-weight:400;"> (약 144,000원)</span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 88.45</span>
+        <span class="badge bid">입찰 9</span>
+      </div>
+      <div class="pick-note">19년 PX 셰리캐스크 싱글캐스크가 이 가격대는 드묾.</div>
+    </div>
+
+    <div class="pick-card"><div class="pick-rank">10</div>
+      <div class="pick-name">AD래트레이 보모어 19년 버번호그스헤드 55.1%</div>
+      <div class="pick-price">¥8,547<span style="color:var(--text-faint);font-weight:400;"> (약 82,000원)</span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 88.00</span>
+        <span class="badge bid">입찰 20</span>
+      </div>
+      <div class="pick-note">만원도 안 되는 가격에 평점 88. 이번 조사 중 가성비 최상급.</div>
+    </div>
+
+    <div class="pick-card"><div class="pick-rank">11</div>
+      <div class="pick-name">벤네비스 17년 Chorlton 버번배럴 (285병 한정)</div>
+      <div class="pick-price">¥25,000<span style="color:var(--text-faint);font-weight:400;"> (약 241,000원)</span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 88.43</span>
+        <span class="badge zero">무입찰</span>
+      </div>
+      <div class="pick-note">한정 285병에 평점 88점대인데 완전히 무경쟁.</div>
+    </div>
+
+    <div class="pick-card"><div class="pick-rank">12</div>
+      <div class="pick-name">벤네비스 9년 2012-2022 알로하위스키 57.6%</div>
+      <div class="pick-price">¥10,000<span style="color:var(--text-faint);font-weight:400;"> (약 97,000원)</span></div>
+      <div class="badges" style="margin:8px 0 10px;">
+        <span class="badge rating">WB 88.00</span>
+        <span class="badge zero">무입찰</span>
+      </div>
+      <div class="pick-note">벤네비스에서 가장 조용한 고평점 매물.</div>
+    </div>
+
+  </div>
+
+  <h2 class="section-title">증류소별 상세</h2>
+  <p class="section-sub">각 항목을 눌러 펼치면 &ldquo;고입찰(입찰 5건 이상, 가격 무관)&rdquo;과 &ldquo;예산내 후보(53,000엔 이하)&rdquo;를 볼 수 있습니다. 예산내 후보는 동일한 병이 여러 판매자로 중복 등록된 경우 가격 범위로 묶었습니다.</p>
+
+  <div class="dist-list" id="dist-list"></div>
+
+  <div class="footnote">
+    <strong>조사 범위 관련 참고사항</strong><br>
+    · MACALLAN(총 637건), LAPHROAIG(234건), YAMAZAKI PUREMALT(266건), BOWMORE(238건), SPRINGBANK(141건), GLEN GRANT(106건)은 여러 페이지를 모두 확인했습니다.<br>
+    · AKKESHI(전체 4페이지 중 1페이지), CHICHIBU(전체 10페이지 중 1페이지), GLENFARCLAS(전체 2페이지 중 1페이지)는 지정 URL의 첫 페이지만 확인한 상태입니다 — 나머지 페이지 확인이 필요하면 말씀해 주세요.<br>
+    · WhiskyBase에 정확히 일치하는 배치를 찾지 못한 경우 근접한 도수·빈티지 매물의 평점 범위를 참고치로 표기했습니다 (&ldquo;참고&rdquo; 또는 물결표 범위로 표시). 신상품 등 WhiskyBase 미등록 병은 &ldquo;평점 없음&rdquo;으로 표기했습니다.<br>
+    · 미니어처(50ml 등), 빈 병·빈 상자, 여러 병이 섞인 세트 상품은 원 목록에는 있었지만 WhiskyBase 개별 평점 조회에서는 제외했습니다.<br>
+    · 모든 가격은 매물 페이지 노출 시점의 &ldquo;현재가&rdquo; 기준이며, 경매 특성상 종료 시점 낙찰가는 이보다 높아질 수 있습니다 (특히 입찰수가 많은 매물).
+  </div>
+
+</div>
+
+<script>
+const DATA = [
+{
+  name:"DAFTMILL", count:"매물 3건 · 1페이지",
+  hot:[],
+  budget:[
+    ["Daftmill 2011 Winter Batch Release 46%","29,700","285,875","0","86.72","high"],
+    ["Daftmill 2011 Summer Batch Release 46%","28,700","276,249","0","86.63","high"]
+  ],
+  note:"예산 초과 1건(1st Fill Oloroso Sherry Butt for LMDW, 55,000엔, 무입찰)은 제외."
+},
+{
+  name:"GLENDRONACH", count:"매물 58건 · 1페이지",
+  hot:[
+    ["핸드필 증류소한정 700ml","12,500","120,318","6","86.8~92.7","mid"],
+    ["AZ-205 1995 19년 싱글캐스크 PX 55.2% 700ml","15,000","144,381","9","88.45","high"]
+  ],
+  budget:[
+    ["12년 오리지널 43% (병행품 포함, 6건)","4,500~7,700","","0","84.08","mid"],
+    ["캐스크스트렝스 배치12 58.2% (2건)","13,200~22,000","","0","86.20","high"],
+    ["15년 리바이벌 46% (5건)","12,980~33,000","","0~1","86.24~88.01","high"],
+    ["트래디셔널리 피티드 48% (2건)","6,160~7,250","","0","83.69","mid"],
+    ["21년 셰리캐스크 마츄어드 / 파라먼트 48% (2건)","29,999~39,950","","0","89.29","high"],
+    ["2003-2015 12년 PX셰리 싱글캐스크 55.1%","37,800","","0","~88.25","high"],
+    ["16년 1993 오로로소셰리버트 61%","49,500","","0","89.7~90.6","high"],
+    ["캐스크스트렝스 배치10","15,800","","0","87.55","high"],
+    ["18년 알라다이스 46%","44,000","","0","87.60~88.58","high"],
+    ["오드 투 더 다크 50.8%","14,800","","0","85.36","mid"],
+    ["10년 포그 1L 43%","6,420","","0","82.31","mid"],
+    ["오드 투 디 엠버스 48.4% (2건)","10,980~12,300","","0","83.53","mid"],
+    ["포트우드 46~48% (4건)","11,900~13,670","","0","84.36~84.76","mid"],
+    ["오드 투 더 밸리 46.2% (2건)","10,980~11,500","","0","82.21","mid"]
+  ]
+},
+{
+  name:"MACALLAN", count:"매물 637건 · 3페이지 이상 (가격 낮은순·입찰 많은순 전수)",
+  hot:[
+    ["AZ-185 캐스크스트렝스 750ml","274,000","2,637,360","67","90~91.5","high","예산초과"],
+    ["1957 올드보틀","281,000","2,704,738","31","90~94","high","예산초과"],
+    ["43830 12년 셰리오크 750ml 43%","45,833","441,161","30","86.26","high"],
+    ["12년 싱글몰트 더블캐스크 700ml","2,784","26,798","20","~82.7","mid"],
+    ["18년 셰리오크 2016 700ml 43%","50,000","481,270","18","87~89","high"],
+    ["셰리오크카스크 12년 정규품","2,220","21,369","17","~84.8","mid"],
+    ["25년 빈티지 2018 셰리오크 나무상자","13,050","125,612","17","90.44","high"],
+    ["18년 1975-1993 750ml","56,100","539,985","14","87.9~91.4","high","예산초과"],
+    ["위스키메이커스에디션 과일&향신료 1L","11,601","111,665","14","86.9~89.5","high"],
+    ["하모니컬렉션 오가닉체리우드 랩산티(Jing)","18,270","175,857","14","88.57","high"],
+    ["12 더블캐스크 [EGBE8022]","5,750","55,347","13","~82.7","mid"],
+    ["12 싱글몰트 더블캐스크","2,860","27,529","13","~82.7","mid"],
+    ["셰리오크 12년 [EGBE8022]","9,075","87,351","12","~84.8","mid"],
+    ["12 마츄어드 인 셰리우드","12,000","115,505","11","~84.8","mid"],
+    ["12년 110프루프 55%","10,000","96,254","11","87.8~96.5","high"],
+    ["12 더블캐스크 [EGBD9005]","5,390","51,881","9","~82.7","mid"],
+    ["381 12 더블캐스크","4,300","41,390","9","~82.7","mid"],
+    ["12 하이랜드싱글몰트 350ml","4,070","39,176","8","~84.8","mid"],
+    ["15년 더블캐스크","12,650","121,762","8","85.2~86.0","mid"],
+    ["[세트] 25년 셰리오크 3병세트 나무상자","13,000","125,131","7","세트","none"],
+    ["12 더블캐스크 (18279)","1,461","14,063","7","~82.7","mid"],
+    ["8011[M] 12 셰리오크 레드라벨","3,300","31,764","6","~84.8","mid"],
+    ["18년 2023 셰리오크 하이랜드싱글몰트","39,050","375,872","6","87~89","high"],
+    ["25년 미개전 고주","35,500","341,702","5","88~91","high"],
+    ["25년 1970-1996 애니버서리몰트 750ml","382,800","3,684,604","5","92~93.8","high","예산초과"],
+    ["12 더블캐스크 (3401)","5,700","54,865","5","~82.7","mid"],
+    ["[빈상자] 구 12년 빈상자세트","8,300","79,891","5","빈상자","none"]
+  ],
+  budget:[
+    ["12년 더블캐스크 40% (40건 이상)","1,461~48,500","","0~다양","82.0~86.3 (대표 82.66)","mid"],
+    ["12년 셰리오크/레드라벨 40%","2,220~52,633","","0~다양","84.80 (750ml43%는 86.26)","mid"],
+    ["15년 더블캐스크","12,650~14,080","","0","85.2~86.0","mid"],
+    ["12/15년 컬러 컬렉션","7,999~16,500","","0","12년 83.24 / 15년 84.68","mid"],
+    ["18년 셰리오크카스크 (각 빈티지)","39,050~52,633","","0~6","87~89.6","high"],
+    ["18년 더블캐스크","38,000~48,000","","0","87.05","high"],
+    ["25년 셰리오크/빈티지","13,050 / 35,500","","0~17","88~91","high"],
+    ["에디션 No.4","22,000","","0","88.12","high"],
+    ["에디션 No.5","17,600","","0","86.31","high"],
+    ["에디션 No.6","17,600~27,610","","0","87.34","high"],
+    ["클래식 컷 (각 연도)","1,620~21,800","","0","86~88.2","high"],
+    ["레어카스크 / 배치 No.1,2,3","25,300~30,800","","0","85.9~90.2","high"],
+    ["아에라(Aera)","20,020~24,000","","0","84.90","mid"],
+    ["셀렉트오크 1L","12,100","","0","81.42","mid"],
+    ["테라(Terra)","16,800~29,980","","0","84.73","mid"],
+    ["어 나이트 온 어스 시리즈","12,647~18,900","","0","83.1~85.9","mid"],
+    ["위스키메이커스에디션 (과일&향신료)","30,000","","0","86.87~89.5","high"],
+    ["엘레간시아 1L","20,350","","0","83~85","mid"],
+    ["리사(Litha)","15,000","","0","84.89","mid"],
+    ["1841 레플리카","50,000","","0","86.19","mid"],
+    ["하모니컬렉션 – 앰버메도우","14,630~14,999","","0","86.42","high"],
+    ["하모니컬렉션 – 비브란트오크","17,999~18,480","","0","86.44","high"],
+    ["하모니컬렉션 – 인텐스아라비카","15,400~19,999","","0","86.46","high"],
+    ["하모니컬렉션 – 200주년한정","31,499","","0","미확인(신상품)","none"],
+    ["파인오크 10년","7,920","","0","미확인(단종라인)","none"]
+  ],
+  note:"※ 미니어처·빈병·빈상자·화장품세트류(¥290~97,000대 다수)는 목록엔 있으나 WhiskyBase 조회는 생략."
+},
+{
+  name:"LAPHROAIG", count:"매물 234건 · 3페이지",
+  hot:[
+    ["셀렉트카스크 700ml 40%","3,190","30,706","13","78.35","mid"],
+    ["10년 아이라 싱글몰트 750ml","3,100","29,839","8","83~91 (평균 86~88)","high"],
+    ["17년 2001 55.7% The Whisky Hoop","97,000","933,664","20","90.53","high","예산초과"],
+    ["1998 21년 58.3% 호그스헤드 “더 님프”","15,700","151,119","12","90.50","high"],
+    ["H 미개전 10년 750ml","1,200","11,551","30","83~91","high"],
+    ["카디스 2024 페이발리츠 10년 52.4%","9,950","95,773","12","88.49","high"],
+    ["10년 750ml 43% 상자첨부","5,500","52,940","21","83~91","high"],
+    ["[혼합세트] 시바스+라프로이그+올드파","2,500","24,064","21","세트(혼합)","none"]
+  ],
+  budget:[
+    ["10년 정규/병행/구라벨/구병 (대량)","99~53,000","","다양","83~91 (평균 86~88)","high"],
+    ["셀렉트 / 셀렉트카스크 (대량)","2,000~5,258","","다양","79.39 / 78.35","mid"],
+    ["쿼터캐스크 48%","6,980~22,000","","다양","84.6~87.0","high"],
+    ["로어(Lore) 48%","4,730~17,900","","다양","86.26~86.93","high"],
+    ["카디스 200주년 51.5%","42,348","","0","88.23","high"],
+    ["15년 200주년기념 43%","26,013~44,000","","0","87.83","high"],
+    ["카디스 12년 57.5%","48,398","","0","88.37","high"],
+    ["카디스 마스터에디션 57.3%","20,568","","0","88.46","high"],
+    ["카디스 프렌치오크 52.6%","24,000~24,500","","0","87.03","high"],
+    ["카디스 피노카스크 F 51.8%","33,000","","0","86.19","high"],
+    ["PX캐스크 트리플 마츄어드 1L 48%","11,000","","0","86.81","high"],
+    ["포트우드 46~48%","11,900~15,800","","0","85.56~86.40","high"],
+    ["엘레먼츠 L3.0 55.3%","33,800","","0","86.79","high"],
+    ["트리플우드 48%","26,999","","0","85.04~85.57","mid"],
+    ["포오크(Four Oak) 1L 40%","6,980~7,700","","0","82.97","mid"],
+    ["쉐리오크 피니시 48%","10,980~14,700","","0","85.94","high"],
+    ["10년 CS 배치012/015/017","13,800~21,778","","0","88.81 / 88.12 / 87.97","high"],
+    ["캐스크 레거시 48%","11,000~13,980","","0","86.61","high"],
+    ["윌리엄슨(언디스클로즈드 12년, 2010)","25,850","","0","86.75","high"],
+    ["던컨테일러 배틀힐 14년(2005)","38,000","","0","평점없음","none"],
+    ["올드파티큘러 10년 2015 토니포트","19,100","","0","86.75","high"],
+    ["올드파티큘러 13년 2012 for JIS","28,300","","0","평점없음","none"],
+    ["라메종드위스키 로세스그렌 #14, 10년 2013 61.9%","51,050","","0","89.41","high"]
+  ]
+},
+{
+  name:"YAMAZAKI PUREMALT", count:"매물 266건 · 3페이지",
+  hot:[
+    ["SUNTORY 10년 그린라벨 750ml 40%","21,500","206,000","57","88~89 (참고)","high"],
+    ["술축제 10년 750ml 미개전보관품","10,500","101,000","26","88~89 (참고)","high"],
+    ["나무상자 12년 750ml 고주","27,000","260,000","25","76~88.67","high"],
+    ["완비품 특급760ml 초기보틀","61,000","587,000","23","88.07","high","예산초과"],
+    ["초희소 셰리우드 1982년 700ml 45%","401,000","","23","89.50 (근사치)","high","예산초과"],
+    ["퓨어몰트 특별라벨(우메타케후미)","37,500","361,000","18","매치없음","none"],
+    ["[세트] 히비키 베이비병 2개 180ml","21,450","206,000","14","세트","none"],
+    ["통출원주 15년저장 600ml 56%","11,012","106,000","13","평점없음","none"],
+    ["퓨어몰트 특급760ml 43%","21,500","207,000","12","76~88","high"],
+    ["구라벨 750ml 43%","11,001","106,000","9","76~88","high"],
+    ["골드보틀 특급760ml 43%","3,311","32,000","7","77.00","mid"]
+  ],
+  budget:[
+    ["12년 퓨어몰트 750/760ml 43% (구형 등, 81건)","11,001~50,600","","다양","76.00~88.67 (Flower Crest 최고)","high"],
+    ["10년 퓨어몰트 그린라벨 700/750ml 40% (19건)","21,500~52,800","","다양","88~89 (CS계열 참고)","high"],
+    ["기타 한정판(통출원주10년, 니카콜라보 등, 20건)","400~50,000","","0~다양","미확인(희소라벨)","none"]
+  ],
+  note:"미니어처(50ml)·세트·빈병·기념품(볼펜/글라스 등) 47건은 목록만 확보, 평점조회는 생략."
+},
+{
+  name:"SPRINGBANK", count:"매물 141건 · 2페이지",
+  hot:[
+    ["15년 700ml 46% 상자첨부","29,500","285,000","17","87.87","high"],
+    ["10년 700ml 46%","14,500","140,000","14","86.96","high"],
+    ["21년 700ml 46% 미개전","63,100","","13","89.42~90.39","high","예산초과"],
+    ["35년 리미티드에디션 빈병","3,800","37,000","13","빈병","none"],
+    ["AZ-210 10년 700ml 46% 상자첨부","10,150","98,000","12","86.96","high"],
+    ["캠벨타운 로호 30년 700ml 40%","14,800","143,000","12","매치없음(블렌디드몰트)","none"],
+    ["10년 700ml 46%","16,000","155,000","11","86.96","high"],
+    ["로컬발레이 10년 2011-2021 51.6%","50,600","489,000","6","88.09~89.33","high"],
+    ["핸드필 증류소한정 700ml","12,500","121,000","6","매치어려움","none"],
+    ["1994 빈티지 31년 시리즈2탄","57,000","","5","93.00","high","예산근접초과, 즉결가349,000엔"]
+  ],
+  budget:[
+    ["10년 700ml 46% (표준, 다수)","10,150~24,000","","0~다양","86.96","high"],
+    ["5년 100 Proof 57.1% 700ml","23,001~26,800","","0","86.24~87.95","high"],
+    ["8년","25,097~52,000","","0","87~89 (참고)","high"],
+    ["12년 캐스크스트렝스","34,650~39,800","","0","88.07~88.88","high"],
+    ["Longrow 700ml 46%","10,000~11,999","","0","84.66","mid"],
+    ["캠벨타운 로호(병행품, 블렌디드몰트)","5,980~11,342","","0","별도브랜드-제외","none"],
+    ["기타(핸드필, 8yr 로컬발레이, 아가일10주년 등)","18,000~52,028","","0","다양","none"]
+  ]
+},
+{
+  name:"BOWMORE", count:"매물 238건 · 3페이지",
+  hot:[
+    ["핸드필 1995-2018 700ml 48.1%","87,002","837,430","26","91.80","high","예산초과, 조사 전체 최고평점"],
+    ["12년 정규(블랙라벨 계열)","2,090~2,700","20,118~26,470","12~16","81.3~83.5","mid"],
+    ["12년 셰리오크카스크 상자첨부 (2건)","3,311~3,855","31,870~37,106","8~9","81.46","mid"],
+    ["칸모어 비퀘스트 1991 26년 나무상자 (2건)","30,500~31,500","293,575~303,201","14~16","89.45","high"],
+    ["ISLAY 12년 싱글몰트 1000ml 상자첨부","28,350","272,881","22","82~84","mid"],
+    ["AD래트레이 19년 1996-2015 버번호그스헤드 55.1%","8,547","82,269","20","88.00","high"],
+    ["올드파티큘러 2016 9년 for JIS 60.2%","10,500","101,067","12","87.0~87.11","high"],
+    ["서프(Surf) 1000ml 40%","2,700","25,989","8","77.6~85.0","mid"]
+  ],
+  budget:[
+    ["19년 1990-2010 시그너토리 안필터드","45,000","433,143","0","87.3~90.5 (평균 88.7)","high"],
+    ["15년 셰리오크카스크(정규)","8,250~14,000","79,410~134,756","0","83.18","mid"],
+    ["18년 정규 / Deep&Complex","9,570~24,200","92,116~232,935","0","84.7~86.7","mid"],
+    ["킹스버리 2016 9년 CS골드 57.7~57.8%","15,499~18,601","149,185~179,043","0","84.0~85.0","mid"],
+    ["템페스트 Batch1 10년 55.3%","25,000~33,000","240,635~317,639","0","86.59","high"],
+    ["아이라페스 2016 한정 54.9%","39,800","383,091","0","86.98","high"],
+    ["던컨테일러 NC² 12년 46%","38,500","370,578","0","84.00","mid"],
+    ["High Spirits 아이라4 1998-2007 46%","45,000","433,143","0","83.60","mid"],
+    ["2002년 13년 셰리호그스헤드 46%","38,500","370,578","0","~86.0","high"],
+    ["볼트에디션 1st 51.5%","16,500","158,820","0","매치실패","none"],
+    ["올드파티큘러 2013빈티지 59.1% for JIS","21,800","209,834","0","조회생략","none"],
+    ["올드파티큘러 11년 2014 48.4%","20,000","192,508","0","조회생략","none"],
+    ["12년/350ml/1000ml 정규 다수","1,200~19,900","11,551~191,546","0~4","81.3~83.5","mid"]
+  ],
+  note:"미즈나라캐스크 빈병·상자 세트, 빈병 3건, 미니병 2건, 빈상자 1건은 목록 확인만 하고 평점조회 생략."
+},
+{
+  name:"GLEN GRANT", count:"매물 106건 · 2페이지",
+  hot:[
+    ["THE GLEN GRANT 12년 700ml 43% 상자첨부","2,200","21,176","5","80.5~81.7","mid"]
+  ],
+  budget:[
+    ["2006 프라이빗캐스크 58%","22,000","211,759","0","84.7~90.0 (평균 86~87)","high"],
+    ["Hart Brothers 2002-2015 13년 56.2%","20,000","192,508","0","평점없음","none"],
+    ["2007-2024 17년 for Highlander Inn 53.4%","32,000","308,013","0","87.23","high"],
+    ["24년 1998 젬스톤(Gemstone) 호그스헤드 58.1% (2건)","25,000","240,635","0","88.50","high"],
+    ["16년 2009 1stFill셰리 코니서스초이스 58.6%","28,430","273,651","0","87.67~88.00","high"],
+    ["24년 1997 도토리라벨(Acorn)","45,000","433,143","0","조회생략","none"],
+    ["23년 1998 더 님프(Nymph)","39,800","383,091","0","조회생략","none"],
+    ["25년 메몬일각 314개한정","52,800","508,222","0","86.6~89.2 (참고)","high"],
+    ["2006 싱글캐스크 Ys캐스크 프라이빗캐스크","46,900","451,432","0","84.7~90.0 (참고)","high"],
+    ["16년 2006 싱글캐스크 #97330","49,500","476,458","0","조회생략","none"],
+    ["22년 2003 윌슨&모건 캐스크스트롱","38,500","370,578","0","조회생략","none"],
+    ["26년 1998 오로로소셰리 더도박꾼","49,995","481,222","0","조회생략","none"],
+    ["Arboralis(정규) / CS한정 다수","1,000~22,000","9,626~211,759","0","79.37 / 80.0~84.0","mid"],
+    ["10년 정규 다수","1,980~22,000","19,059~211,759","0","78.1~81.2","mid"]
+  ]
+},
+{
+  name:"SIGNATORY (독립병입)", count:"매물 19건 · 1페이지 · 고입찰 없음(전 매물 입찰 0건)",
+  hot:[],
+  budget:[
+    ["Caol Ila 2008 13년 호그스헤드 55.4%","30,980","298,195","0","86.50","high"],
+    ["Aberfeldy 2013 10년 오로로소 48.2%","11,000","105,880","0","85.29","high"],
+    ["치치부 위스키축제한정 Unnamed Speyside 14yo 61.8%","25,000","240,635","0","86.00 (근접매칭)","high"],
+    ["보우모어 19년 1990-2010 안필터드 (중복항목)","45,000","433,143","0","87.3~90.5","high"],
+    ["Mortlach 2008 캐스크스트렝스 60.8%","29,800","286,837","0","~84.75","mid"],
+    ["CS Speyside(비공개, 맥캘란 추정) 18년 1stFill Oloroso 58.2%","49,800","479,345","0","정확매치 못찾음","none"],
+    ["CS Orkney(비공개, 하이랜드파크 추정) 18년 1stFill Oloroso 54.6%","39,800","383,091","0","정확매치 못찾음","none"],
+    ["플루토니 시나노야 2008 10년 60.4% 245개한정","16,600","159,782","0","정확매치 못찾음","none"]
+  ]
+},
+{
+  name:"AKKESHI (厚岸)", count:"1페이지 확인 (전체 4페이지 중)",
+  hot:[
+    ["THE AKKESHI 처서(処暑) 2021 브렌디드 48%","17,000","163,632","16","86.42","high"],
+    ["아츠기시 위스키 (상품명 특정불가)","12,000","115,505","5","조회불가","none"],
+    ["[세트] 한로·빗물·씨앗·처서 4개세트","28,200","271,437","10","세트-조회제외","none"]
+  ],
+  budget:[
+    ["Rikka(立夏) 2025 싱글몰트","22,990~26,013","","0","89.11 (아케시 중 최고)","high"],
+    ["Risshu(立秋) 2025 싱글몰트","22,988~26,618","","0","86.07","high"],
+    ["Seimei(清明) 2022","17,050~26,800","","0~2","86.89","high"],
+    ["Daikan(大寒) 2022","18,700~22,000","","0","85.60 (피티드 83.00)","high"],
+    ["Keichitsu(啓蟄) 2023","25,000~25,800","","0","84.85 (피티드 84.17)","mid"],
+    ["Hakuro(白露) 2023","22,000","","0","86.27","high"],
+    ["Usui(雨水) 2021","5,000~28,820","","0","86.45","high"],
+    ["Taisetsu(大雪) 2022","16,500~27,800","","0~1","84.40","mid"],
+    ["Shoukan(小寒) 2025","16,500~23,100","","0~1","82.00","mid"],
+    ["Kokuu(穀雨) 2024","18,000","","0","84.00","mid"],
+    ["뉴본 시리즈 / 콜라보 다수","4,397~46,800","","0","80.14~86.06 (일부 평점없음)","mid"]
+  ],
+  note:"2026년 신상 다수(나츠지·하루분·춘분 등, ¥20,000~33,000대)는 출시 직후라 대부분 WhiskyBase 미평가."
+},
+{
+  name:"CHICHIBU (Ichiro's Malt)", count:"1페이지 확인 (전체 10페이지 중)",
+  hot:[
+    ["게터로보 Bar Zizz 30주년 기념병","22,011","211,865","23","매치불확실","none"],
+    ["싱글캐스크 한큐백화점한정 100개","40,500","389,829","22","미등록","none"],
+    ["The Single Cask 치치부에디션","21,850","210,315","21","미확인","none"],
+    ["뉴본 뉴호스헤드 2008","62,000","596,775","19","미확인","none","예산초과"],
+    ["CHIBIDARU 치비달","13,000","125,131","17","86.6~89.25 (참고)","high"],
+    ["ON THE WAY 2015","10,506","101,125","15","88.23 (참고)","high"],
+    ["디스틸러리Ⅱ 힌트오브셰리 2026","16,010","154,103","13","미등록 추정","none"],
+    ["52석의 행복 2024 캐스크스트렝스","20,500","197,321","9","89.33 (참고)","high"]
+  ],
+  budget:[
+    ["치치부 10년(Aged 10 Years)","42,000~50,000","","0","정확매치 없음","none"],
+    ["Malt&Grain 클래식에디션 700ml 48%","5,280","","0","85.32","mid"],
+    ["Double Distilleries(DD, 리프시리즈 등)","7,917~24,200","","0~1","87.57~89.67","high"],
+    ["The Peated 2022","27,999~33,000","","0","88.62","high"],
+    ["플로어몰티드 2009-2012","27,999","","0","미확인","none"]
+  ],
+  note:"위스키축제 싱글캐스크(54,000엔대), 타증류소 콜라보(스토이샤 부나하븐 등)는 참고용으로만 확인, 에이콘 에디션 시리즈(대부분 65,000엔대·무입찰)는 예산초과로 제외."
+},
+{
+  name:"CLYNELISH", count:"1페이지 확인",
+  hot:[
+    ["Clynelish 12years (병입자 불명)","32,500","312,826","16","85.91 (참고)","mid"],
+    ["핸드필 디스틸러리 익스클루시브 700ml","15,500","149,194","10","87.7~88.6","high"],
+    ["클린느리쉬 14년 200ml 46%","11,603","111,684","8","83.55~84.89","mid"]
+  ],
+  budget:[
+    ["14년 700ml 46% 정규품 (동일가 6,342엔 13건 이상 포함)","5,060~7,800","","0~2","83.55~84.89","mid"],
+    ["12년 스페셜릴리스 2022 CS 58.5% (다수)","25,000~34,800","","0","85.91","mid"],
+    ["히든스피릿츠10주년 10년 1stFill버본배럴","25,000~29,800","","0","미확인","none"],
+    ["시크릿하이랜드 재즈 10년 261개한정","47,800","","0","미확인","none"],
+    ["잔지바 쿤스트라 13년(2007-2020)","25,300","","0","미확인","none"],
+    ["위스키트레일 9~11년 등","6,300~20,000","","0","미확인","none"]
+  ]
+},
+{
+  name:"GLENFARCLAS", count:"1페이지 확인 (전체 2페이지 중)",
+  hot:[
+    ["25년 CS 바이오하자드(레지던트이블) 기념병 51.6%","15,000","144,381","12","89.00","high"],
+    ["1엔스타트 미개전 한정 12년","1,190","11,455","10","81.34 (정규기준)","mid"]
+  ],
+  budget:[
+    ["정규 12년(New Label)","1,190~5,250","","0~10","81.34","mid"],
+    ["정규 15년","9,500~18,700","","0","84.63","mid"],
+    ["정규 17년(병행품 포함)","5,250~13,980","","0~2","84.48","mid"],
+    ["정규 21년","26,290","","0","85.67","high"],
+    ["105 캐스크스트렝스(700ml/1L/200ml)","8,680~15,000","","0","83.48","mid"],
+    ["12년 캐스크스트렝스 배치6","12,800","","0","88.00","high"],
+    ["12년 캐스크스트렝스 미개전 57.6%","5,500","","1","88.00 (참고)","high"],
+    ["1996 Edition N°26 “Rob Roy MacGregor”","59,800","","0","87.00","high","예산초과"],
+    ["패밀리캐스크 셰리뱃 No.3418 (2006)","27,000 / 36,800","","0","89.07","high"],
+    ["패밀리캐스크 No.531 (2010, 15년)","31,500","","0","88.37","high"],
+    ["패밀리캐스크 No.2462 (2005, 18년)","38,500","","0","88.58","high"],
+    ["패밀리캐스크 No.1118 (2009, 16년)","33,000","","0","88.24 (추정)","high"],
+    ["패밀리리저브 싱글몰트","22,000","","0","84.67 (추정)","mid"],
+    ["헤리티지(구병/레어라벨)","19,000~28,000","","0","79.00","low"],
+    ["디케이즈(Decades)","12,000~13,200","","0","82.50","mid"],
+    ["25년 정규","51,280","","0","87.16 (추정)","high"]
+  ]
+},
+{
+  name:"BEN NEVIS", count:"매물 23건 · 1페이지 (시계·의류 등 무관상품 다수 혼재) · 고입찰 없음(전 매물 입찰 0건)",
+  hot:[],
+  budget:[
+    ["Chorlton Whisky 17년 버번배럴 48.8% (285병 한정)","25,000","240,635","0","88.43","high"],
+    ["9년 2012-2022 알로하위스키 57.6%","10,000","96,254","0","88.00","high"],
+    ["10년 표준품 700ml","11,000","105,880","0","85.09","mid"],
+    ["10년 아티스트#15 다크사이드오브더문 58.3%","18,999","183,000","0","86.69","high"],
+    ["Boutique-y Batch16 25년 55.8% 500ml (10주년기념)","45,000","435,000","0","87.00","high"],
+    ["10년 2015-2025 55.7% 독립병입(추정)","14,000","135,000","0","78.00 (불확실)","low"],
+    ["Hepburn's Choice 11년 2011-2023 46%","13,200","127,000","0","84.25","mid"],
+    ["8년 세라믹디캔터 Premier Barrel 46%","10,500","101,000","0","85.00~86.00","mid"]
+  ],
+  note:"예산초과: 1966년 15년 79병한정(94,000엔), 1997-2024 27년 셰리뱃(64,800엔·95개한정). 무관상품(시계·티셔츠 등) 12건은 제외."
+}
+];
+
+function ratingClass(t){
+  if(t==="high") return "high";
+  if(t==="mid") return "mid";
+  if(t==="low") return "low";
+  return "none";
+}
+
+function renderTable(rows, isHot){
+  if(!rows.length) return "<p style=\"font-size:13px;color:var(--text-faint);margin:10px 0 0;\">해당 없음.</p>";
+  let head = isHot
+    ? "<tr><th>상품</th><th>현재가</th><th>입찰</th><th>WhiskyBase 평점</th></tr>"
+    : "<tr><th>병 / 상품</th><th>가격(범위)</th><th>입찰</th><th>WhiskyBase 평점</th></tr>";
+  let body = rows.map(r=>{
+    const [name, price, krw, bid, rate, tone, tag] = r;
+    const bidClass = (bid==="0") ? "zero" : (parseInt(bid)>=5 ? "hot" : "");
+    const krwHtml = krw ? `<span class="krw">${krw}원</span>` : "";
+    const tagHtml = tag ? ` <span class="krw">· ${tag}</span>` : "";
+    return `<tr>
+      <td class="name">${name}${tagHtml}</td>
+      <td class="num">¥${price}${krwHtml}</td>
+      <td class="num"><span class="bidn ${bidClass}">${bid}</span></td>
+      <td class="num"><span class="rate ${ratingClass(tone)}">${rate}</span></td>
+    </tr>`;
+  }).join("");
+  return `<div class="tbl-scroll"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+const list = document.getElementById("dist-list");
+DATA.forEach((d,i)=>{
+  const det = document.createElement("details");
+  det.className = "dist";
+  if(i<2) det.open = true;
+  det.innerHTML = `
+    <summary class="dist-head">
+      <span class="name-wrap"><span class="dname">${d.name}</span><span class="dcount">${d.count}</span></span>
+      <span class="chev">▶</span>
+    </summary>
+    <div class="dist-body">
+      <h4 class="tbl-label hot">🔥 고입찰 (입찰 5건 이상, 가격 무관)</h4>
+      ${renderTable(d.hot, true)}
+      <h4 class="tbl-label">예산내 후보 (¥53,000 이하)</h4>
+      ${renderTable(d.budget, false)}
+      ${d.note ? `<p class="dist-note" style="padding:0;margin-top:10px;">${d.note}</p>` : ""}
+    </div>
+  `;
+  list.appendChild(det);
+});
+</script>

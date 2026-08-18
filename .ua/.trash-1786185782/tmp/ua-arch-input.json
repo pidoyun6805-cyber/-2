@@ -1,0 +1,20 @@
+{
+  "fileNodes": [
+    {"id": "config:.claude/settings.local.json", "type": "config", "name": "settings.local.json", "filePath": ".claude/settings.local.json", "summary": "Claude Code 로컬 세션의 도구 사용 권한을 정의하는 설정 파일", "tags": ["configuration","permissions","claude-code","automation"]},
+    {"id": "document:CLAUDE.md", "type": "document", "name": "CLAUDE.md", "filePath": "CLAUDE.md", "summary": "프로젝트 개요와 작업 방식 가이드라인을 정리한 저장소 최상위 안내 문서", "tags": ["documentation","entry-point","project-overview","guidelines"]},
+    {"id": "file:경동로ENG재무/index.html", "type": "file", "name": "index.html", "filePath": "경동로ENG재무/index.html", "summary": "경동로ENG의 거래처별 매출/매입 및 세금계산서 확인 여부를 관리하는 단일 페이지 웹앱", "tags": ["single-page-app","finance","local-storage","dashboard","korean-ui"]},
+    {"id": "file:내위스키컬렉션/index.html", "type": "file", "name": "index.html", "filePath": "내위스키컬렉션/index.html", "summary": "개인 위스키 컬렉션과 시음 행사 기록을 관리하는 단일 페이지 웹앱", "tags": ["single-page-app","collection","local-storage","whisky","korean-ui"]},
+    {"id": "document:위스키체크/LOG.md", "type": "document", "name": "LOG.md", "filePath": "위스키체크/LOG.md", "summary": "카에루몰 위스키 경매 체크 작업 로그", "tags": ["log","documentation","whisky-auction","research-notes"]},
+    {"id": "file:위스키체크/reports/2026-08-06_리포트.html", "type": "file", "name": "2026-08-06_리포트.html", "filePath": "위스키체크/reports/2026-08-06_리포트.html", "summary": "2026-08-06 기준 카에루몰 위스키 경매 메리트 리포트", "tags": ["report","whisky-auction","static-html","data-table","korean-ui"]},
+    {"id": "file:위스키체크/reports/2026-08-08_리포트.html", "type": "file", "name": "2026-08-08_리포트.html", "filePath": "위스키체크/reports/2026-08-08_리포트.html", "summary": "2026-08-08 기준 카에루몰 위스키 경매 메리트 리포트 개정판", "tags": ["report","whisky-auction","static-html","data-table","korean-ui"]}
+  ],
+  "importEdges": [],
+  "allEdges": [
+    {"source":"document:CLAUDE.md","target":"file:경동로ENG재무/index.html","type":"documents"},
+    {"source":"document:CLAUDE.md","target":"file:내위스키컬렉션/index.html","type":"documents"},
+    {"source":"document:CLAUDE.md","target":"document:위스키체크/LOG.md","type":"related"},
+    {"source":"document:위스키체크/LOG.md","target":"file:위스키체크/reports/2026-08-06_리포트.html","type":"documents"},
+    {"source":"document:위스키체크/LOG.md","target":"file:위스키체크/reports/2026-08-08_리포트.html","type":"documents"},
+    {"source":"file:위스키체크/reports/2026-08-06_리포트.html","target":"file:위스키체크/reports/2026-08-08_리포트.html","type":"related"}
+  ]
+}

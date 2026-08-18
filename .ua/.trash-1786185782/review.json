@@ -1,0 +1,23 @@
+{
+  "issues": [],
+  "warnings": [
+    "Node 'config:.claude/settings.local.json' has no edges (orphan)"
+  ],
+  "stats": {
+    "totalNodes": 21,
+    "totalEdges": 20,
+    "totalLayers": 4,
+    "tourSteps": 7,
+    "nodeTypes": {
+      "config": 1,
+      "document": 2,
+      "file": 4,
+      "function": 14
+    },
+    "edgeTypes": {
+      "contains": 14,
+      "documents": 4,
+      "related": 2
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "scriptCompleted": true,
+  "stats": {
+    "filesScanned": 7,
+    "filesWithImports": 0,
+    "totalEdges": 0
+  },
+  "importMap": {
+    ".claude/settings.local.json": [],
+    "CLAUDE.md": [],
+    "경동로ENG재무/index.html": [],
+    "내위스키컬렉션/index.html": [],
+    "위스키체크/LOG.md": [],
+    "위스키체크/reports/2026-08-06_리포트.html": [],
+    "위스키체크/reports/2026-08-08_리포트.html": []
+  }
+}

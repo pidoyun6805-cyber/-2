@@ -1,0 +1,199 @@
+{
+  "scriptCompleted": true,
+  "entryPointCandidates": [
+    {
+      "id": "document:CLAUDE.md",
+      "score": 2,
+      "name": "CLAUDE.md",
+      "summary": "프로젝트 개요와 작업 방식 가이드라인을 정리한 저장소 최상위 안내 문서"
+    },
+    {
+      "id": "file:경동로ENG재무/index.html",
+      "score": 1,
+      "name": "index.html",
+      "summary": "경동로ENG의 거래처별 매출/매입 및 세금계산서 확인 여부를 관리하는 단일 페이지 웹앱"
+    },
+    {
+      "id": "file:내위스키컬렉션/index.html",
+      "score": 1,
+      "name": "index.html",
+      "summary": "개인 위스키 컬렉션과 시음 행사 기록을 관리하는 단일 페이지 웹앱"
+    }
+  ],
+  "fanInRanking": [
+    {
+      "id": "file:위스키체크/reports/2026-08-08_리포트.html",
+      "fanIn": 2,
+      "name": "2026-08-08_리포트.html"
+    },
+    {
+      "id": "file:경동로ENG재무/index.html",
+      "fanIn": 1,
+      "name": "index.html"
+    },
+    {
+      "id": "file:내위스키컬렉션/index.html",
+      "fanIn": 1,
+      "name": "index.html"
+    },
+    {
+      "id": "document:위스키체크/LOG.md",
+      "fanIn": 1,
+      "name": "LOG.md"
+    },
+    {
+      "id": "file:위스키체크/reports/2026-08-06_리포트.html",
+      "fanIn": 1,
+      "name": "2026-08-06_리포트.html"
+    },
+    {
+      "id": "document:CLAUDE.md",
+      "fanIn": 0,
+      "name": "CLAUDE.md"
+    },
+    {
+      "id": "config:.claude/settings.local.json",
+      "fanIn": 0,
+      "name": "settings.local.json"
+    }
+  ],
+  "fanOutRanking": [
+    {
+      "id": "document:CLAUDE.md",
+      "fanOut": 3,
+      "name": "CLAUDE.md"
+    },
+    {
+      "id": "document:위스키체크/LOG.md",
+      "fanOut": 2,
+      "name": "LOG.md"
+    },
+    {
+      "id": "file:위스키체크/reports/2026-08-06_리포트.html",
+      "fanOut": 1,
+      "name": "2026-08-06_리포트.html"
+    },
+    {
+      "id": "config:.claude/settings.local.json",
+      "fanOut": 0,
+      "name": "settings.local.json"
+    },
+    {
+      "id": "file:경동로ENG재무/index.html",
+      "fanOut": 0,
+      "name": "index.html"
+    },
+    {
+      "id": "file:내위스키컬렉션/index.html",
+      "fanOut": 0,
+      "name": "index.html"
+    },
+    {
+      "id": "file:위스키체크/reports/2026-08-08_리포트.html",
+      "fanOut": 0,
+      "name": "2026-08-08_리포트.html"
+    }
+  ],
+  "bfsTraversal": {
+    "startNode": "file:경동로ENG재무/index.html",
+    "order": [
+      "file:경동로ENG재무/index.html"
+    ],
+    "depthMap": {
+      "file:경동로ENG재무/index.html": 0
+    },
+    "byDepth": {
+      "0": [
+        "file:경동로ENG재무/index.html"
+      ]
+    }
+  },
+  "nonCodeFiles": {
+    "documentation": [
+      {
+        "id": "document:CLAUDE.md",
+        "name": "CLAUDE.md",
+        "summary": "프로젝트 개요와 작업 방식 가이드라인을 정리한 저장소 최상위 안내 문서"
+      },
+      {
+        "id": "document:위스키체크/LOG.md",
+        "name": "LOG.md",
+        "summary": "카에루몰 위스키 경매 체크 작업 로그"
+      }
+    ],
+    "infrastructure": [],
+    "data": [],
+    "config": [
+      {
+        "id": "config:.claude/settings.local.json",
+        "name": "settings.local.json",
+        "summary": "Claude Code 로컬 세션의 도구 사용 권한을 정의하는 설정 파일"
+      }
+    ]
+  },
+  "clusters": [],
+  "layers": {
+    "count": 4,
+    "list": [
+      {
+        "id": "layer:project-config",
+        "name": "프로젝트 설정 및 문서",
+        "description": "저장소 전체를 아우르는 작업 가이드 문서와 Claude Code 세션 권한 설정"
+      },
+      {
+        "id": "layer:gyeongdongro-finance",
+        "name": "경동로ENG 재무 관리",
+        "description": "거래처별 매출·매입 및 세금계산서 확인 여부 관리 앱"
+      },
+      {
+        "id": "layer:whisky-collection",
+        "name": "개인 위스키 컬렉션",
+        "description": "개인 위스키 컬렉션 및 시음 행사 기록 앱"
+      },
+      {
+        "id": "layer:whisky-auction-check",
+        "name": "위스키 경매 체크 리포트",
+        "description": "카에루몰 위스키 경매 메리트 조사·리포팅 프로젝트"
+      }
+    ]
+  },
+  "nodeSummaryIndex": {
+    "document:CLAUDE.md": {
+      "name": "CLAUDE.md",
+      "type": "document",
+      "summary": "프로젝트 개요와 작업 방식 가이드라인을 정리한 저장소 최상위 안내 문서"
+    },
+    "config:.claude/settings.local.json": {
+      "name": "settings.local.json",
+      "type": "config",
+      "summary": "Claude Code 로컬 세션의 도구 사용 권한을 정의하는 설정 파일"
+    },
+    "file:경동로ENG재무/index.html": {
+      "name": "index.html",
+      "type": "file",
+      "summary": "경동로ENG의 거래처별 매출/매입 및 세금계산서 확인 여부를 관리하는 단일 페이지 웹앱"
+    },
+    "file:내위스키컬렉션/index.html": {
+      "name": "index.html",
+      "type": "file",
+      "summary": "개인 위스키 컬렉션과 시음 행사 기록을 관리하는 단일 페이지 웹앱"
+    },
+    "document:위스키체크/LOG.md": {
+      "name": "LOG.md",
+      "type": "document",
+      "summary": "카에루몰 위스키 경매 체크 작업 로그"
+    },
+    "file:위스키체크/reports/2026-08-06_리포트.html": {
+      "name": "2026-08-06_리포트.html",
+      "type": "file",
+      "summary": "2026-08-06 기준 카에루몰 위스키 경매 메리트 리포트"
+    },
+    "file:위스키체크/reports/2026-08-08_리포트.html": {
+      "name": "2026-08-08_리포트.html",
+      "type": "file",
+      "summary": "2026-08-08 기준 카에루몰 위스키 경매 메리트 리포트 개정판"
+    }
+  },
+  "totalNodes": 7,
+  "totalEdges": 6
+}

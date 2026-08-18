@@ -1,0 +1,17 @@
+{
+  "fixedSectionOk": true,
+  "nodesRecovered": 0,
+  "edgesRestored": 0,
+  "crossBatchEdgesAdded": 0,
+  "typesRemapped": 0,
+  "complexityRemapped": 0,
+  "notes": [
+    "Single batch (batch-1.json) with 21 nodes / 20 edges merged 1:1 into assembled-graph.json with zero changes; the merge script's report shows no 'Fixed' or 'Could not fix' entries.",
+    "All node IDs already follow the <type-prefix>:<filePath>[:<name>] convention (config:, document:, file:, function:) with no double prefixes, project-name prefixes, or func: aliases to normalize.",
+    "All complexity values are already valid (simple/moderate/complex); no unknown values found.",
+    "All 20 edges reference node IDs present in the node set; no dangling edges were dropped.",
+    "importMap has 7 entries (settings.local.json, CLAUDE.md, and the whisky/finance HTML/MD files) all with empty import arrays, since these are standalone HTML/Markdown files with no JS module imports -- 0 imports edges recovered is correct, not a gap.",
+    "config:.claude/settings.local.json is an isolated node (no edges in or out); this is expected since it's a permissions config file not referenced by or documenting other project files.",
+    "No malformed nodes, unknown types, or unknown complexity values required investigation this run."
+  ]
+}

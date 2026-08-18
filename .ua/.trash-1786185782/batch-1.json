@@ -1,0 +1,353 @@
+{
+  "nodes": [
+    {
+      "id": "config:.claude/settings.local.json",
+      "type": "config",
+      "name": "settings.local.json",
+      "filePath": ".claude/settings.local.json",
+      "summary": "Claude Code 로컬 세션의 도구 사용 권한(Bash, WebFetch, PowerShell, Skill 등)을 허용 목록 형태로 정의하는 설정 파일. 카에루몰/WhiskyBase 크롤링용 curl 명령, 위스키 데이터 정제용 셸 파이프라인, understand-anything 플러그인 실행 등을 허용한다.",
+      "tags": ["configuration", "permissions", "claude-code", "automation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:CLAUDE.md",
+      "type": "document",
+      "name": "CLAUDE.md",
+      "filePath": "CLAUDE.md",
+      "summary": "프로젝트 개요와 Karpathy 가이드라인 기반 작업 방식(사전 확인, 단순함 우선, 수술적 변경, 목표 지향 실행)을 정리한 저장소 최상위 안내 문서.",
+      "tags": ["documentation", "entry-point", "project-overview", "guidelines"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:경동로ENG재무/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "경동로ENG재무/index.html",
+      "summary": "경동로ENG의 거래처별 매출/매입 내역과 세금계산서·견적서·입출금 확인 여부를 관리하는 단일 페이지 웹앱. 시드 데이터와 브라우저 localStorage를 합쳐 거래처별/날짜별 뷰, 처리 필요 항목 패널, 거래 등록·수정·삭제 기능을 제공한다.",
+      "tags": ["single-page-app", "finance", "local-storage", "dashboard", "korean-ui"],
+      "complexity": "complex",
+      "languageNotes": "별도 프레임워크 없이 바닐라 JS로 구현되며, 하드코딩된 시드 데이터(SEED_CLIENTS/SEED_TXNS)와 사용자가 추가한 localStorage 데이터를 병합해 렌더링하는 패턴을 사용한다."
+    },
+    {
+      "id": "file:내위스키컬렉션/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "내위스키컬렉션/index.html",
+      "summary": "개인 위스키 컬렉션(보유/오픈/다마심/위시리스트)과 시음 행사 기록을 관리하는 단일 페이지 웹앱. 시드 데이터와 localStorage를 병합해 카드 그리드, 상태별 필터 칩, 타임라인 뷰와 등록·수정 모달을 제공한다.",
+      "tags": ["single-page-app", "collection", "local-storage", "whisky", "korean-ui"],
+      "complexity": "complex",
+      "languageNotes": "경동로ENG재무 앱과 동일하게 SEED_BOTTLES/SEED_EVENTS 상수와 localStorage 데이터를 병합해 렌더링하는 바닐라 JS 패턴을 공유한다."
+    },
+    {
+      "id": "document:위스키체크/LOG.md",
+      "type": "document",
+      "name": "LOG.md",
+      "filePath": "위스키체크/LOG.md",
+      "summary": "카에루몰 위스키 경매 체크 작업 로그. 회차별로 조사한 14개 증류소, 예산/고입찰 필터링 기준, TOP 픽 요약과 다음 리포트에 반영할 개선 사항을 날짜별로 기록한다.",
+      "tags": ["log", "documentation", "whisky-auction", "research-notes"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:위스키체크/reports/2026-08-06_리포트.html",
+      "type": "file",
+      "name": "2026-08-06_리포트.html",
+      "filePath": "위스키체크/reports/2026-08-06_리포트.html",
+      "summary": "2026-08-06 기준 카에루몰 위스키 경매 메리트 리포트. 14개 증류소의 예산내 후보(5만3천엔 이하)와 고입찰(입찰 5건 이상) 매물을 WhiskyBase 평점과 대조해 증류소별 표와 TOP 픽으로 정리한 정적 HTML 페이지.",
+      "tags": ["report", "whisky-auction", "static-html", "data-table", "korean-ui"],
+      "complexity": "complex",
+      "languageNotes": "DATA 배열에 증류소별 매물 정보를 하드코딩하고 renderTable과 forEach로 <details> 아코디언을 동적 생성하는 정적 리포트 패턴을 사용한다."
+    },
+    {
+      "id": "file:위스키체크/reports/2026-08-08_리포트.html",
+      "type": "file",
+      "name": "2026-08-08_리포트.html",
+      "filePath": "위스키체크/reports/2026-08-08_리포트.html",
+      "summary": "2026-08-08 기준 카에루몰 위스키 경매 메리트 리포트 개정판. WhiskyBase 84점 이하로 확정된 항목을 완전 제외하고 TOP 픽을 20개로 확대했으며 '평점−가격' 가성비 지수 기준으로 정렬한 정적 HTML 페이지.",
+      "tags": ["report", "whisky-auction", "static-html", "data-table", "korean-ui"],
+      "complexity": "complex",
+      "languageNotes": "2026-08-06 리포트와 동일한 DATA 배열 + renderTable 렌더링 구조를 재사용하되, 평점 하한 필터와 정렬 기준(가성비 지수)이 추가되었다."
+    },
+    {
+      "id": "function:경동로ENG재무/index.html:renderStats",
+      "type": "function",
+      "name": "renderStats",
+      "filePath": "경동로ENG재무/index.html",
+      "lineRange": [384, 401],
+      "summary": "전체 거래 내역에서 총 매출·총 매입·순이익과 세금계산서/견적서/입출금 미확인 건수를 집계해 상단 통계 바 HTML을 렌더링한다.",
+      "tags": ["rendering", "statistics", "finance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:경동로ENG재무/index.html:renderTodo",
+      "type": "function",
+      "name": "renderTodo",
+      "filePath": "경동로ENG재무/index.html",
+      "lineRange": [403, 440],
+      "summary": "세금계산서·견적서·입출금 중 하나라도 미확인인 거래를 날짜순으로 나열하고, 각 항목을 '처리 완료'로 표시하는 버튼 클릭 이벤트를 바인딩하는 '처리 필요' 패널 렌더 함수.",
+      "tags": ["rendering", "event-handler", "todo-panel", "finance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:경동로ENG재무/index.html:txnRowsHtml",
+      "type": "function",
+      "name": "txnRowsHtml",
+      "filePath": "경동로ENG재무/index.html",
+      "lineRange": [442, 467],
+      "summary": "거래 내역 배열을 받아 날짜/거래처/구분/금액/세금계산서/견적서/입출금/메모 컬럼을 가진 HTML 테이블 문자열을 생성한다.",
+      "tags": ["rendering", "table", "utility", "finance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:경동로ENG재무/index.html:bindTxnRowActions",
+      "type": "function",
+      "name": "bindTxnRowActions",
+      "filePath": "경동로ENG재무/index.html",
+      "lineRange": [469, 481],
+      "summary": "거래 테이블 내 수정/삭제 버튼에 클릭 이벤트를 바인딩해 openTxnForm 호출 또는 localStorage에서 거래 삭제 후 재렌더링을 수행한다.",
+      "tags": ["event-handler", "local-storage", "finance"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:경동로ENG재무/index.html:renderClientView",
+      "type": "function",
+      "name": "renderClientView",
+      "filePath": "경동로ENG재무/index.html",
+      "lineRange": [483, 516],
+      "summary": "검색어로 필터링된 거래처 목록을 카드(details/summary) 형태로 렌더링하고 각 카드 안에 거래처별 매출/매입 합계와 거래 내역 테이블을 표시한다.",
+      "tags": ["rendering", "component", "finance", "search"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:경동로ENG재무/index.html:renderDateView",
+      "type": "function",
+      "name": "renderDateView",
+      "filePath": "경동로ENG재무/index.html",
+      "lineRange": [518, 527],
+      "summary": "전체 거래를 검색어로 필터링하고 날짜 내림차순으로 정렬해 단일 테이블로 렌더링하는 날짜별 보기 함수.",
+      "tags": ["rendering", "table", "finance", "search"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:경동로ENG재무/index.html:openTxnForm",
+      "type": "function",
+      "name": "openTxnForm",
+      "filePath": "경동로ENG재무/index.html",
+      "lineRange": [585, 600],
+      "summary": "거래 등록/수정 모달을 열고 기존 거래 데이터가 있으면 폼 필드에 채워 넣는다.",
+      "tags": ["modal", "form", "finance"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:내위스키컬렉션/index.html:renderStats",
+      "type": "function",
+      "name": "renderStats",
+      "filePath": "내위스키컬렉션/index.html",
+      "lineRange": [333, 350],
+      "summary": "전체 병 수, 보유 중 수, 누적 구매액, 내 평균 평점, 참여 행사 수를 집계해 상단 통계 바를 렌더링한다.",
+      "tags": ["rendering", "statistics", "whisky"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:내위스키컬렉션/index.html:renderChips",
+      "type": "function",
+      "name": "renderChips",
+      "filePath": "내위스키컬렉션/index.html",
+      "lineRange": [352, 367],
+      "summary": "상태별(전체/보유중/오픈됨/다마심/위시리스트) 개수를 계산해 필터 칩을 렌더링하고 클릭 시 currentFilter를 갱신해 그리드를 다시 그린다.",
+      "tags": ["rendering", "filter", "event-handler", "whisky"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:내위스키컬렉션/index.html:renderGrid",
+      "type": "function",
+      "name": "renderGrid",
+      "filePath": "내위스키컬렉션/index.html",
+      "lineRange": [369, 424],
+      "summary": "현재 필터에 맞는 위스키 목록을 카드 그리드로 렌더링하고, 각 카드의 수정/삭제 버튼에 대한 이벤트를 바인딩한다.",
+      "tags": ["rendering", "component", "grid", "whisky"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:내위스키컬렉션/index.html:renderEvents",
+      "type": "function",
+      "name": "renderEvents",
+      "filePath": "내위스키컬렉션/index.html",
+      "lineRange": [426, 459],
+      "summary": "시음 행사 기록을 날짜 내림차순 타임라인으로 렌더링하고, 각 항목의 수정/삭제 버튼 이벤트를 바인딩한다.",
+      "tags": ["rendering", "timeline", "event-handler", "whisky"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:내위스키컬렉션/index.html:openBottleForm",
+      "type": "function",
+      "name": "openBottleForm",
+      "filePath": "내위스키컬렉션/index.html",
+      "lineRange": [470, 487],
+      "summary": "위스키 등록/수정 모달을 열고 기존 병 데이터가 있으면 각 입력 필드에 값을 채워 넣는다.",
+      "tags": ["modal", "form", "whisky"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:위스키체크/reports/2026-08-06_리포트.html:renderTable",
+      "type": "function",
+      "name": "renderTable",
+      "filePath": "위스키체크/reports/2026-08-06_리포트.html",
+      "lineRange": [684, 702],
+      "summary": "매물 행 데이터 배열을 받아 상품명·가격·입찰수·WhiskyBase 평점 컬럼을 가진 HTML 테이블 문자열을 생성하며, 고입찰 여부에 따라 헤더 라벨을 다르게 표시한다.",
+      "tags": ["rendering", "table", "report", "whisky-auction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:위스키체크/reports/2026-08-08_리포트.html:renderTable",
+      "type": "function",
+      "name": "renderTable",
+      "filePath": "위스키체크/reports/2026-08-08_리포트.html",
+      "lineRange": [764, 783],
+      "summary": "매물 행 데이터 배열을 받아 상품명·가격·입찰수·WhiskyBase 평점 컬럼을 가진 HTML 테이블 문자열을 생성하며, 2026-08-06 버전에서 가격 문자열이 숫자로 시작하지 않는 경우(미확인 등)를 처리하는 분기가 추가되었다.",
+      "tags": ["rendering", "table", "report", "whisky-auction"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:경동로ENG재무/index.html",
+      "target": "function:경동로ENG재무/index.html:renderStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:경동로ENG재무/index.html",
+      "target": "function:경동로ENG재무/index.html:renderTodo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:경동로ENG재무/index.html",
+      "target": "function:경동로ENG재무/index.html:txnRowsHtml",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:경동로ENG재무/index.html",
+      "target": "function:경동로ENG재무/index.html:bindTxnRowActions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:경동로ENG재무/index.html",
+      "target": "function:경동로ENG재무/index.html:renderClientView",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:경동로ENG재무/index.html",
+      "target": "function:경동로ENG재무/index.html:renderDateView",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:경동로ENG재무/index.html",
+      "target": "function:경동로ENG재무/index.html:openTxnForm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:내위스키컬렉션/index.html",
+      "target": "function:내위스키컬렉션/index.html:renderStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:내위스키컬렉션/index.html",
+      "target": "function:내위스키컬렉션/index.html:renderChips",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:내위스키컬렉션/index.html",
+      "target": "function:내위스키컬렉션/index.html:renderGrid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:내위스키컬렉션/index.html",
+      "target": "function:내위스키컬렉션/index.html:renderEvents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:내위스키컬렉션/index.html",
+      "target": "function:내위스키컬렉션/index.html:openBottleForm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:위스키체크/reports/2026-08-06_리포트.html",
+      "target": "function:위스키체크/reports/2026-08-06_리포트.html:renderTable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:위스키체크/reports/2026-08-08_리포트.html",
+      "target": "function:위스키체크/reports/2026-08-08_리포트.html:renderTable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "document:CLAUDE.md",
+      "target": "file:경동로ENG재무/index.html",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:CLAUDE.md",
+      "target": "file:내위스키컬렉션/index.html",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:CLAUDE.md",
+      "target": "document:위스키체크/LOG.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:위스키체크/LOG.md",
+      "target": "file:위스키체크/reports/2026-08-06_리포트.html",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:위스키체크/LOG.md",
+      "target": "file:위스키체크/reports/2026-08-08_리포트.html",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:위스키체크/reports/2026-08-06_리포트.html",
+      "target": "file:위스키체크/reports/2026-08-08_리포트.html",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

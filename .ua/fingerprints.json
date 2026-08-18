@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "e8a7c02223564e076efd63de438c5fc406f072bf",
+  "generatedAt": "2026-08-08T10:38:06.856Z",
+  "files": {
+    ".claude/settings.local.json": {
+      "filePath": ".claude/settings.local.json",
+      "contentHash": "0656ca00f1f756ba64140277971d4ac280d3523273ef3181a0433d5d5e789a3d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 50,
+      "hasStructuralAnalysis": true
+    },
+    "CLAUDE.md": {
+      "filePath": "CLAUDE.md",
+      "contentHash": "db642ebe959d7997087c02daaca8d3042ad5ab5b1cdea8bfd326b0768cc5e18f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 50,
+      "hasStructuralAnalysis": true
+    },
+    "경동로ENG재무/index.html": {
+      "filePath": "경동로ENG재무/index.html",
+      "contentHash": "e71d022dc5887f6aa8b603f0984356a288aeaca0c882617dbf94d3b68e4cdbef",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 646,
+      "hasStructuralAnalysis": false
+    },
+    "내위스키컬렉션/index.html": {
+      "filePath": "내위스키컬렉션/index.html",
+      "contentHash": "e664e6e28de25214f9484508bd08050c6c8cc92f83e12009ab4b25d37f8a3ef6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 594,
+      "hasStructuralAnalysis": false
+    },
+    "위스키체크/LOG.md": {
+      "filePath": "위스키체크/LOG.md",
+      "contentHash": "86c9d54dd1750ca5c30587abb8b6bc52579cb330afe9d573c805531047abd5c6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "위스키체크/reports/2026-08-06_리포트.html": {
+      "filePath": "위스키체크/reports/2026-08-06_리포트.html",
+      "contentHash": "c842c3a46b853a728e8859006e59cd7d95349bf1dcc8c43f69c840816a65df14",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 725,
+      "hasStructuralAnalysis": false
+    },
+    "위스키체크/reports/2026-08-08_리포트.html": {
+      "filePath": "위스키체크/reports/2026-08-08_리포트.html",
+      "contentHash": "037d6ae36e48cde8ef54f4075df4c9491e8af2cf80beaad43f3e249a422e9735",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 806,
+      "hasStructuralAnalysis": false
+    }
+  }
+}

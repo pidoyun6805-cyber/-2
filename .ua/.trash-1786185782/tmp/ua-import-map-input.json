@@ -1,0 +1,12 @@
+{
+  "projectRoot": "C:\\Users\\PC\\Desktop\\클로드 도윤",
+  "files": [
+    {"path": ".claude/settings.local.json", "language": "json", "fileCategory": "config"},
+    {"path": "CLAUDE.md", "language": "markdown", "fileCategory": "docs"},
+    {"path": "경동로ENG재무/index.html", "language": "html", "fileCategory": "markup"},
+    {"path": "내위스키컬렉션/index.html", "language": "html", "fileCategory": "markup"},
+    {"path": "위스키체크/LOG.md", "language": "markdown", "fileCategory": "docs"},
+    {"path": "위스키체크/reports/2026-08-06_리포트.html", "language": "html", "fileCategory": "markup"},
+    {"path": "위스키체크/reports/2026-08-08_리포트.html", "language": "html", "fileCategory": "markup"}
+  ]
+}

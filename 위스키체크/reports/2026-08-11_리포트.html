@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>카에루몰 위스키 경매 리포트 · 2026-08-11 (DAFTMILL·GLENDRONACH·MACALLAN)</title>
+<style>
+:root{
+  --paper:#E8E2D0; --paper-raised:#F2EDDE; --ink:#2A2420; --ink-soft:#5C5344;
+  --line:#C9BFA0; --amber:#9C5F1F; --amber-deep:#7A4A18;
+  --old-tag:#6B4A2F; --current-tag:#3E6B5C; --hot:#A13D2B; --wb-good:#4B7A3D;
+  --shadow: 0 1px 2px rgba(42,36,32,0.08), 0 4px 12px rgba(42,36,32,0.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#191510; --paper-raised:#221C15; --ink:#EDE3D0; --ink-soft:#B9AD95;
+    --line:#453C2E; --amber:#D9A455; --amber-deep:#F0BE72;
+    --old-tag:#C99B6B; --current-tag:#7FB39F; --hot:#E06A50; --wb-good:#8FC97A;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.25);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#191510; --paper-raised:#221C15; --ink:#EDE3D0; --ink-soft:#B9AD95;
+  --line:#453C2E; --amber:#D9A455; --amber-deep:#F0BE72;
+  --old-tag:#C99B6B; --current-tag:#7FB39F; --hot:#E06A50; --wb-good:#8FC97A;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.25);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'Malgun Gothic','Apple SD Gothic Neo',-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:15px; line-height:1.6;
+}
+a{color:var(--amber);}
+.wrap{max-width:1180px; margin:0 auto; padding:0 24px 80px;}
+
+.masthead{
+  background:var(--paper-raised); border-bottom:1px solid var(--line);
+  padding:40px 24px 28px; margin-bottom:36px;
+}
+.masthead-inner{max-width:1180px; margin:0 auto;}
+.masthead-eyebrow{
+  font-family:Georgia,serif; letter-spacing:.12em; text-transform:uppercase;
+  font-size:12px; color:var(--amber); margin:0 0 10px;
+}
+.masthead h1{
+  font-family:Georgia,'Iowan Old Style','Times New Roman',serif;
+  font-size:clamp(28px,4vw,42px); margin:0 0 8px; text-wrap:balance; font-weight:600;
+}
+.masthead-sub{color:var(--ink-soft); margin:0 0 20px; font-size:15px;}
+.criteria{
+  display:flex; flex-wrap:wrap; gap:10px 22px; padding-top:16px; border-top:1px dashed var(--line);
+  font-size:13px; color:var(--ink-soft);
+}
+.criteria b{color:var(--ink); font-weight:600;}
+.stat-row{display:flex; gap:28px; margin-top:18px; flex-wrap:wrap;}
+.stat .n{font-family:Georgia,serif; font-size:26px; color:var(--amber); font-variant-numeric:tabular-nums; display:block;}
+.stat .l{font-size:12px; color:var(--ink-soft);}
+
+.lot-section{margin-bottom:52px;}
+.lot-section-head{
+  display:flex; align-items:baseline; gap:14px; margin-bottom:22px;
+  border-bottom:2px solid var(--tag-color); padding-bottom:12px;
+}
+.tag-old{--tag-color:var(--old-tag);}
+.tag-current{--tag-color:var(--current-tag);}
+.lot-eyebrow{
+  font-family:Georgia,serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--tag-color); font-weight:700;
+}
+.lot-title{
+  font-family:Georgia,'Iowan Old Style',serif; font-size:26px; margin:0; color:var(--ink);
+}
+.lot-total{margin-left:auto; font-size:13px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+
+.distillery-group{margin-bottom:30px;}
+.distillery-head{display:flex; align-items:baseline; gap:10px; margin-bottom:12px;}
+.distillery-name{
+  font-family:Georgia,serif; font-size:16px; letter-spacing:.03em; margin:0;
+  color:var(--ink); text-transform:uppercase;
+}
+.distillery-count{font-size:12px; color:var(--ink-soft);}
+
+.card-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:16px;
+}
+.card{
+  background:var(--paper-raised); border:1px solid var(--line); border-radius:4px;
+  overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
+}
+.card-media{
+  aspect-ratio:1/1; background:var(--paper); display:flex; align-items:center; justify-content:center;
+  border-bottom:1px solid var(--line); overflow:hidden;
+}
+.card-media img{width:100%; height:100%; object-fit:contain;}
+.card-body{padding:14px 16px 16px; display:flex; flex-direction:column; gap:6px; flex:1;}
+.card-name{
+  font-size:13.5px; line-height:1.45; margin:0; font-weight:700; min-height:2.9em;
+}
+.card-price{
+  font-family:Georgia,serif; font-size:19px; color:var(--amber); font-variant-numeric:tabular-nums; font-weight:700;
+}
+.card-time{font-size:11.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+.card-badges{display:flex; gap:6px; flex-wrap:wrap;}
+.badge{
+  font-size:11px; padding:2px 8px; border-radius:99px; font-weight:600; white-space:nowrap;
+  border:1px solid transparent;
+}
+.badge-hot{background:color-mix(in srgb, var(--hot) 16%, transparent); color:var(--hot); border-color:color-mix(in srgb, var(--hot) 40%, transparent);}
+.badge-neutral{background:color-mix(in srgb, var(--ink-soft) 14%, transparent); color:var(--ink-soft);}
+.badge-wb-good{background:color-mix(in srgb, var(--wb-good) 16%, transparent); color:var(--wb-good); border-color:color-mix(in srgb, var(--wb-good) 40%, transparent);}
+.card-note{
+  font-size:12.5px; color:var(--ink-soft); margin:2px 0 4px; line-height:1.5; flex:1;
+}
+.card-link{
+  font-size:12.5px; font-weight:600; text-decoration:none; margin-top:auto;
+}
+.card-link:hover{text-decoration:underline;}
+
+footer{
+  max-width:1180px; margin:60px auto 0; padding:20px 24px 0; border-top:1px solid var(--line);
+  color:var(--ink-soft); font-size:12px; line-height:1.7;
+}
+@media (max-width:640px){
+  .masthead{padding:28px 16px 22px;}
+  .wrap{padding:0 16px 60px;}
+  .lot-total{margin-left:0;}
+}
+</style>
+</head>
+<body>
+<div class="masthead">
+  <div class="masthead-inner">
+    <p class="masthead-eyebrow">Kaerumall Auction Watch — Partial Check</p>
+    <h1>카에루몰 위스키 경매 리포트</h1>
+    <p class="masthead-sub">2026년 8월 11일 · 담당 증류소 3개(DAFTMILL·GLENDRONACH·MACALLAN) 조사</p>
+    <div class="stat-row">
+      <div class="stat"><span class="n">14</span><span class="l">최종 후보</span></div>
+      <div class="stat"><span class="n">3</span><span class="l">증류소</span></div>
+      <div class="stat"><span class="n">¥53,000</span><span class="l">가격 상한(하드캡)</span></div>
+      <div class="stat"><span class="n">84.0</span><span class="l">WhiskyBase 최소 평점</span></div>
+    </div>
+    <div class="criteria">
+      <span><b>가격 기준</b> — 현재가 53,000엔(≈면세 400달러) 초과는 올드바틀·희귀바틀 포함 예외 없이 전부 제외</span>
+      <span><b>평점 기준</b> — WhiskyBase 84점 이하 확정 항목 제외</span>
+      <span><b>제외 기준</b> — 12·15·18년 오리지널, Double/Triple/Sherry Oak 등 흔한 정규 스탠다드품 제외</span>
+      <span><b>검색 범위</b> — 증류소별 최대 2페이지까지 확인</span>
+    </div>
+  </div>
+</div>
+<div class="wrap">
+
+  <section class="lot-section tag-old">
+    <div class="lot-section-head">
+      <span class="lot-eyebrow">LOT I — VINTAGE</span>
+      <h2 class="lot-title">올드바틀</h2>
+      <span class="lot-total">총 5종</span>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">GLENDRONACH</h3>
+        <span class="distillery-count">3종</span>
+      </div>
+      <div class="card-grid">
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/7a3b5636353eebbbc73734e058233f3eaa17627f17418c63e1f6306e347b884e/i-img900x1200-1786234834499200xjtu2e8.jpg" alt="그렌드로낙 1992 24年 미개봉 상자 첨부" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">그렌드로낙 1992 24年 미개봉 상자 첨부</h4>
+      <div class="card-price">¥33,500</div>
+      <div class="card-time">잔여시간 5日</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 23건</span><span class="badge badge-neutral">WB ~89-92 (인원수 미확인)</span></div>
+      <p class="card-note">1992년 증류 24년 장기숙성, 미개봉+상자 첨부, 입찰 23건으로 관심 최상</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/n1240148787" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/7a3b5636353eebbbc73734e058233f3eaa17627f17418c63e1f6306e347b884e/i-img900x1200-1786235287231111rlub3v8.jpg" alt="그렌드로낙 2003 10年 미개봉 상자 첨부" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">그렌드로낙 2003 10年 미개봉 상자 첨부</h4>
+      <div class="card-price">¥11,000</div>
+      <div class="card-time">잔여시간 5日</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 15건</span><span class="badge badge-neutral">WB ~85.6-90.3 (인원수 미확인)</span></div>
+      <p class="card-note">1만엔대 초저가, 미개봉+상자 첨부, 입찰 15건</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/l1240161124" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/6a926c5e172fc3e2893744bc97c377cbfdfab64fd9816c7426ab8a6454ca87f4/i-img1200x900-178305136199415fz9dl36.jpg" alt="그렌드로낙 16年 오로로소 셰리 뱃트 1993" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">그렌드로낙 16年 오로로소 셰리 뱃트 1993</h4>
+      <div class="card-price">¥49,500</div>
+      <div class="card-time">잔여시간 12時間</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB ~89.7-91.8 (인원수 미확인)</span></div>
+      <p class="card-note">1993년 증류 2009년 Batch1 계열, 상한 근접이나 통과</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/c1235768838" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">MACALLAN</h3>
+        <span class="distillery-count">2종</span>
+      </div>
+      <div class="card-grid">
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/f1113b43a7fb9fd2328941cf822253f09b01d24209194601d95c38745589b1dd/i-img900x1200-17854149912207xaxaqd27.jpg" alt="맥캘란 Hart Brothers 25年 (독립병입)" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">맥캘란 Hart Brothers 25年 (독립병입)</h4>
+      <div class="card-price">¥32,500</div>
+      <div class="card-time">잔여시간 8時間</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 17건</span><span class="badge badge-neutral">WB ~83-92 시리즈평균 (인원수 미확인)</span></div>
+      <p class="card-note">독립병입 25년, 정확한 캐스크 매치 안 됨(시리즈 평균 추정), 입찰 17건</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/j1239034339" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/3310b7950f35777f2f0b2a2ae9cc0ef9c1de75edc6ce44e35d07db699b2641dc/i-img600x600-17863446634805zbzndo34.jpg" alt="Whisky Galore 레어올드 싱글몰트 1989 (독립병입)" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">Whisky Galore 레어올드 싱글몰트 1989 (독립병입)</h4>
+      <div class="card-price">¥30,399</div>
+      <div class="card-time">잔여시간 1日</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB ~84.8 시리즈평균, 84점 경계 (인원수 미확인)</span></div>
+      <p class="card-note">1989년 독립병입, WB 시리즈 81-88점대 분포로 84점 경계 — 구매 전 재확인 권장</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/k1240296794" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="lot-section tag-current">
+    <div class="lot-section-head">
+      <span class="lot-eyebrow">LOT II — CURRENT RELEASE</span>
+      <h2 class="lot-title">현행바틀</h2>
+      <span class="lot-total">총 9종</span>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">DAFTMILL</h3>
+        <span class="distillery-count">2종</span>
+      </div>
+      <div class="card-grid">
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/869ffeb0126c2b9ffe36ea8288d32f3e854e7e414d6d2920fe5350c0921a776c/i-img703x1200-17836013760837gmnidu39060.jpg" alt="Daftmill 2011-2023 Summer Batch Release 46%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">Daftmill 2011-2023 Summer Batch Release 46%</h4>
+      <div class="card-price">¥28,700</div>
+      <div class="card-time">잔여시간 3日 (8/15 7:54 종료예정)</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 86.64 (252평점)</span></div>
+      <p class="card-note">데프트밀은 한국 미유통, 연 2회 소량 배치만 출시하는 초희소 증류소</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/d1236522260" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/869ffeb0126c2b9ffe36ea8288d32f3e854e7e414d6d2920fe5350c0921a776c/i-img900x1200-178360137455277pb3ij65762.jpg" alt="Daftmill 2011-2024 Winter Batch Release 46%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">Daftmill 2011-2024 Winter Batch Release 46%</h4>
+      <div class="card-price">¥29,700</div>
+      <div class="card-time">잔여시간 3日 (8/15 4:52 종료예정)</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 86.74 (159평점)</span></div>
+      <p class="card-note">윈터배치는 서머보다 유통량이 더 적음</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/r1236516791" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">GLENDRONACH</h3>
+        <span class="distillery-count">3종</span>
+      </div>
+      <div class="card-grid">
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/16a766418bb390adfdfeacd70bf75e3880dd7c52d838ba1e874a3ee1d2dd47ae/i-img901x1200-17861431247695l2tqsy7579.jpg" alt="글렌드로낙 2011 10年 56.8% 셰리뱃 Hart Brothers 싱글캐스크" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">글렌드로낙 2011 10年 56.8% 셰리뱃 Hart Brothers 싱글캐스크</h4>
+      <div class="card-price">¥23,000</div>
+      <div class="card-time">잔여시간 4日</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 88.00 (15평점)</span></div>
+      <p class="card-note">Hart Brothers 독립병입 싱글캐스크, 캐스크스트렝스 56.8%</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/k1240062339" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/f5ffc3dff83427a670086298a7eafe31f42948c6865e27ae48cc3f3d061b5528/i-img1200x1200-17854845537694xy6q4v35.jpg" alt="글렌드로낙 캐스크 스트렝스 Batch 12 700ml 58.2% 미개봉" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">글렌드로낙 캐스크 스트렝스 Batch 12 700ml 58.2% 미개봉</h4>
+      <div class="card-price">¥13,200</div>
+      <div class="card-time">잔여시간 2日</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 86.19 (269평점)</span></div>
+      <p class="card-note">단종 배치 넘버 표기, 1.3만엔대 초저가 미개봉</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/1239136439" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/869ffeb0126c2b9ffe36ea8288d32f3e854e7e414d6d2920fe5350c0921a776c/i-img433x577-17861012317306sq1uta19585.jpg" alt="글렌드로낙 Ode to the Dark 50.8%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">글렌드로낙 Ode to the Dark 50.8%</h4>
+      <div class="card-price">¥14,800</div>
+      <div class="card-time">잔여시간 3日</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 85.37 (468평점)</span></div>
+      <p class="card-note">한정판 Ode 시리즈, 평점 참가인원 468명으로 신뢰도 높음</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/1239992993" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">MACALLAN</h3>
+        <span class="distillery-count">4종</span>
+      </div>
+      <div class="card-grid">
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/9780b8ccee5f5117a7b748b27511360ffad39d15ee38214320c5d17a220dfe81/i-img600x400-17859210574988o3ujmg34.jpg" alt="맥캘란 Rare Cask Batch No.3 (2018 Release) 43%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">맥캘란 Rare Cask Batch No.3 (2018 Release) 43%</h4>
+      <div class="card-price">¥30,250 <span style="font-size:12px;font-weight:400;color:var(--ink-soft)">(즉결 ¥33,878)</span></div>
+      <div class="card-time">잔여시간 12時間</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 89.64 (인원수 미확인)</span></div>
+      <p class="card-note">단종 Rare Cask 배치, 전체 후보 중 평점 최고</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/1239746551" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/6e44824df97d50e96760f5edcd2b84d6d2544bd2caf34d898005cdd6d6544ffb/i-img1200x1200-17859911899746js7vem168792.jpg" alt="맥캘란 Edition No.4 48.4% 상자 첨부" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">맥캘란 Edition No.4 48.4% 상자 첨부</h4>
+      <div class="card-price">¥24,200</div>
+      <div class="card-time">잔여시간 12時間</div>
+      <div class="card-badges"><span class="badge badge-neutral">입찰 4건</span><span class="badge badge-wb-good">WB 88.12 (인원수 미확인)</span></div>
+      <p class="card-note">단종 넘버드 에디션 시리즈, 상자 첨부</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/l1239849125" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/6bb94efbbf0c39179f0bfd156f7a67e8575d78336e208c533a7a22087ad83118/i-img1200x1200-17863483009224vyfsbw35.jpg" alt="맥캘란 Harmony Collection 비브란트 오크 (Cirque du Soleil 콜라보) 44.2%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">맥캘란 Harmony Collection 비브란트 오크 (Cirque du Soleil 콜라보) 44.2%</h4>
+      <div class="card-price">¥31 <span style="font-size:12px;font-weight:400;color:var(--hot)">(초저가·상승 가능)</span></div>
+      <div class="card-time">잔여시간 6日</div>
+      <div class="card-badges"><span class="badge badge-neutral">입찰 3건</span><span class="badge badge-wb-good">WB 86.44 (인원수 미확인)</span></div>
+      <p class="card-note">Cirque du Soleil 콜라보 한정판, 시작가 수준 초저가지만 6일 남아 상승 여지 큼 — 모니터링 권장</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/1240295436" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/00ec5572000efbc38e08c584c7df5b2a54cda576ca9a99ce7d87eb11b1cb0f5a/i-img900x1200-17863442192246njsd0d35.jpg" alt="맥캘란 12年 110 Proof 55% 미개봉 셰리오크" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">맥캘란 12年 110 Proof 55% 미개봉 셰리오크</h4>
+      <div class="card-price">¥26,500 <span style="font-size:12px;font-weight:400;color:var(--ink-soft)">(즉결 ¥38,000)</span></div>
+      <div class="card-time">잔여시간 5日</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 87.76 (인원수 미확인)</span></div>
+      <p class="card-note">단종 110 Proof(55%) 캐스크스트렝스 라인, 일반 12년 셰리오크(43%)와 다른 단종 스펙</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/o1240311371" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+  </section>
+</div>
+<footer>
+  <p>조사 방식: 담당 증류소 3개(DAFTMILL·GLENDRONACH·MACALLAN)를 백그라운드 에이전트 3개로 병렬 조사, 각 증류소당 최대 2페이지·현재가 53,000엔 하드캡·WhiskyBase 84점 이하 완전 제외 기준 적용.
+  가격은 조사 시점 현재가(엔) 기준이며 경매 진행 상황에 따라 변동될 수 있습니다(맥캘란 Harmony Collection처럼 초저가·잔여기간 긴 매물은 특히 낙찰가 상승 가능). WhiskyBase 평점은 정확한 캐스크/빈티지 매치가 안 되는 경우 라인업·시리즈 평균으로 추정한 값이 포함되어 있어 구매 전 재확인을 권장합니다. 참가 인원수를 확인하지 못한 항목은 "(인원수 미확인)"으로 표기했습니다.</p>
+</footer>
+</body>
+</html>

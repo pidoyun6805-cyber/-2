@@ -1,0 +1,737 @@
+<!doctype html>
+<title>카에루몰 위스키 체크 — 2026-08-09 (v3)</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --paper: #e9e3d3;
+    --panel: #f7f3e8;
+    --ink: #241f16;
+    --muted: #756a56;
+    --line: #d9cfb6;
+    --amber: #a06f1f;
+    --amber-soft: #e3d4ab;
+    --wine: #7d3232;
+    --moss: #4c6339;
+    --shadow: rgba(36, 31, 22, 0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #16130e;
+      --panel: #211c14;
+      --ink: #ece3d0;
+      --muted: #a89a80;
+      --line: #3a3223;
+      --amber: #d9a53f;
+      --amber-soft: #3c3018;
+      --wine: #c97e7e;
+      --moss: #8fae74;
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #16130e;
+    --panel: #211c14;
+    --ink: #ece3d0;
+    --muted: #a89a80;
+    --line: #3a3223;
+    --amber: #d9a53f;
+    --amber-soft: #3c3018;
+    --wine: #c97e7e;
+    --moss: #8fae74;
+    --shadow: rgba(0, 0, 0, 0.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+    margin: 0;
+    padding: 0 0 4rem;
+  }
+  h1, h2, h3, .section-title, .dist-heading {
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, "Nanum Myeongjo", serif;
+  }
+  header {
+    padding: 3rem 1.5rem 1.6rem;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-weight: 600;
+  }
+  h1 { font-size: 2rem; margin: 0.3rem 0 0.4rem; text-wrap: balance; font-weight: 500; }
+  .subtitle { color: var(--muted); font-size: 0.92rem; margin-bottom: 1.2rem; max-width: 65ch; line-height: 1.5; }
+  .stats { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 1.2rem; }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 0.55rem 1rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    min-width: 5.5rem;
+  }
+  .stat b {
+    display: block;
+    font-size: 1.4rem;
+    color: var(--amber);
+    font-variant-numeric: tabular-nums;
+    font-family: "Iowan Old Style", Georgia, serif;
+  }
+  main { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+  .section-title {
+    font-size: 1.35rem;
+    font-weight: 500;
+    margin: 3rem 0 0.3rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .section-title::before {
+    content: "";
+    display: inline-block;
+    width: 0.55rem;
+    height: 0.55rem;
+    background: var(--amber);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .section-desc { color: var(--muted); font-size: 0.86rem; margin: 0.7rem 0 0; max-width: 62ch; line-height: 1.5; }
+  .dist-heading {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 2rem 0 0.8rem;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    padding-left: 0.7rem;
+    border-left: 2px solid var(--amber);
+  }
+  .dist-count { font-size: 0.72rem; color: var(--muted); font-weight: normal; font-family: -apple-system, sans-serif; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.1rem;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow);
+    border-color: var(--amber);
+  }
+  .card img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+    background: var(--amber-soft);
+    display: block;
+  }
+  .card-body {
+    padding: 0.75rem 0.85rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.38rem;
+    flex: 1;
+    border-top: 1px solid var(--line);
+  }
+  .card-distillery { font-size: 0.68rem; letter-spacing: 0.07em; color: var(--muted); text-transform: uppercase; }
+  .card-name { font-size: 0.87rem; line-height: 1.32; min-height: 2.3em; }
+  .card-name a { color: var(--ink); text-decoration: none; }
+  .card-name a:hover { text-decoration: underline; }
+  .card-meta { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; font-size: 0.76rem; }
+  .price { font-weight: 700; color: var(--amber); font-variant-numeric: tabular-nums; }
+  .badge {
+    background: var(--amber-soft);
+    color: var(--amber);
+    border-radius: 3px;
+    padding: 0.1rem 0.42rem;
+    font-size: 0.68rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .badge-hot { background: var(--wine); color: #fff5f0; }
+  .wb { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .wb-high { color: var(--moss); font-weight: 600; }
+  .card-note { font-size: 0.77rem; color: var(--muted); line-height: 1.4; }
+  a:focus-visible, .card:focus-within { outline: 2px solid var(--amber); outline-offset: 2px; }
+  footer {
+    max-width: 1120px;
+    margin: 3rem auto 0;
+    padding: 1.2rem 1.5rem;
+    color: var(--muted);
+    font-size: 0.76rem;
+    border-top: 1px solid var(--line);
+    line-height: 1.6;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card { transition: none; }
+  }
+</style>
+<header>
+  <div class="eyebrow">Kaerumall Auction Scan</div>
+  <h1>카에루몰 위스키 체크 — 2026-08-09</h1>
+  <div class="subtitle">14개 증류소/보틀러 대상 야후옥션 매물 조사 · 페이지당 2페이지 상한 · 현재가 53,000엔(면세 한도) 하드캡 · WhiskyBase 84점 이하 및 흔한 정규 스탠다드품 제외</div>
+  <div class="stats">
+    <div class="stat"><b>35</b>전체 후보</div>
+    <div class="stat"><b>15</b>올드바틀</div>
+    <div class="stat"><b>20</b>현행바틀</div>
+    <div class="stat"><b>14</b>증류소·보틀러</div>
+  </div>
+</header>
+<main>
+  <div class="section-title">올드바틀 — 오래된 빈티지 · 단종 · 구디자인</div>
+  <div class="section-desc">특급시대 병입, 90년대 이전 증류, 단종된 배치/패키징 등 — 지금은 구할 수 없는 병들.</div>
+  <h3 class="dist-heading">GLENDRONACH <span class="dist-count">2건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/q1239571088" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/5d7d671175e491ed6fe5e5709e882fa68de5795761010894a6db8860d94aee0e/i-img715x1200-17858165869456mx4jsr283333.jpg" alt="GLENDRONACH" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">GLENDRONACH</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/q1239571088" target="_blank" rel="noopener">AZ-205 글렌드로낙 1995 19년 싱글캐스크 PX 55.2% 한정</a></div>
+      <div class="card-meta">
+        <span class="price">¥30,500</span>
+        <span class="badge badge-hot">고입찰 28건</span>
+        <span class="wb ">WB ~89</span>
+      </div>
+      <div class="card-note">90년대 증류 싱글캐스크 PX, 입찰 28건으로 인기 확인</div>
+    </div>
+  </div>
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/n1240148787" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/7a3b5636353eebbbc73734e058233f3eaa17627f17418c63e1f6306e347b884e/i-img900x1200-1786234834499200xjtu2e8.jpg" alt="GLENDRONACH" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">GLENDRONACH</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/n1240148787" target="_blank" rel="noopener">글렌드로낙 1992 24년 미개봉 상자첨부</a></div>
+      <div class="card-meta">
+        <span class="price">¥11,500</span>
+        <span class="badge badge-hot">고입찰 15건</span>
+        <span class="wb ">WB ~90</span>
+      </div>
+      <div class="card-note">24년산이 1만엔대, 압도적 가성비 + 15건 입찰</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">MACALLAN <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/j1239034339" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/f1113b43a7fb9fd2328941cf822253f09b01d24209194601d95c38745589b1dd/i-img900x1200-17854149912207xaxaqd27.jpg" alt="MACALLAN" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">MACALLAN</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/j1239034339" target="_blank" rel="noopener">마카란 25년 Hart Brothers 독립병입</a></div>
+      <div class="card-meta">
+        <span class="price">¥12,500</span>
+        <span class="badge badge-hot">고입찰 9건</span>
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">25년산이 1.25만엔, 정가 대비 압도적 저가 + 9건 입찰</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">LAPHROAIG <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/k1231054313" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0205/user/cdb0cce1047354eb3103c27133ebf8f5c3587b3413f2f8e8e00c054da9e43db4/i-img1200x900-17796347635234xwmcaz54395.jpg" alt="LAPHROAIG" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">LAPHROAIG</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/k1231054313" target="_blank" rel="noopener">Douglas Laing Old Particular 라프로이그 2000-2016 16년 리필호그스헤드 54.3%</a></div>
+      <div class="card-meta">
+        <span class="price">¥35,000</span>
+        
+        <span class="wb ">WB ~87-89</span>
+      </div>
+      <div class="card-note">2000년 증류 16년 독립병입 싱글캐스크</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">YAMAZAKI <span class="dist-count">2건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/e1239639246" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/75264b92083adab2dc5c3068e89cea1cc694f9eb518511a77eb1f53e5ecac1f2/i-img1024x1200-17858472737753lhbcq7315.jpg" alt="YAMAZAKI" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">YAMAZAKI</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/e1239639246" target="_blank" rel="noopener">무코사자 마크 야마자키 12년 750ml [古酒] 나무상자</a></div>
+      <div class="card-meta">
+        <span class="price">¥34,055</span>
+        <span class="badge badge-hot">고입찰 35건</span>
+        <span class="wb ">WB ~86</span>
+      </div>
+      <div class="card-note">단종 구 디자인, 35건 고입찰로 수요 확인</div>
+    </div>
+  </div>
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/q1239626858" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/10b401739b6a2154d90477915c9f9f73ee904ba565a9e5b7ab78cf3c8c8e7956/i-img900x1200-17858444040787n3fqgj101240.jpg" alt="YAMAZAKI" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">YAMAZAKI</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/q1239626858" target="_blank" rel="noopener">야마자키 특급 골드보틀 760ml (구 미개전)</a></div>
+      <div class="card-meta">
+        <span class="price">¥22,501</span>
+        <span class="badge badge-hot">고입찰 25건</span>
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">89년 이전 세율 표기 올드바틀, 25건 고입찰</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">SPRINGBANK <span class="dist-count">2건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/f1237837764" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/57b9a611de04d5171d99b493823b0d36348976cd71558c03e1f91a3257bc6d84/i-img1200x1200-178459937413003jmr1m8547.jpg" alt="SPRINGBANK" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">SPRINGBANK</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/f1237837764" target="_blank" rel="noopener">스프링뱅크 특급 도기병 100%퓨어몰트 캠벨타운 750ml</a></div>
+      <div class="card-meta">
+        <span class="price">¥30,179</span>
+        
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">올드 세율 시대 + 도자기 보틀 희소 패키징</div>
+    </div>
+  </div>
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/d1224599874" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0203/user/fd9699bbb8e840e9d124f3fff4ba397bdaa3d00b7c15fc815b3b81aa1fc5ec7e/i-img1200x1200-17747536304377aopb1e582.jpg" alt="SPRINGBANK" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">SPRINGBANK</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/d1224599874" target="_blank" rel="noopener">스프링뱅크 색소폰형 병 12년 375ml 46%</a></div>
+      <div class="card-meta">
+        <span class="price">¥32,393</span>
+        
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">단종 이색 보틀 디자인, 스프링뱅크 자체가 세계적 소량 증류소</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">BEN NEVIS <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/f1230915337" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0205/user/e504dc7157eb9de7993e7125dcd5fed8b52717c948b60f4270633128a985da75/i-img480x640-17795154736957ipzbsd11071.jpg" alt="BEN NEVIS" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">BEN NEVIS</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/f1230915337" target="_blank" rel="noopener">8년 세라믹디캔터 프리미어배럴(더글러스레인) 46% 700ml</a></div>
+      <div class="card-meta">
+        <span class="price">¥10,500</span>
+        
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">더글러스레인 세라믹 디캔터, 단종 수집가치</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">SIGNATORY <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/m1239992718" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/3310b7950f35777f2f0b2a2ae9cc0ef9c1de75edc6ce44e35d07db699b2641dc/i-img1200x1200-17860893118679yhx4et197432.jpg" alt="SIGNATORY" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">SIGNATORY</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/m1239992718" target="_blank" rel="noopener">하이랜드파크 10년 1988-1998 10주년애니버서리 43% 700ml</a></div>
+      <div class="card-meta">
+        <span class="price">¥26,950</span>
+        
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">10주년 기념 한정, 90년대 병입 올드바틀</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">AKKESHI <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/q1240146496" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/9ed564c47d1643150cc53c9cf385a02e684a5c4c6aff9d369a7af98df1e61cba/i-img1200x1200-17862403234292ikse3u80473.jpg" alt="AKKESHI" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">AKKESHI</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/q1240146496" target="_blank" rel="noopener">立冬(릿토) 2021 싱글몰트 700ml</a></div>
+      <div class="card-meta">
+        <span class="price">¥33,000</span>
+        
+        <span class="wb ">WB 87.53</span>
+      </div>
+      <div class="card-note">2021년 시즌 단종 배치</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">CHICHIBU <span class="dist-count">2건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/g1237526072" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/7ca80400cd78a483bfdd4a808b065fbf5a2821ee639e655fdd5df79a8e0e0dd5/i-img942x1200-17843358896516748dckjn31.jpg" alt="CHICHIBU" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">CHICHIBU</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/g1237526072" target="_blank" rel="noopener">Ichiro's Malt CHICHIBU 秩父10年 The First Ten (희소, 미개전)</a></div>
+      <div class="card-meta">
+        <span class="price">¥44,000</span>
+        
+        <span class="wb wb-high">WB 89.15</span>
+      </div>
+      <div class="card-note">세계적으로 극호평받은 단종 공식 10년</div>
+    </div>
+  </div>
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/c1240184234" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/6e44824df97d50e96760f5edcd2b84d6d2544bd2caf34d898005cdd6d6544ffb/i-img1200x1200-178625838273546t1ifl34.jpg" alt="CHICHIBU" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">CHICHIBU</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/c1240184234" target="_blank" rel="noopener">Ichiro's Malt 秩父 루스타우 오로로소셰리카스크 2013-2025 (미개전)</a></div>
+      <div class="card-meta">
+        <span class="price">¥4,620</span>
+        <span class="badge">입찰 3건</span>
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">압도적 초저가 싱글캐스크</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">CLYNELISH <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/p1240101004" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/9780b8ccee5f5117a7b748b27511360ffad39d15ee38214320c5d17a220dfe81/i-img600x400-17861768720922ne2zdj409574.jpg" alt="CLYNELISH" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">CLYNELISH</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/p1240101004" target="_blank" rel="noopener">킹스배리 클린리쉬 1996 18年 카스크 No.207 46%</a></div>
+      <div class="card-meta">
+        <span class="price">¥43,558</span>
+        
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">올드 빈티지 싱글캐스크</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">GLENFARCLAS <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/l1239779508" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/6427ff9db9929874320faa36328f309b75cb48b2e1b8a3611e15e87b3b0d1964/i-img1200x1200-17859488105636887aczg231.jpg" alt="GLENFARCLAS" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">GLENFARCLAS</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/l1239779508" target="_blank" rel="noopener">Glenfarclas 21年 캐스크스트롱스 Batch 2 (90년대 증류) 54.5%</a></div>
+      <div class="card-meta">
+        <span class="price">¥23,000</span>
+        
+        <span class="wb wb-high">WB 89.30</span>
+      </div>
+      <div class="card-note">WB 89.3점, 단종 배치</div>
+    </div>
+  </div></div>
+
+
+  <div class="section-title">현행바틀 — 최근 생산이지만 한정판·희귀</div>
+  <div class="section-desc">디스틸러리 익스클루시브, 콜라보 한정판, 축제 한정품 등 — 최근에 나왔지만 구하기 어려운 병들.</div>
+  <h3 class="dist-heading">DAFTMILL <span class="dist-count">2건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/d1236522260" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/869ffeb0126c2b9ffe36ea8288d32f3e854e7e414d6d2920fe5350c0921a776c/i-img703x1200-17836013760837gmnidu39060.jpg" alt="DAFTMILL" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">DAFTMILL</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/d1236522260" target="_blank" rel="noopener">Daftmill 2011-2023 Summer Batch Release 46%</a></div>
+      <div class="card-meta">
+        <span class="price">¥28,700</span>
+        
+        <span class="wb ">WB 86.64</span>
+      </div>
+      <div class="card-note">연 1~2회만 소량 출시되는 다프트밀 정규 배치, 국내 유통 거의 없음</div>
+    </div>
+  </div>
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/r1236516791" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/869ffeb0126c2b9ffe36ea8288d32f3e854e7e414d6d2920fe5350c0921a776c/i-img900x1200-178360137455277pb3ij65762.jpg" alt="DAFTMILL" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">DAFTMILL</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/r1236516791" target="_blank" rel="noopener">Daftmill 2011-2024 Winter Batch Release 46%</a></div>
+      <div class="card-meta">
+        <span class="price">¥29,700</span>
+        
+        <span class="wb ">WB 86.72</span>
+      </div>
+      <div class="card-note">여름보다 더 희소한 윈터 배치</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">GLENDRONACH <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/k1240062339" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/16a766418bb390adfdfeacd70bf75e3880dd7c52d838ba1e874a3ee1d2dd47ae/i-img901x1200-17861431247695l2tqsy7579.jpg" alt="GLENDRONACH" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">GLENDRONACH</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/k1240062339" target="_blank" rel="noopener">글렌드로낙 2011 10년 56.8% 셰리뱃 Hart Brothers 싱글캐스크</a></div>
+      <div class="card-meta">
+        <span class="price">¥23,000</span>
+        
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">독립병입 싱글캐스크 셰리뱃, 국내서 구하기 어려움</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">MACALLAN <span class="dist-count">2건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/u1239895457" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/3310b7950f35777f2f0b2a2ae9cc0ef9c1de75edc6ce44e35d07db699b2641dc/i-img1200x1200-17860230133738yya03g3373.jpg" alt="MACALLAN" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">MACALLAN</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/u1239895457" target="_blank" rel="noopener">THE MACALLAN 레어 카스크 블랙 48%</a></div>
+      <div class="card-meta">
+        <span class="price">¥45,430</span>
+        <span class="badge">입찰 1건</span>
+        <span class="wb wb-high">WB 88.85</span>
+      </div>
+      <div class="card-note">트래블리테일 전용 한정판, 국내 정식 유통 없음</div>
+    </div>
+  </div>
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/h1239999082" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/3310b7950f35777f2f0b2a2ae9cc0ef9c1de75edc6ce44e35d07db699b2641dc/i-img1200x1200-17860989660104mypqqx104672.jpg" alt="MACALLAN" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">MACALLAN</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/h1239999082" target="_blank" rel="noopener">마카란 하모니 컬렉션 JING 유기농 체리우드 랩산티 44.9%</a></div>
+      <div class="card-meta">
+        <span class="price">¥34,540</span>
+        
+        <span class="wb wb-high">WB 88.57</span>
+      </div>
+      <div class="card-note">콜라보 한정판, 국내 미유통</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">LAPHROAIG <span class="dist-count">2건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/u1239632479" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/9780b8ccee5f5117a7b748b27511360ffad39d15ee38214320c5d17a220dfe81/i-img600x400-17858360685525knhzyz34.jpg" alt="LAPHROAIG" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">LAPHROAIG</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/u1239632479" target="_blank" rel="noopener">라프로이그 카디스(Cairdeas) 200주년 기념 51.5%</a></div>
+      <div class="card-meta">
+        <span class="price">¥37,948</span>
+        
+        <span class="wb wb-high">WB 88.23</span>
+      </div>
+      <div class="card-note">페스티벌 한정판, 이미 단종된 200주년 에디션</div>
+    </div>
+  </div>
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/t1224414085" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0203/user/7c325fde5964fed1d2edfa40940aea017a9892323f89923bee6359b5050fe6b5/i-img636x1200-1774599640912926jz6qom31.jpg" alt="LAPHROAIG" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">LAPHROAIG</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/t1224414085" target="_blank" rel="noopener">라프로이그 배틀힐(Battlehill) 14년(2005) Duncan Taylor</a></div>
+      <div class="card-meta">
+        <span class="price">¥38,000</span>
+        
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">독립병입사 던컨테일러의 라프로이그 시리즈</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">YAMAZAKI <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/w1239628326" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/10b401739b6a2154d90477915c9f9f73ee904ba565a9e5b7ab78cf3c8c8e7956/i-img900x1200-17858450809288gvmpg235.jpg" alt="YAMAZAKI" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">YAMAZAKI</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/w1239628326" target="_blank" rel="noopener">야마자키 증류소 통출원주 15년저장 56도 600ml</a></div>
+      <div class="card-meta">
+        <span class="price">¥13,012</span>
+        <span class="badge badge-hot">고입찰 17건</span>
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">증류소 직판 캐스크 원주, 17건 고입찰, 1.3만엔 저가</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">SPRINGBANK <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/f1239960860" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/61daf63806f2d7bd33b16681b81714e325111886f2f188934ccf0ea9b642ab10/i-img1200x1200-1786074514985805ml9x62443.jpg" alt="SPRINGBANK" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">SPRINGBANK</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/f1239960860" target="_blank" rel="noopener">스프링뱅크 로컬 버레이(Local Barley) 8년 신품미개봉</a></div>
+      <div class="card-meta">
+        <span class="price">¥40,000</span>
+        <span class="badge">입찰 1건</span>
+        <span class="wb wb-high">WB 88.5</span>
+      </div>
+      <div class="card-note">자체농장보리 시리즈, WB 88점대</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">BOWMORE <span class="dist-count">2건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/s1238306018" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/6dfd086ebbf48007158dfc65775815a26b530fb6835698e971e6e5a7895b017d/i-img1200x1200-17848778044971ux7ahc32840.jpg" alt="BOWMORE" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">BOWMORE</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/s1238306018" target="_blank" rel="noopener">보모어 10년 템페스트(Tempest)</a></div>
+      <div class="card-meta">
+        <span class="price">¥25,000</span>
+        
+        <span class="wb ">WB 85.6~86.6</span>
+      </div>
+      <div class="card-note">캐스크스트렝스 소량배치, 단종</div>
+    </div>
+  </div>
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/m1239979238" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/12fb8b328d899c99c9619df40354c62c3f91880558ac4a97d170e4b735abe2c3/i-img900x1200-1786081091098548hvftuz31.jpg" alt="BOWMORE" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">BOWMORE</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/m1239979238" target="_blank" rel="noopener">보모어 킹스버리 2010 15년 카스크스트롱 55.8%</a></div>
+      <div class="card-meta">
+        <span class="price">¥20,800</span>
+        
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">독립병입 캐스크스트렝스, 오피셜보다 개성있는 프로파일</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">GLEN GRANT <span class="dist-count">2건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/h1175771624" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0103/users/2c6322eaa50d9e62e269ab8b3c59cf57602c0f10/i-img1200x837-1741096302lfm3hr1699.jpg" alt="GLEN GRANT" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">GLEN GRANT</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/h1175771624" target="_blank" rel="noopener">글렌그란트 오케타니 프라이빗캐스크 2006 (세계168개한정) 2개세트</a></div>
+      <div class="card-meta">
+        <span class="price">¥50,000</span>
+        
+        <span class="wb ">WB 84~90</span>
+      </div>
+      <div class="card-note">세계 168개 한정, 일본 독점 프라이빗 캐스크</div>
+    </div>
+  </div>
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/s1161286561" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0511/user/86431165f86002f7b17a5dffc212bcc188586bada1d2e0e1b435ca821118f422/i-img899x1200-17316518522975v8oxwz20206.jpg" alt="GLEN GRANT" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">GLEN GRANT</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/s1161286561" target="_blank" rel="noopener">글렌그란트 25년 메몬 일각라벨 (314개한정)</a></div>
+      <div class="card-meta">
+        <span class="price">¥52,800</span>
+        
+        <span class="wb ">WB ~86</span>
+      </div>
+      <div class="card-note">314병 한정판, 정규 25년보다 희소</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">BEN NEVIS <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/l1239578349" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/f9b7757b3b36d504c5ed36a49190197329ab261627419cb7f08e50ca4d5d0864/i-img900x1200-17858134453533rqwc7u34.jpg" alt="BEN NEVIS" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">BEN NEVIS</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/l1239578349" target="_blank" rel="noopener">Chorlton Whisky 17년 버번배럴 48.8% 700ml (한정 285병)</a></div>
+      <div class="card-meta">
+        <span class="price">¥25,000</span>
+        
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">국내 미수입, 285병 한정 단종 독립병입</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">SIGNATORY <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/n1183761795" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0105/user/b7e2b4768e87db59fd2d8ce8e845a896a40570b68cc17d608cc8d11e60f18df5/i-img900x1200-174651766247568exqpq35.jpg" alt="SIGNATORY" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">SIGNATORY</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/n1183761795" target="_blank" rel="noopener">MORTLACH 2008 빈티지 캐스크스트렝스 60.8% 700ml</a></div>
+      <div class="card-meta">
+        <span class="price">¥29,800</span>
+        
+        <span class="wb ">WB 미확인</span>
+      </div>
+      <div class="card-note">모트락 캐스크스트렝스, 고도수 희귀</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">AKKESHI <span class="dist-count">2건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/k1239462855" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/0def8f3b29d6eef44b66b9e97bf9e0bf21fec2a6d975597a869724dd6b86c6c6/i-img824x969-17857316215251kucicn186485.jpg" alt="AKKESHI" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">AKKESHI</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/k1239462855" target="_blank" rel="noopener">싱글몰트 3개세트(하쿠로・케이치츠・리슌)</a></div>
+      <div class="card-meta">
+        <span class="price">¥51,100</span>
+        <span class="badge badge-hot">고입찰 35건</span>
+        <span class="wb ">WB 84.95~88.27</span>
+      </div>
+      <div class="card-note">24절기 3종 세트, 입찰35건으로 인기 매우 높음</div>
+    </div>
+  </div>
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/w1207174138" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0111/user/6c0a47fbf1ba1a9e9175c4be67638831d370c371d593fa30fc1a91f10f84f11d/i-img534x534-17626811656661g3pcqv40931.jpg" alt="AKKESHI" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">AKKESHI</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/w1207174138" target="_blank" rel="noopener">ANA기내면세한정 HOKUSAI시리즈 제1탄 翠嶺(스이레이) 700ml</a></div>
+      <div class="card-meta">
+        <span class="price">¥48,000</span>
+        
+        <span class="wb wb-high">WB 89.00</span>
+      </div>
+      <div class="card-note">항공기내면세 전용, 국내 미유통, 평점 89점</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">CHICHIBU <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/h1239746217" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/6e44824df97d50e96760f5edcd2b84d6d2544bd2caf34d898005cdd6d6544ffb/i-img1200x1200-17859197044842vplv8u17780.jpg" alt="CHICHIBU" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">CHICHIBU</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/h1239746217" target="_blank" rel="noopener">Ichiro's Malt 秩父 제2증류소 Hint of Sherry 2026 (미개전)</a></div>
+      <div class="card-meta">
+        <span class="price">¥16,500</span>
+        <span class="badge">입찰 4건</span>
+        <span class="wb wb-high">WB 89.25</span>
+      </div>
+      <div class="card-note">신설 제2증류소 첫 라인업, 저가인데 평점 우수</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">CLYNELISH <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/w1238496875" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/67f69ba640a1591540a8c3f9ac2dad3a16f1f3eb85b605fc10acdd8d03b5dc9e/i-img900x1200-17850440258937jhwwci113055.jpg" alt="CLYNELISH" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">CLYNELISH</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/w1238496875" target="_blank" rel="noopener">히든 스피릿츠 10주년 클린리쉬 2013-2023 10年 1st필버본배럴 (상자첨부)</a></div>
+      <div class="card-meta">
+        <span class="price">¥29,800</span>
+        
+        <span class="wb wb-high">WB 88.44</span>
+      </div>
+      <div class="card-note">브랜드 10주년 기념병, WB 88.4점</div>
+    </div>
+  </div></div>
+<h3 class="dist-heading">GLENFARCLAS <span class="dist-count">1건</span></h3>
+<div class="grid">
+
+  <div class="card">
+    <a href="https://auctions.yahoo.co.jp/jp/auction/u1230922197" target="_blank" rel="noopener"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0205/user/e504dc7157eb9de7993e7125dcd5fed8b52717c948b60f4270633128a985da75/i-img480x640-17795153243143ayukng33.jpg" alt="GLENFARCLAS" loading="lazy"></a>
+    <div class="card-body">
+      <div class="card-distillery">GLENFARCLAS</div>
+      <div class="card-name"><a href="https://auctions.yahoo.co.jp/jp/auction/u1230922197" target="_blank" rel="noopener">Glenfarclas 185주년 기념병 46%</a></div>
+      <div class="card-meta">
+        <span class="price">¥26,800</span>
+        
+        <span class="wb wb-high">WB 88.04</span>
+      </div>
+      <div class="card-note">WB 88점, 증류소 185주년 한정</div>
+    </div>
+  </div></div>
+
+</main>
+<footer>
+  카에루몰(kaerumall.com) 계정 피원호1 · 야후옥션 검색 결과 기준 · 2026-08-09 조사 · 가격/입찰수는 조사 시점 기준으로 변동될 수 있음 · 카드 클릭 시 야후옥션 상품 페이지로 이동
+</footer>

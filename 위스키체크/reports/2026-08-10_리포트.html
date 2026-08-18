@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>카에루몰 위스키 경매 리포트 · 2026-08-10</title>
+<style>
+:root{
+  --paper:#E8E2D0; --paper-raised:#F2EDDE; --ink:#2A2420; --ink-soft:#5C5344;
+  --line:#C9BFA0; --amber:#9C5F1F; --amber-deep:#7A4A18;
+  --old-tag:#6B4A2F; --current-tag:#3E6B5C; --hot:#A13D2B; --wb-good:#4B7A3D;
+  --shadow: 0 1px 2px rgba(42,36,32,0.08), 0 4px 12px rgba(42,36,32,0.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#191510; --paper-raised:#221C15; --ink:#EDE3D0; --ink-soft:#B9AD95;
+    --line:#453C2E; --amber:#D9A455; --amber-deep:#F0BE72;
+    --old-tag:#C99B6B; --current-tag:#7FB39F; --hot:#E06A50; --wb-good:#8FC97A;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.25);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#191510; --paper-raised:#221C15; --ink:#EDE3D0; --ink-soft:#B9AD95;
+  --line:#453C2E; --amber:#D9A455; --amber-deep:#F0BE72;
+  --old-tag:#C99B6B; --current-tag:#7FB39F; --hot:#E06A50; --wb-good:#8FC97A;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.25);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'Malgun Gothic','Apple SD Gothic Neo',-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:15px; line-height:1.6;
+}
+.font-display{font-family:Georgia,'Iowan Old Style','Times New Roman',serif;}
+a{color:var(--amber);}
+.wrap{max-width:1180px; margin:0 auto; padding:0 24px 80px;}
+
+.masthead{
+  background:var(--paper-raised); border-bottom:1px solid var(--line);
+  padding:40px 24px 28px; margin-bottom:36px;
+}
+.masthead-inner{max-width:1180px; margin:0 auto;}
+.masthead-eyebrow{
+  font-family:Georgia,serif; letter-spacing:.12em; text-transform:uppercase;
+  font-size:12px; color:var(--amber); margin:0 0 10px;
+}
+.masthead h1{
+  font-family:Georgia,'Iowan Old Style','Times New Roman',serif;
+  font-size:clamp(28px,4vw,42px); margin:0 0 8px; text-wrap:balance; font-weight:600;
+}
+.masthead-sub{color:var(--ink-soft); margin:0 0 20px; font-size:15px;}
+.criteria{
+  display:flex; flex-wrap:wrap; gap:10px 22px; padding-top:16px; border-top:1px dashed var(--line);
+  font-size:13px; color:var(--ink-soft);
+}
+.criteria b{color:var(--ink); font-weight:600;}
+.stat-row{display:flex; gap:28px; margin-top:18px; flex-wrap:wrap;}
+.stat{}
+.stat .n{font-family:Georgia,serif; font-size:26px; color:var(--amber); font-variant-numeric:tabular-nums; display:block;}
+.stat .l{font-size:12px; color:var(--ink-soft);}
+
+.lot-section{margin-bottom:52px;}
+.lot-section-head{
+  display:flex; align-items:baseline; gap:14px; margin-bottom:22px;
+  border-bottom:2px solid var(--tag-color); padding-bottom:12px;
+}
+.tag-old{--tag-color:var(--old-tag);}
+.tag-current{--tag-color:var(--current-tag);}
+.lot-eyebrow{
+  font-family:Georgia,serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--tag-color); font-weight:700;
+}
+.lot-title{
+  font-family:Georgia,'Iowan Old Style',serif; font-size:26px; margin:0; color:var(--ink);
+}
+.lot-total{margin-left:auto; font-size:13px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+
+.distillery-group{margin-bottom:30px;}
+.distillery-head{display:flex; align-items:baseline; gap:10px; margin-bottom:12px;}
+.distillery-name{
+  font-family:Georgia,serif; font-size:16px; letter-spacing:.03em; margin:0;
+  color:var(--ink); text-transform:uppercase;
+}
+.distillery-count{font-size:12px; color:var(--ink-soft);}
+
+.card-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:16px;
+}
+.card{
+  background:var(--paper-raised); border:1px solid var(--line); border-radius:4px;
+  overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
+}
+.card-media{
+  aspect-ratio:1/1; background:var(--paper); display:flex; align-items:center; justify-content:center;
+  border-bottom:1px solid var(--line); overflow:hidden;
+}
+.card-media img{width:100%; height:100%; object-fit:contain;}
+.card-body{padding:14px 16px 16px; display:flex; flex-direction:column; gap:6px; flex:1;}
+.card-name{
+  font-size:13.5px; line-height:1.45; margin:0; font-weight:700; min-height:2.9em;
+}
+.card-price{
+  font-family:Georgia,serif; font-size:19px; color:var(--amber); font-variant-numeric:tabular-nums; font-weight:700;
+}
+.card-badges{display:flex; gap:6px; flex-wrap:wrap;}
+.badge{
+  font-size:11px; padding:2px 8px; border-radius:99px; font-weight:600; white-space:nowrap;
+  border:1px solid transparent;
+}
+.badge-hot{background:color-mix(in srgb, var(--hot) 16%, transparent); color:var(--hot); border-color:color-mix(in srgb, var(--hot) 40%, transparent);}
+.badge-neutral{background:color-mix(in srgb, var(--ink-soft) 14%, transparent); color:var(--ink-soft);}
+.badge-wb-good{background:color-mix(in srgb, var(--wb-good) 16%, transparent); color:var(--wb-good); border-color:color-mix(in srgb, var(--wb-good) 40%, transparent);}
+.card-note{
+  font-size:12.5px; color:var(--ink-soft); margin:2px 0 4px; line-height:1.5; flex:1;
+}
+.card-link{
+  font-size:12.5px; font-weight:600; text-decoration:none; margin-top:auto;
+}
+.card-link:hover{text-decoration:underline;}
+
+footer{
+  max-width:1180px; margin:60px auto 0; padding:20px 24px 0; border-top:1px solid var(--line);
+  color:var(--ink-soft); font-size:12px; line-height:1.7;
+}
+@media (max-width:640px){
+  .masthead{padding:28px 16px 22px;}
+  .wrap{padding:0 16px 60px;}
+  .lot-total{margin-left:0;}
+}
+</style>
+</head>
+<body>
+<div class="masthead">
+  <div class="masthead-inner">
+    <p class="masthead-eyebrow">Kaerumall Auction Watch</p>
+    <h1>카에루몰 위스키 경매 리포트</h1>
+    <p class="masthead-sub">2026년 8월 10일 · 14개 지정 증류소·보틀러 대상 조사</p>
+    <div class="stat-row">
+      <div class="stat"><span class="n">34</span><span class="l">최종 후보</span></div>
+      <div class="stat"><span class="n">14</span><span class="l">증류소·보틀러</span></div>
+      <div class="stat"><span class="n">¥53,000</span><span class="l">가격 상한(하드캡)</span></div>
+      <div class="stat"><span class="n">84.0</span><span class="l">WhiskyBase 최소 평점</span></div>
+    </div>
+    <div class="criteria">
+      <span><b>가격 기준</b> — 현재가 53,000엔(≈면세 400달러) 초과는 올드바틀·희귀바틀 포함 예외 없이 전부 제외</span>
+      <span><b>평점 기준</b> — WhiskyBase 84점 이하 확정 항목 제외</span>
+      <span><b>제외 기준</b> — 12·10·15년 오리지널, Double/Triple Cask 등 흔한 정규 스탠다드품 제외</span>
+      <span><b>검색 범위</b> — 증류소별 최대 2페이지까지 확인</span>
+    </div>
+  </div>
+</div>
+<div class="wrap">
+  
+  <section class="lot-section tag-old">
+    <div class="lot-section-head">
+      <span class="lot-eyebrow">LOT I — VINTAGE</span>
+      <h2 class="lot-title">올드바틀</h2>
+      <span class="lot-total">총 12종</span>
+    </div>
+    
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">GLENDRONACH</h3>
+        <span class="distillery-count">2종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/5d7d671175e491ed6fe5e5709e882fa68de5795761010894a6db8860d94aee0e/i-img715x1200-17858165869456mx4jsr283333.jpg" alt="글렌드로낙 AZ-205 1995 19年 싱글캐스크 PX" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">글렌드로낙 AZ-205 1995 19年 싱글캐스크 PX</h4>
+      <div class="card-price">¥30,500</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 28건</span><span class="badge badge-neutral">WB 미확인(~87-92)</span></div>
+      <p class="card-note">PX셰리 싱글캐스크, 입찰 28건으로 인기 최상</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/q1239571088" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0111/user/1d0ad0c93c0003ae1d9d6cd349619329d46cf8a2256283e9efbd666329621381/i-img1200x1200-17626526264895fmboqe235181.jpg" alt="글렌드로낙 18年 아라다이스(Allardice) 고주" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">글렌드로낙 18年 아라다이스(Allardice) 고주</h4>
+      <div class="card-price">¥44,000</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 89.00</span></div>
+      <p class="card-note">단종된 Allardice 18년, WB 89점</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/v1207168019" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">YAMAZAKI PUREMALT</h3>
+        <span class="distillery-count">3종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/10b401739b6a2154d90477915c9f9f73ee904ba565a9e5b7ab78cf3c8c8e7956/i-img900x1200-17858450809288gvmpg235.jpg" alt="야마자키 통출원주 15年저장 56도 퓨어몰트 600ml" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">야마자키 통출원주 15年저장 56도 퓨어몰트 600ml</h4>
+      <div class="card-price">¥13,012</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 17건</span><span class="badge badge-wb-good">WB 91.00</span></div>
+      <p class="card-note">초저가+56도 캐스크스트렝스+WB91 최고평점</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/w1239628326" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/75264b92083adab2dc5c3068e89cea1cc694f9eb518511a77eb1f53e5ecac1f2/i-img1024x1200-17858472737753lhbcq7315.jpg" alt="야마자키12年 퓨어몰트 나무상자 무코사자마크[古酒]" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">야마자키12年 퓨어몰트 나무상자 무코사자마크[古酒]</h4>
+      <div class="card-price">¥36,101</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 40건</span><span class="badge badge-wb-good">WB 88.07</span></div>
+      <p class="card-note">특급시대 올드바틀, 입찰 40건 최다 관심</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/e1239639246" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/20555b5e9854013d383901866e00db6126af6629989fd660308553e1f212c646/i-img1200x1200-1782871899785251vtbflq8.jpg" alt="산토리 2000 밀레니엄 퓨어몰트 (야마자키+하쿠슈 20년저장)" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">산토리 2000 밀레니엄 퓨어몰트 (야마자키+하쿠슈 20년저장)</h4>
+      <div class="card-price">¥22,000</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB ~89.20</span></div>
+      <p class="card-note">밀레니엄 한정판, 야마자키+하쿠슈 블렌드</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/g1235502323" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">SPRINGBANK</h3>
+        <span class="distillery-count">2종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/57b9a611de04d5171d99b493823b0d36348976cd71558c03e1f91a3257bc6d84/i-img1200x1200-178459937413003jmr1m8547.jpg" alt="캠벨타운 100%퓨어몰트 특급 도기(세라믹저그) 43%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">캠벨타운 100%퓨어몰트 특급 도기(세라믹저그) 43%</h4>
+      <div class="card-price">¥30,179</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 88.53</span></div>
+      <p class="card-note">단종 세라믹저그 올드바틀, WB 88.53</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/f1237837764" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0203/user/fd9699bbb8e840e9d124f3fff4ba397bdaa3d00b7c15fc815b3b81aa1fc5ec7e/i-img1200x1200-17747536304377aopb1e582.jpg" alt="SPRING BANK 색소폰병 12年 375ml 46% 고주" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">SPRING BANK 색소폰병 12年 375ml 46% 고주</h4>
+      <div class="card-price">¥32,393</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 미확인</span></div>
+      <p class="card-note">색소폰 모양 희귀 이형병</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/d1224599874" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">GLEN GRANT</h3>
+        <span class="distillery-count">1종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/9780b8ccee5f5117a7b748b27511360ffad39d15ee38214320c5d17a220dfe81/i-img600x400-17854855662564d1zhi52515.jpg" alt="더위스키후프 그렌그란트 29年 1988-2017 셰리뱃트" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">더위스키후프 그렌그란트 29年 1988-2017 셰리뱃트</h4>
+      <div class="card-price">¥40,150</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 11건</span><span class="badge badge-neutral">WB 미확인</span></div>
+      <p class="card-note">1988년 증류 29년 장기숙성 셰리뱃트</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/b1239139731" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">SIGNATORY</h3>
+        <span class="distillery-count">2종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/25b72c58f0357457b88d7abee27a07864c4982d03e013dd95a9cb4ad2b529bc7/i-img800x1200-17839523597113wbgiqx40168.jpg" alt="Signatory Bowmore 19年 1990-2010 언칠필터드" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">Signatory Bowmore 19年 1990-2010 언칠필터드</h4>
+      <div class="card-price">¥45,000</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB ~87-90</span></div>
+      <p class="card-note">2010년 병입 20년 가까운 숙성</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/e1236967224" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/3310b7950f35777f2f0b2a2ae9cc0ef9c1de75edc6ce44e35d07db699b2641dc/i-img1200x1200-17863408867249cjld6a77133.jpg" alt="Signatory Highland Park 10年 1988-1998 10주년기념" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">Signatory Highland Park 10年 1988-1998 10주년기념</h4>
+      <div class="card-price">¥26,180</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 86.75</span></div>
+      <p class="card-note">1998년 병입 시그너토리 10주년 기념 올드바틀</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/1240293666" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">CHICHIBU</h3>
+        <span class="distillery-count">1종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/8d6b44fd864574e1d84d0adea6cd555d52f0584e90d4cd6998b0926d189c1aa5/i-img800x1200-17861180735198wq47va529.jpg" alt="골든 호스 지치부(하네증류소) 올드보틀" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">골든 호스 지치부(하네증류소) 올드보틀</h4>
+      <div class="card-price">¥13,000</div>
+      <div class="card-badges"><span class="badge badge-neutral">입찰 3건</span><span class="badge badge-neutral">WB 81-88.5</span></div>
+      <p class="card-note">이치로즈몰트 전신 하네증류소 시절 올드바틀</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/c1240024316" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">CLYNELISH</h3>
+        <span class="distillery-count">1종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/9780b8ccee5f5117a7b748b27511360ffad39d15ee38214320c5d17a220dfe81/i-img600x400-17861768720922ne2zdj409574.jpg" alt="킹스배리 클린리쉬 1996 18年 캐스크No.207" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">킹스배리 클린리쉬 1996 18年 캐스크No.207</h4>
+      <div class="card-price">¥43,558</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 미확인(84-92)</span></div>
+      <p class="card-note">캐스크 넘버 명시 싱글캐스크, 29년 숙성</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/p1240101004" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+  </section>
+  
+  <section class="lot-section tag-current">
+    <div class="lot-section-head">
+      <span class="lot-eyebrow">LOT II — CURRENT RELEASE</span>
+      <h2 class="lot-title">현행바틀</h2>
+      <span class="lot-total">총 22종</span>
+    </div>
+    
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">DAFTMILL</h3>
+        <span class="distillery-count">2종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/869ffeb0126c2b9ffe36ea8288d32f3e854e7e414d6d2920fe5350c0921a776c/i-img703x1200-17836013760837gmnidu39060.jpg" alt="Daftmill 2011 Summer Batch Release 46%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">Daftmill 2011 Summer Batch Release 46%</h4>
+      <div class="card-price">¥28,700</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 86.64</span></div>
+      <p class="card-note">데프트밀은 한국 미유통, 연 2회 소량 배치만 출시하는 초희소 증류소</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/d1236522260" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/869ffeb0126c2b9ffe36ea8288d32f3e854e7e414d6d2920fe5350c0921a776c/i-img900x1200-178360137455277pb3ij65762.jpg" alt="Daftmill 2011 Winter Batch Release 46%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">Daftmill 2011 Winter Batch Release 46%</h4>
+      <div class="card-price">¥29,700</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 86.74</span></div>
+      <p class="card-note">윈터배치는 서머보다 유통량이 더 적음</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/r1236516791" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">MACALLAN</h3>
+        <span class="distillery-count">2종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/f1113b43a7fb9fd2328941cf822253f09b01d24209194601d95c38745589b1dd/i-img900x1200-17854149912207xaxaqd27.jpg" alt="맥캘란 Hart Brothers 25年 (인디펜던트 병입)" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">맥캘란 Hart Brothers 25年 (인디펜던트 병입)</h4>
+      <div class="card-price">¥13,500</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 11건</span><span class="badge badge-neutral">WB 미확인</span></div>
+      <p class="card-note">독립병입 25년, 매우 저가+입찰 11건</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/j1239034339" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/6e44824df97d50e96760f5edcd2b84d6d2544bd2caf34d898005cdd6d6544ffb/i-img1200x1200-17859911899746js7vem168792.jpg" alt="맥캘란 Edition No.4" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">맥캘란 Edition No.4</h4>
+      <div class="card-price">¥24,200</div>
+      <div class="card-badges"><span class="badge badge-neutral">입찰 4건</span><span class="badge badge-wb-good">WB 88.12</span></div>
+      <p class="card-note">단종 넘버드 에디션, WB 88.12</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/l1239849125" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">LAPHROAIG</h3>
+        <span class="distillery-count">3종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/9780b8ccee5f5117a7b748b27511360ffad39d15ee38214320c5d17a220dfe81/i-img600x400-178574775848770fuhqw439130.jpg" alt="라프로이그 15年 200주년 기념(2015)" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">라프로이그 15年 200주년 기념(2015)</h4>
+      <div class="card-price">¥15,950</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 14건</span><span class="badge badge-wb-good">WB 87.83</span></div>
+      <p class="card-note">저가+고입찰 14건, WB 87.83</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/m1239495028" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/9780b8ccee5f5117a7b748b27511360ffad39d15ee38214320c5d17a220dfe81/i-img600x400-17858360685525knhzyz34.jpg" alt="라프로이그 Cairdeas 200주년(2015)" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">라프로이그 Cairdeas 200주년(2015)</h4>
+      <div class="card-price">¥37,948</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 88.23</span></div>
+      <p class="card-note">WB 88.23 고평점, 단종 페스티벌 한정판</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/u1239632479" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/a0e67168b701f9deb70fcba67c45e08191ecc9b4dd11fa6124fa39c8c4efc5b6/i-img1200x1200-17834268398269w3byvq688.jpg" alt="라프로이그 Willem Dafoe 싱글몰트 14年 (셀럽 콜라보)" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">라프로이그 Willem Dafoe 싱글몰트 14年 (셀럽 콜라보)</h4>
+      <div class="card-price">¥45,000</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 미확인</span></div>
+      <p class="card-note">셀럽 콜라보 한정판(윌렘 디포), 희소성 높음</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/m1236268018" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">BOWMORE</h3>
+        <span class="distillery-count">3종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/1d0ad0c93c0003ae1d9d6cd349619329d46cf8a2256283e9efbd666329621381/i-img1200x1200-17863251080996qeeis534.jpg" alt="보우모어 1996 16年 셰리 윌슨&모건 56.6도" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">보우모어 1996 16年 셰리 윌슨&모건 56.6도</h4>
+      <div class="card-price">¥29,700</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 86.53</span></div>
+      <p class="card-note">윌슨&모건 배럴셀렉션, 스펙 정확 일치 WB86.53</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/e1240257068" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/1d0ad0c93c0003ae1d9d6cd349619329d46cf8a2256283e9efbd666329621381/i-img1200x1200-17859168683909jny5eb175231.jpg" alt="보우모어 볼트에디션 1st 아이라 51.5%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">보우모어 볼트에디션 1st 아이라 51.5%</h4>
+      <div class="card-price">¥16,500</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 미확인</span></div>
+      <p class="card-note">공식 볼트에디션 시리즈 1탄</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/h1239741627" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0206/user/1d0ad0c93c0003ae1d9d6cd349619329d46cf8a2256283e9efbd666329621381/i-img1200x1200-17814440541065srwpaa35.jpg" alt="보우모어 2002 13年 셰리호그스헤드 46%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">보우모어 2002 13年 셰리호그스헤드 46%</h4>
+      <div class="card-price">¥38,500</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 미확인</span></div>
+      <p class="card-note">셰리호그스헤드 싱글캐스크</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/q1233544980" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">GLEN GRANT</h3>
+        <span class="distillery-count">2종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/9780b8ccee5f5117a7b748b27511360ffad39d15ee38214320c5d17a220dfe81/i-img600x400-17854033061457rqbp3z16296.jpg" alt="고든&맥파일 그렌그란트 21年" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">고든&맥파일 그렌그란트 21年</h4>
+      <div class="card-price">¥22,550</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 22건</span><span class="badge badge-wb-good">WB 89.00</span></div>
+      <p class="card-note">WB 89점 확정, 입찰 22건 최다 관심</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/m1239020676" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/9780b8ccee5f5117a7b748b27511360ffad39d15ee38214320c5d17a220dfe81/i-img600x400-17853959707249aijdiq2601.jpg" alt="고든&맥파일 그렌그란트 25年" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">고든&맥파일 그렌그란트 25年</h4>
+      <div class="card-price">¥18,700</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 17건</span><span class="badge badge-neutral">WB ~88-89</span></div>
+      <p class="card-note">25년 단종 라인, 고입찰 17건</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/k1239003557" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">BEN NEVIS</h3>
+        <span class="distillery-count">2종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0204/user/12fb8b328d899c99c9619df40354c62c3f91880558ac4a97d170e4b735abe2c3/i-img900x1200-1775958698152973doz4xt31.jpg" alt="벤네비스 배치16 25年 55.8% 부티크위스키컴퍼니 10주년" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">벤네비스 배치16 25年 55.8% 부티크위스키컴퍼니 10주년</h4>
+      <div class="card-price">¥45,000</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 87.00</span></div>
+      <p class="card-note">25년 캐스크스트렝스, 10주년 한정 배치</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/g1226244022" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/f9b7757b3b36d504c5ed36a49190197329ab261627419cb7f08e50ca4d5d0864/i-img900x1200-17858134453533rqwc7u34.jpg" alt="Chorlton Whisky 17年 버번배럴 48.8% (한정285병, 미수입)" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">Chorlton Whisky 17年 버번배럴 48.8% (한정285병, 미수입)</h4>
+      <div class="card-price">¥25,000</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 88.43</span></div>
+      <p class="card-note">국내 미수입 인디보틀러, WB88.43, 한정285병</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/l1239578349" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">AKKESHI</h3>
+        <span class="distillery-count">3종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0111/user/6c0a47fbf1ba1a9e9175c4be67638831d370c371d593fa30fc1a91f10f84f11d/i-img534x534-17626811656661g3pcqv40931.jpg" alt="THE AKKESHI SuiRei(翠嶺) HOKUSAI North Colors 그린라벨" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">THE AKKESHI SuiRei(翠嶺) HOKUSAI North Colors 그린라벨</h4>
+      <div class="card-price">¥48,000</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 89.00</span></div>
+      <p class="card-note">ANA기내면세 한정, 호쿠사이 시리즈 1탄, WB89.00</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/w1207174138" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/6e44824df97d50e96760f5edcd2b84d6d2544bd2caf34d898005cdd6d6544ffb/i-img1200x1200-17861790617761nh7xqr14138.jpg" alt="THE AKKESHI KuSui(空翠) HOKUSAI North Colors" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">THE AKKESHI KuSui(空翠) HOKUSAI North Colors</h4>
+      <div class="card-price">¥28,050</div>
+      <div class="card-badges"><span class="badge badge-neutral">입찰 2건</span><span class="badge badge-wb-good">WB 88.00</span></div>
+      <p class="card-note">호쿠사이 콜라보 아트라벨, WB88.00</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/t1240085299" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/51591571bc1a6a5f644e340c8af2342c009ff4f8729dcc45d1fe60fa7a39db56/i-img675x1200-17862537576922xbgw1235.jpg" alt="AKKESHI 24절기 시리즈 제1탄 寒露(칸로) 55%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">AKKESHI 24절기 시리즈 제1탄 寒露(칸로) 55%</h4>
+      <div class="card-price">¥50,000</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 미확인</span></div>
+      <p class="card-note">24절기 시리즈 최초 발매분(제1탄), 초기 단종 배치</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/m1240179941" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">CHICHIBU</h3>
+        <span class="distillery-count">2종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/eafd7301a6ea5583abdfd1c49d02425e275cf8be365f23027323bcc8807067e3/i-img1200x1164-1786284024622116ysyt3x31.jpg" alt="이치로즈몰트 지치부 싱글캐스크 한큐백화점 100개 한정" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">이치로즈몰트 지치부 싱글캐스크 한큐백화점 100개 한정</h4>
+      <div class="card-price">¥30,500</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 26건</span><span class="badge badge-neutral">WB 미확인(85-92)</span></div>
+      <p class="card-note">100병 한정 백화점 단독 싱글캐스크, 입찰 26건 최다</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/g1240189642" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0205/user/c1075eaa1c3b3568cbf642f9a44a96cfb83ed5efc52d381459e073e87079bb31/i-img1200x1200-17797808195338edhmbs1070.jpg" alt="이치로즈몰트 지치부 THE FLOOR MALTED 2009-2012" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">이치로즈몰트 지치부 THE FLOOR MALTED 2009-2012</h4>
+      <div class="card-price">¥32,800</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 85.53</span></div>
+      <p class="card-note">컬트급 인기 시리즈, 단종 배치, WB85.53 확정</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/g1231272128" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">CLYNELISH</h3>
+        <span class="distillery-count">1종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0203/user/951e91e5c3ce772ffe50d9acf3fb085abc1f02cd5620eb40c1de636e4da6327b/i-img900x1200-1773647736940586yfrosd8.jpg" alt="클린리쉬 12年 스페셜릴리스 2022 캐스크스트롱스" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">클린리쉬 12年 스페셜릴리스 2022 캐스크스트롱스</h4>
+      <div class="card-price">¥25,000</div>
+      <div class="card-badges"><span class="badge badge-neutral">WB 85.91</span></div>
+      <p class="card-note">디아지오 스페셜릴리스 정식 라인업, WB85.91 확정</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/g1223128370" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <div class="distillery-head">
+        <h3 class="distillery-name">GLENFARCLAS</h3>
+        <span class="distillery-count">2종</span>
+      </div>
+      <div class="card-grid">
+        
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/e567eea15aaa9bdd44fcf916d768ec61287580097f8f0c7f07eb7eaf9cbb61f0/i-img1200x1200-17860723460051n9oxyd7888.jpg" alt="글렌퍼클래스 2004 리필호그스헤드 Y's카스크 56.4%" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">글렌퍼클래스 2004 리필호그스헤드 Y's카스크 56.4%</h4>
+      <div class="card-price">¥13,500</div>
+      <div class="card-badges"><span class="badge badge-hot">고입찰 24건</span><span class="badge badge-neutral">WB 미확인</span></div>
+      <p class="card-note">저가에 입찰 24건, 관심도 최상</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/f1239953903" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-media"><img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/2bd98102387266ea95c11c0e5787eb63deb196fe675d83d72ad36c8df22be221/i-img900x1200-1786251172806756pxndeb8.jpg" alt="글렌퍼클래스 골고13 라벨 2009-2021 11年 1stFillSherryButt#2181" loading="lazy"></div>
+    <div class="card-body">
+      <h4 class="card-name">글렌퍼클래스 골고13 라벨 2009-2021 11年 1stFillSherryButt#2181</h4>
+      <div class="card-price">¥25,000</div>
+      <div class="card-badges"><span class="badge badge-wb-good">WB 88.00</span></div>
+      <p class="card-note">만화 골고13 콜라보, WB88.00 확정(캐스크#2181)</p>
+      <a class="card-link" href="https://auctions.yahoo.co.jp/jp/auction/j1240182657" target="_blank" rel="noopener">야후옥션에서 보기 →</a>
+    </div>
+  </article>
+      </div>
+    </div>
+  </section>
+</div>
+<footer>
+  <p>조사 방식: 카에루몰(kaerumall.com) 야후옥션 통합검색을 4개 그룹으로 병렬 조사, 각 증류소당 최대 2페이지·최종 후보 최대 5~6개로 큐레이션 후 이 리포트에서 재선별.
+  가격은 조사 시점 현재가(엔) 기준이며 경매 진행 상황에 따라 변동될 수 있습니다. WhiskyBase 평점은 정확한 캐스크/빈티지 매치가 아닌 경우 라인업 평균으로 추정한 값이 포함되어 있어 구매 전 재확인을 권장합니다.</p>
+</footer>
+</body>
+</html>

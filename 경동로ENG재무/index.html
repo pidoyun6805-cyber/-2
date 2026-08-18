@@ -1,0 +1,645 @@
+<title>경동로ENG 재무 관리</title>
+<style>
+:root{
+  --bg:#eef0ec; --bg-panel:#ffffff; --bg-panel-2:#e3e6de; --border:#d0d5c8;
+  --text:#171a15; --text-muted:#5b6353; --text-faint:#818a76;
+  --accent:#c1531f; --accent-strong:#93400f; --accent-soft:#f3ddc4;
+  --sale-fg:#2f6b45; --sale-bg:#e2eee0;
+  --purchase-fg:#3a5a8c; --purchase-bg:#e2e9f2;
+  --warn-bg:#fbe1d1; --warn-fg:#9c3f16;
+  --done-bg:#dfeee0; --done-fg:#2f6b45;
+  --main-bg:#f3ddc4; --main-fg:#93400f;
+  --shadow: 0 1px 2px rgba(20,25,15,.06), 0 10px 26px rgba(20,25,15,.06);
+  --overlay: rgba(20,24,18,.5);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#12151a; --bg-panel:#191e24; --bg-panel-2:#212630; --border:#2d333d;
+    --text:#eaedee; --text-muted:#a7afba; --text-faint:#78828d;
+    --accent:#e2803f; --accent-strong:#f2a768; --accent-soft:#3a2712;
+    --sale-fg:#82c090; --sale-bg:#1c2c1f;
+    --purchase-fg:#84aae0; --purchase-bg:#1c2636;
+    --warn-bg:#3a2216; --warn-fg:#e58e69;
+    --done-bg:#1d2c1f; --done-fg:#82c090;
+    --main-bg:#3a2712; --main-fg:#f2a768;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.4);
+    --overlay: rgba(6,8,10,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12151a; --bg-panel:#191e24; --bg-panel-2:#212630; --border:#2d333d;
+  --text:#eaedee; --text-muted:#a7afba; --text-faint:#78828d;
+  --accent:#e2803f; --accent-strong:#f2a768; --accent-soft:#3a2712;
+  --sale-fg:#82c090; --sale-bg:#1c2c1f;
+  --purchase-fg:#84aae0; --purchase-bg:#1c2636;
+  --warn-bg:#3a2216; --warn-fg:#e58e69;
+  --done-bg:#1d2c1f; --done-fg:#82c090;
+  --main-bg:#3a2712; --main-fg:#f2a768;
+  --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px rgba(0,0,0,.4);
+  --overlay: rgba(6,8,10,.7);
+}
+:root[data-theme="light"]{
+  --bg:#eef0ec; --bg-panel:#ffffff; --bg-panel-2:#e3e6de; --border:#d0d5c8;
+  --text:#171a15; --text-muted:#5b6353; --text-faint:#818a76;
+  --accent:#c1531f; --accent-strong:#93400f; --accent-soft:#f3ddc4;
+  --sale-fg:#2f6b45; --sale-bg:#e2eee0;
+  --purchase-fg:#3a5a8c; --purchase-bg:#e2e9f2;
+  --warn-bg:#fbe1d1; --warn-fg:#9c3f16;
+  --done-bg:#dfeee0; --done-fg:#2f6b45;
+  --main-bg:#f3ddc4; --main-fg:#93400f;
+  --shadow: 0 1px 2px rgba(20,25,15,.06), 0 10px 26px rgba(20,25,15,.06);
+  --overlay: rgba(20,24,18,.5);
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg); color:var(--text);
+  font-family: -apple-system,"Segoe UI","Pretendard","Apple SD Gothic Neo",sans-serif;
+  line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1100px; margin:0 auto; padding:0 20px 90px;}
+
+.hero{padding:44px 20px 30px; border-bottom:1px solid var(--border); margin-bottom:28px;}
+.hero-inner{max-width:1100px; margin:0 auto;}
+.eyebrow{font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:800; margin-bottom:10px;}
+h1{font-size:clamp(24px,3.6vw,34px); font-weight:800; line-height:1.2; margin:0 0 10px; letter-spacing:-.01em; text-wrap:balance;}
+.hero p.sub{font-size:14.5px; color:var(--text-muted); max-width:600px; margin:0 0 22px;}
+
+.stat-row{display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:var(--bg-panel);}
+.stat{flex:1 1 130px; padding:14px 16px; border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat .n{font-variant-numeric:tabular-nums; font-size:20px; font-weight:800; color:var(--text);}
+.stat .n.accent{color:var(--accent-strong);}
+.stat .n.warn{color:var(--warn-fg);}
+.stat .l{font-size:11px; color:var(--text-faint); margin-top:3px;}
+
+.section-head{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin:34px 0 4px;}
+h2.section-title{font-size:18px; font-weight:800; margin:0 0 4px; letter-spacing:-.01em;}
+.section-sub{color:var(--text-muted); font-size:13px; margin:0 0 16px;}
+
+.btn{
+  font-size:13.5px; font-weight:700; padding:9px 16px; border-radius:8px; border:1px solid transparent;
+  cursor:pointer; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+  font-family:inherit; transition:filter .12s ease;
+}
+.btn:hover{filter:brightness(1.06);}
+.btn-primary{background:var(--accent); color:#fff;}
+.btn-ghost{background:var(--bg-panel); color:var(--text-muted); border-color:var(--border);}
+.btn-small{padding:5px 10px; font-size:12px; border-radius:6px;}
+.btn-danger-text{background:transparent; color:var(--warn-fg); border-color:transparent; padding:5px 8px;}
+.btn-row{display:flex; gap:8px; flex-wrap:wrap;}
+
+/* search */
+.search-row{margin-bottom:18px;}
+.search-box{
+  display:flex; align-items:center; gap:8px; background:var(--bg-panel); border:1px solid var(--border);
+  border-radius:9px; padding:9px 13px; max-width:420px;
+}
+.search-box input{border:none; background:transparent; outline:none; font-size:14px; color:var(--text); width:100%; font-family:inherit;}
+.search-box svg{flex-shrink:0; opacity:.55;}
+
+/* 처리 필요 패널 */
+.todo-panel{border:1px solid var(--border); border-radius:12px; background:var(--bg-panel); overflow:hidden;}
+.todo-row{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  padding:12px 16px; border-bottom:1px solid var(--border);
+}
+.todo-row:last-child{border-bottom:none;}
+.todo-info{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.todo-tag{font-size:11px; font-weight:800; padding:3px 8px; border-radius:6px; background:var(--warn-bg); color:var(--warn-fg);}
+.todo-name{font-weight:700; font-size:13.5px;}
+.todo-meta{font-size:12px; color:var(--text-faint); font-variant-numeric:tabular-nums;}
+.all-done{padding:20px; text-align:center; color:var(--done-fg); font-size:13.5px; font-weight:700; background:var(--done-bg);}
+
+/* view toggle */
+.view-toggle{display:flex; gap:6px; margin-bottom:18px;}
+.view-btn{
+  font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px;
+  border:1px solid var(--border); background:var(--bg-panel); color:var(--text-muted); cursor:pointer;
+}
+.view-btn.active{background:var(--text); color:var(--bg); border-color:var(--text);}
+
+/* client cards */
+.client-card{border:1px solid var(--border); border-radius:12px; background:var(--bg-panel); box-shadow:var(--shadow); margin-bottom:14px; overflow:hidden;}
+.client-card.main{border-color:var(--accent);}
+.client-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px 18px; flex-wrap:wrap; cursor:pointer; list-style:none;}
+.client-head::-webkit-details-marker{display:none;}
+.client-name-row{display:flex; align-items:center; gap:8px;}
+.client-name{font-size:16px; font-weight:800;}
+.main-badge{font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:20px; background:var(--main-bg); color:var(--main-fg); letter-spacing:.02em;}
+.client-contact{font-size:12px; color:var(--text-faint); margin-top:2px;}
+.client-tally{display:flex; gap:14px; font-size:12.5px; font-variant-numeric:tabular-nums;}
+.client-tally .sale{color:var(--sale-fg); font-weight:700;}
+.client-tally .purchase{color:var(--purchase-fg); font-weight:700;}
+
+.tbl-scroll{overflow-x:auto;}
+table{width:100%; border-collapse:collapse; font-size:13px; min-width:700px;}
+thead th{
+  text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--text-faint); background:var(--bg-panel-2); padding:8px 12px; white-space:nowrap; font-weight:700;
+}
+tbody td{padding:9px 12px; border-top:1px solid var(--border); vertical-align:top;}
+tbody tr:hover{background:var(--bg-panel-2);}
+td.num{font-variant-numeric:tabular-nums; white-space:nowrap;}
+.type-badge{font-size:11px; font-weight:800; padding:2px 7px; border-radius:5px;}
+.type-badge.sale{background:var(--sale-bg); color:var(--sale-fg);}
+.type-badge.purchase{background:var(--purchase-bg); color:var(--purchase-fg);}
+.check-badge{font-size:11px; font-weight:700; padding:2px 7px; border-radius:5px; white-space:nowrap;}
+.check-badge.done{background:var(--done-bg); color:var(--done-fg);}
+.check-badge.pending{background:var(--warn-bg); color:var(--warn-fg);}
+.row-actions{display:flex; gap:4px; white-space:nowrap;}
+
+.empty{border:1px dashed var(--border); border-radius:12px; padding:36px 20px; text-align:center; color:var(--text-faint); font-size:13.5px; background:var(--bg-panel);}
+.empty b{color:var(--text-muted);}
+
+.note-box{font-size:12px; color:var(--text-faint); background:var(--bg-panel-2); border-radius:8px; padding:11px 13px; margin:16px 0 4px; line-height:1.65;}
+.note-box b{color:var(--text-muted);}
+.footnote{margin-top:40px; padding-top:20px; border-top:1px solid var(--border); font-size:12px; color:var(--text-faint); display:flex; justify-content:flex-end;}
+
+/* modal */
+.modal-overlay{position:fixed; inset:0; background:var(--overlay); display:none; align-items:center; justify-content:center; padding:20px; z-index:50;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg-panel); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); width:100%; max-width:520px; max-height:88vh; overflow-y:auto; padding:24px 24px 20px;}
+.modal h3{font-size:17px; font-weight:800; margin:0 0 16px;}
+.field{margin-bottom:13px;}
+.field label{display:block; font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:5px;}
+.field input, .field select, .field textarea{width:100%; padding:9px 11px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:14px; font-family:inherit;}
+.field textarea{resize:vertical; min-height:56px;}
+.field-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.check-row{display:flex; align-items:center; gap:8px; padding:9px 0;}
+.check-row label{font-size:13.5px; font-weight:600; color:var(--text); margin:0;}
+.radio-row{display:flex; gap:16px; padding:4px 0 2px;}
+.radio-row label{display:flex; align-items:center; gap:6px; font-size:13.5px; font-weight:600; color:var(--text); margin:0;}
+.modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:18px;}
+.toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%); background:var(--text); color:var(--bg); padding:10px 18px; border-radius:8px; font-size:13px; z-index:60; opacity:0; pointer-events:none; transition:opacity .2s ease;}
+.toast.show{opacity:1;}
+</style>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">경동로ENG · 재무 원장</div>
+    <h1>경동로ENG 재무 관리</h1>
+    <p class="sub">거래처별 매출·매입, 일한 내용과 금액, 세금계산서·견적서·입금 확인까지 한 곳에서 관리해요.</p>
+    <div class="stat-row" id="stat-row"></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="section-head" style="margin-top:0;">
+    <div>
+      <h2 class="section-title">⚠ 처리 필요</h2>
+      <p class="section-sub">세금계산서 미발행 · 견적서 미발송 · 입출금 미확인 건을 놓치지 않게 모아서 보여줘요.</p>
+    </div>
+  </div>
+  <div class="todo-panel" id="todo-panel"></div>
+
+  <div class="section-head">
+    <div>
+      <h2 class="section-title">거래 내역</h2>
+      <p class="section-sub">거래처별로 모아보거나, 날짜순으로 전체를 훑어볼 수 있어요. 주거래처(호경·두인·아성금속·원진메탈)는 맨 위에 표시돼요.</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="add-client-btn">+ 거래처 등록</button>
+      <button class="btn btn-primary" id="add-txn-btn">+ 거래 추가</button>
+    </div>
+  </div>
+
+  <div class="search-row">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="거래처명, 일한 내용, 메모로 검색">
+    </div>
+  </div>
+
+  <div class="view-toggle">
+    <button class="view-btn active" data-view="client">거래처별</button>
+    <button class="view-btn" data-view="date">날짜별 (참고용)</button>
+  </div>
+
+  <div id="client-view"></div>
+  <div id="date-view" style="display:none;"></div>
+
+  <div class="note-box">
+    여기서 직접 등록한 거래처·거래는 <b>이 브라우저</b>에만 저장돼요. 다른 기기에서도 보고 싶거나 영구히 남기고 싶으면 아래 <b>내보내기</b>로 백업 파일을 받아서 망고한테 전달해주세요 — 정식으로 등록해드릴게요.
+  </div>
+
+  <div class="footnote">
+    <button class="btn btn-ghost" id="export-btn">⭳ 내 등록분 내보내기</button>
+  </div>
+
+</div>
+
+<!-- 거래처 등록 모달 -->
+<div class="modal-overlay" id="client-modal-overlay">
+  <div class="modal">
+    <h3 id="client-modal-title">거래처 등록</h3>
+    <form id="client-form">
+      <div class="field"><label>거래처명 *</label><input type="text" id="c-name" required placeholder="예: 대한주물(주)"></div>
+      <div class="field"><label>담당자/연락처</label><input type="text" id="c-contact" placeholder="예: 김부장 010-1234-5678"></div>
+      <div class="check-row"><input type="checkbox" id="c-isMain"><label for="c-isMain">주거래처로 표시</label></div>
+      <div class="field"><label>메모</label><textarea id="c-note" placeholder="거래처 관련 참고사항"></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="client-cancel-btn">취소</button>
+        <button type="submit" class="btn btn-primary">저장</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 거래 추가/수정 모달 -->
+<div class="modal-overlay" id="txn-modal-overlay">
+  <div class="modal">
+    <h3 id="txn-modal-title">거래 추가</h3>
+    <form id="txn-form">
+      <div class="field">
+        <label>거래처 *</label>
+        <select id="t-client" required></select>
+      </div>
+      <div class="radio-row">
+        <label><input type="radio" name="t-type" value="sale" checked> 매출 (받는 돈)</label>
+        <label><input type="radio" name="t-type" value="purchase"> 매입 (나가는 돈)</label>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>날짜</label><input type="date" id="t-date"></div>
+        <div class="field"><label>금액(원)</label><input type="number" id="t-amount" placeholder="예: 3500000"></div>
+      </div>
+      <div class="field"><label>일한 내용</label><textarea id="t-work" placeholder="예: 반사로 내화벽돌 보수공사"></textarea></div>
+      <div class="check-row"><input type="checkbox" id="t-taxInvoice"><label for="t-taxInvoice">세금계산서 발행 완료</label></div>
+      <div class="check-row"><input type="checkbox" id="t-quote"><label for="t-quote">견적서 발송 완료</label></div>
+      <div class="check-row"><input type="checkbox" id="t-paid"><label for="t-paid">입금/출금 확인됨</label></div>
+      <div class="field"><label>메모</label><textarea id="t-note" placeholder="추가 메모"></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="txn-cancel-btn">취소</button>
+        <button type="submit" class="btn btn-primary">저장</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── 채팅(망고)이 관리하는 "공식" 데이터. 직접 편집 후 같은 경로로 재배포하면 모두에게 반영됨.
+// isMain: true인 거래처는 "주거래처" 배지가 붙고 목록 맨 위에 표시됨.
+const SEED_CLIENTS = [
+  { id: "c_hokyung", name: "호경", contact: "", note: "", isMain: true },
+  { id: "c_dooin", name: "두인", contact: "", note: "", isMain: true },
+  { id: "c_asungmetal", name: "아성금속", contact: "", note: "", isMain: true },
+  { id: "c_wonjinmetal", name: "원진메탈", contact: "", note: "", isMain: true },
+
+  { id: "c_koaelec", name: "코아전기", contact: "", note: "전기안전관리 대행", isMain: false },
+  { id: "c_amway", name: "한국암웨이", contact: "", note: "", isMain: false },
+  { id: "c_skshieldus", name: "SK쉴더스 밀양지점", contact: "", note: "보안 월정료", isMain: false },
+  { id: "c_kepco", name: "한국전력공사", contact: "", note: "전기요금", isMain: false },
+  { id: "c_yangdong", name: "양동종합에너지", contact: "", note: "산소 등 가스", isMain: false },
+  { id: "c_jhwelding", name: "제이에이치웰딩", contact: "", note: "", isMain: false },
+  { id: "c_kt", name: "케이티", contact: "", note: "전화/통신", isMain: false },
+  { id: "c_samjinweltec", name: "삼진웰텍", contact: "", note: "", isMain: false },
+  { id: "c_samwoomtech", name: "삼우엠텍", contact: "", note: "", isMain: false },
+  { id: "c_daeho", name: "대호산업관리", contact: "", note: "", isMain: false },
+  { id: "c_kgs", name: "한국가스안전공사 경남본부", contact: "", note: "시설검사", isMain: false },
+  { id: "c_sinmilyang", name: "신밀양건기", contact: "", note: "장비대", isMain: false },
+  { id: "c_daebosteel", name: "대보스틸", contact: "", note: "", isMain: false }
+];
+
+// paid: 홈택스 세금계산서와 농협기업뱅킹 입출금 내역을 대조해서 채워짐 (아직 은행자료 대조 전이라 전부 false로 시작)
+const SEED_TXNS = [
+  { id: "s_asung_1", clientId: "c_asungmetal", type: "sale", date: "2026-08-05", amount: 1412675, workDesc: "로 보수", taxInvoice: true, quote: true, paid: false, note: "홈택스 자동 등록 · 농협뱅킹 3개월 내역에서 입금 미확인" },
+  { id: "s_asung_2", clientId: "c_asungmetal", type: "sale", date: "2026-06-30", amount: 8547440, workDesc: "문짝 보수", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 (발급일 2026-07-07) · 2026-07-31 아성금속(주)에서 8,547,440원 입금 확인(농협뱅킹 대조)" },
+
+  { id: "p_1", clientId: "c_koaelec", type: "purchase", date: "2026-08-03", amount: 231000, workDesc: "08월분 전기안전관리 대행료", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리" },
+  { id: "p_2", clientId: "c_amway", type: "purchase", date: "2026-08-03", amount: 272000, workDesc: "이스프링 필터카트리지", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리" },
+  { id: "p_3", clientId: "c_skshieldus", type: "purchase", date: "2026-08-01", amount: 44000, workDesc: "월정료(202608)", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리" },
+  { id: "p_4", clientId: "c_kepco", type: "purchase", date: "2026-07-30", amount: 888357, workDesc: "전기요금(0917069922)", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리 (계량기 매칭은 여전히 불확실했으나 지급 자체는 확인됨)" },
+  { id: "p_5", clientId: "c_yangdong", type: "purchase", date: "2026-07-16", amount: 148500, workDesc: "산소", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-07-19 김성백(양동종합에너지)에게 148,500원 출금 확인(농협뱅킹 대조)" },
+  { id: "p_6", clientId: "c_jhwelding", type: "purchase", date: "2026-07-08", amount: 165000, workDesc: "Co2 p.c.b 교체", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-07-08 당일 차재환(제이에이치웰딩)에게 165,000원 출금 확인(농협뱅킹 대조)" },
+  { id: "p_7", clientId: "c_kt", type: "purchase", date: "2026-07-06", amount: 53590, workDesc: "일반전화", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-07-31 KT 센터일괄 53,590원 출금 확인(농협뱅킹 대조)" },
+  { id: "p_8", clientId: "c_yangdong", type: "purchase", date: "2026-07-06", amount: 279500, workDesc: "산소", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리 (농협뱅킹엔 4,500원 차이나는 이체만 잡혀있었음)" },
+  { id: "p_9", clientId: "c_koaelec", type: "purchase", date: "2026-07-01", amount: 231000, workDesc: "전기안전관리 대행료", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-07-30 (주)코아전기에게 231,000원 출금 확인(농협뱅킹 대조)" },
+  { id: "p_10", clientId: "c_skshieldus", type: "purchase", date: "2026-07-01", amount: 44000, workDesc: "월정료(202607)", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-07-15 SK쉴더스 44,000원 출금 확인(농협뱅킹 대조)" },
+  { id: "p_11", clientId: "c_kepco", type: "purchase", date: "2026-06-30", amount: 431878, workDesc: "전기요금", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리 (계량기 매칭은 여전히 불확실했으나 지급 자체는 확인됨)" },
+  { id: "p_12", clientId: "c_kt", type: "purchase", date: "2026-06-06", amount: 52914, workDesc: "일반전화", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-06-30 KT 센터일괄 52,910원 출금 확인(농협뱅킹 대조, 4원 차이는 반올림 추정)" },
+  { id: "p_13", clientId: "c_samjinweltec", type: "purchase", date: "2026-06-02", amount: 148940, workDesc: "co2팁 외", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리" },
+  { id: "p_14", clientId: "c_koaelec", type: "purchase", date: "2026-06-01", amount: 231000, workDesc: "06월분 전기안전관리 대행료", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-06-30 (주)코아전기에게 231,000원 출금 확인(농협뱅킹 대조)" },
+  { id: "p_15", clientId: "c_skshieldus", type: "purchase", date: "2026-06-01", amount: 44000, workDesc: "월정료(202606)", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-06-15 SK쉴더스 44,000원 출금 확인(농협뱅킹 대조)" },
+  { id: "p_16", clientId: "c_samwoomtech", type: "purchase", date: "2026-05-31", amount: 23980000, workDesc: "ALU-FLO 85AR 외", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-07-29 (주)삼우엠텍에게 23,980,000원 출금 확인(농협뱅킹 대조, 세금계산서 발행 약 2개월 후 지급)" },
+  { id: "p_17", clientId: "c_kepco", type: "purchase", date: "2026-05-30", amount: 431134, workDesc: "전기요금", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리" },
+  { id: "p_18", clientId: "c_amway", type: "purchase", date: "2026-05-30", amount: 68400, workDesc: "구매", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리" },
+  { id: "p_19", clientId: "c_amway", type: "purchase", date: "2026-05-29", amount: 144000, workDesc: "글리스터프로 외 5종", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리" },
+  { id: "p_20", clientId: "c_amway", type: "purchase", date: "2026-05-13", amount: 79400, workDesc: "글리스터프로 외 6종", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리" },
+  { id: "p_21", clientId: "c_daeho", type: "purchase", date: "2026-05-13", amount: 16394400, workDesc: "SK 36 T1 (230*114*65/55)", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인 — 나눠서 송금해서 농협뱅킹 단일 이체로는 안 잡혔던 것, 지급 완료 처리" },
+  { id: "p_22", clientId: "c_kgs", type: "purchase", date: "2026-05-12", amount: -58410, workDesc: "시설검사·정기검사 (수정세금계산서, 차감분)", taxInvoice: true, quote: true, paid: true, note: "홈택스 자동 등록 · 2026-08-07 대표 확인으로 지급 완료 처리 (수정 차감분)" }
+];
+
+// ── 사용자가 페이지에서 직접 등록한 데이터는 이 브라우저의 localStorage에만 저장됨.
+const LS_CLIENTS = "gd_clients_v1";
+const LS_TXNS = "gd_txns_v1";
+
+function loadLS(key){ try{ return JSON.parse(localStorage.getItem(key) || "[]"); }catch(e){ return []; } }
+function saveLS(key, arr){ localStorage.setItem(key, JSON.stringify(arr)); }
+function uid(){ return "u_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+function allClients(){
+  const list = [...SEED_CLIENTS.map(c=>({...c, _src:"seed"})), ...loadLS(LS_CLIENTS).map(c=>({...c, _src:"user"}))];
+  return list.sort((a,b)=> (b.isMain?1:0) - (a.isMain?1:0));
+}
+function allTxns(){
+  return [...SEED_TXNS.map(t=>({...t, _src:"seed"})), ...loadLS(LS_TXNS).map(t=>({...t, _src:"user"}))];
+}
+function clientName(id){
+  const c = allClients().find(x=>x.id===id);
+  return c ? c.name : "(삭제된 거래처)";
+}
+function fmtWon(n){ return (n || n===0) ? Number(n).toLocaleString("ko-KR") + "원" : "-"; }
+function escapeHtml(s){ return String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2200);
+}
+
+let currentView = "client";
+let searchQuery = "";
+
+function matchesSearch(text){
+  if(!searchQuery) return true;
+  return String(text||"").toLowerCase().includes(searchQuery);
+}
+function txnMatchesSearch(t){
+  if(!searchQuery) return true;
+  return matchesSearch(clientName(t.clientId)) || matchesSearch(t.workDesc) || matchesSearch(t.note);
+}
+
+function renderAll(){
+  renderStats();
+  renderTodo();
+  renderClientView();
+  renderDateView();
+  populateClientSelect();
+}
+
+function renderStats(){
+  const txns = allTxns();
+  const sale = txns.filter(t=>t.type==="sale").reduce((s,t)=>s+(Number(t.amount)||0),0);
+  const purchase = txns.filter(t=>t.type==="purchase").reduce((s,t)=>s+(Number(t.amount)||0),0);
+  const pendingTax = txns.filter(t=>!t.taxInvoice).length;
+  const pendingQuote = txns.filter(t=>!t.quote).length;
+  const pendingPay = txns.filter(t=>t.taxInvoice && !t.paid).length;
+  const stats = [
+    [fmtWon(sale), "총 매출", ""],
+    [fmtWon(purchase), "총 매입", ""],
+    [fmtWon(sale-purchase), "순이익", "accent"],
+    [pendingTax, "세금계산서 미발행", pendingTax>0?"warn":""],
+    [pendingQuote, "견적서 미발송", pendingQuote>0?"warn":""],
+    [pendingPay, "입출금 미확인", pendingPay>0?"warn":""]
+  ];
+  document.getElementById("stat-row").innerHTML = stats.map(([n,l,cls])=>
+    `<div class="stat"><div class="n ${cls}">${n}</div><div class="l">${l}</div></div>`).join("");
+}
+
+function renderTodo(){
+  const txns = allTxns().filter(t=>!t.taxInvoice || !t.quote || (t.taxInvoice && !t.paid));
+  const panel = document.getElementById("todo-panel");
+  if(!txns.length){
+    panel.innerHTML = `<div class="all-done">✓ 세금계산서·견적서·입출금 모두 확인됐어요.</div>`;
+    return;
+  }
+  const sorted = [...txns].sort((a,b)=> (a.date||"").localeCompare(b.date||""));
+  panel.innerHTML = sorted.map(t=>`
+    <div class="todo-row">
+      <div class="todo-info">
+        ${!t.taxInvoice ? `<span class="todo-tag">세금계산서 미발행</span>` : ""}
+        ${!t.quote ? `<span class="todo-tag">견적서 미발송</span>` : ""}
+        ${(t.taxInvoice && !t.paid) ? `<span class="todo-tag">${t.type==="sale"?"미수금(입금 미확인)":"미지급금(출금 미확인)"}</span>` : ""}
+        <span class="todo-name">${escapeHtml(clientName(t.clientId))}</span>
+        <span class="todo-meta">${escapeHtml(t.workDesc||"")} · ${fmtWon(t.amount)} · ${escapeHtml(t.date||"")}</span>
+      </div>
+      <div class="btn-row">
+        ${(!t.taxInvoice && t._src==="user") ? `<button class="btn btn-small btn-ghost" data-resolve="tax" data-id="${t.id}">세금계산서 발행완료</button>` : ""}
+        ${(!t.quote && t._src==="user") ? `<button class="btn btn-small btn-ghost" data-resolve="quote" data-id="${t.id}">견적서 발송완료</button>` : ""}
+        ${(t.taxInvoice && !t.paid && t._src==="user") ? `<button class="btn btn-small btn-ghost" data-resolve="paid" data-id="${t.id}">입출금 확인완료</button>` : ""}
+      </div>
+    </div>
+  `).join("");
+  panel.querySelectorAll("[data-resolve]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const arr = loadLS(LS_TXNS);
+      const t = arr.find(x=>x.id===btn.dataset.id);
+      if(!t) return;
+      if(btn.dataset.resolve==="tax") t.taxInvoice = true;
+      else if(btn.dataset.resolve==="quote") t.quote = true;
+      else if(btn.dataset.resolve==="paid") t.paid = true;
+      saveLS(LS_TXNS, arr);
+      showToast("처리 완료로 표시했어요.");
+      renderAll();
+    });
+  });
+}
+
+function txnRowsHtml(txns, showClient){
+  return `<div class="tbl-scroll"><table>
+    <thead><tr>
+      <th>날짜</th>${showClient?"<th>거래처</th>":""}<th>구분</th><th>일한 내용</th><th>금액</th><th>세금계산서</th><th>견적서</th><th>입출금</th><th>메모</th><th></th>
+    </tr></thead>
+    <tbody>
+      ${txns.map(t=>`
+        <tr>
+          <td class="num">${escapeHtml(t.date||"")}</td>
+          ${showClient?`<td>${escapeHtml(clientName(t.clientId))}</td>`:""}
+          <td><span class="type-badge ${t.type}">${t.type==="sale"?"매출":"매입"}</span></td>
+          <td>${escapeHtml(t.workDesc||"")}</td>
+          <td class="num">${fmtWon(t.amount)}</td>
+          <td><span class="check-badge ${t.taxInvoice?"done":"pending"}">${t.taxInvoice?"발행완료":"미발행"}</span></td>
+          <td><span class="check-badge ${t.quote?"done":"pending"}">${t.quote?"발송완료":"미발송"}</span></td>
+          <td><span class="check-badge ${t.paid?"done":"pending"}">${t.paid?"확인됨":"미확인"}</span></td>
+          <td>${escapeHtml(t.note||"")}</td>
+          <td>${t._src==="user" ? `<div class="row-actions">
+              <button class="btn btn-small btn-ghost" data-edit-txn="${t.id}">수정</button>
+              <button class="btn btn-small btn-danger-text" data-del-txn="${t.id}">삭제</button>
+            </div>` : `<span style="font-size:11px;color:var(--text-faint);">채팅등록</span>`}</td>
+        </tr>
+      `).join("")}
+    </tbody>
+  </table></div>`;
+}
+
+function bindTxnRowActions(container){
+  container.querySelectorAll("[data-edit-txn]").forEach(btn=>{
+    btn.addEventListener("click", ()=> openTxnForm(loadLS(LS_TXNS).find(x=>x.id===btn.dataset.editTxn)));
+  });
+  container.querySelectorAll("[data-del-txn]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if(!confirm("이 거래 내역을 삭제할까요?")) return;
+      saveLS(LS_TXNS, loadLS(LS_TXNS).filter(x=>x.id!==btn.dataset.delTxn));
+      showToast("삭제했어요.");
+      renderAll();
+    });
+  });
+}
+
+function renderClientView(){
+  const wrap = document.getElementById("client-view");
+  const clients = allClients().filter(c=> !searchQuery || matchesSearch(c.name) || matchesSearch(c.note));
+  const txns = allTxns();
+  if(!clients.length){
+    wrap.innerHTML = `<div class="empty">${searchQuery ? "검색 결과가 없어요." : "아직 등록된 거래처가 없어요.<br><b>+ 거래처 등록</b>으로 먼저 등록해보세요."}</div>`;
+    return;
+  }
+  wrap.innerHTML = clients.map(c=>{
+    const my = txns.filter(t=>t.clientId===c.id);
+    const sale = my.filter(t=>t.type==="sale").reduce((s,t)=>s+(Number(t.amount)||0),0);
+    const purchase = my.filter(t=>t.type==="purchase").reduce((s,t)=>s+(Number(t.amount)||0),0);
+    return `<details class="client-card ${c.isMain?'main':''}" ${c.isMain||searchQuery ? "open" : ""}>
+      <summary class="client-head">
+        <div>
+          <div class="client-name-row">
+            <span class="client-name">${escapeHtml(c.name)}</span>
+            ${c.isMain ? `<span class="main-badge">주거래처</span>` : ""}
+          </div>
+          <div class="client-contact">${escapeHtml(c.contact||"")}${c.note?" · "+escapeHtml(c.note):""}</div>
+        </div>
+        <div class="client-tally">
+          <span class="sale">매출 ${fmtWon(sale)}</span>
+          <span class="purchase">매입 ${fmtWon(purchase)}</span>
+        </div>
+      </summary>
+      <div style="padding:0 18px 18px;">
+        ${my.length ? txnRowsHtml(my.sort((a,b)=>(b.date||"").localeCompare(a.date||"")), false)
+                    : `<div class="empty">이 거래처의 거래 내역이 아직 없어요.</div>`}
+      </div>
+    </details>`;
+  }).join("");
+  bindTxnRowActions(wrap);
+}
+
+function renderDateView(){
+  const wrap = document.getElementById("date-view");
+  const txns = [...allTxns()].filter(txnMatchesSearch).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  if(!txns.length){
+    wrap.innerHTML = `<div class="empty">${searchQuery ? "검색 결과가 없어요." : "아직 등록된 거래가 없어요."}</div>`;
+    return;
+  }
+  wrap.innerHTML = txnRowsHtml(txns, true);
+  bindTxnRowActions(wrap);
+}
+
+document.getElementById("search-input").addEventListener("input", (e)=>{
+  searchQuery = e.target.value.trim().toLowerCase();
+  renderClientView();
+  renderDateView();
+});
+
+document.querySelectorAll(".view-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".view-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentView = btn.dataset.view;
+    document.getElementById("client-view").style.display = currentView==="client" ? "" : "none";
+    document.getElementById("date-view").style.display = currentView==="date" ? "" : "none";
+  });
+});
+
+// ── 거래처 등록 모달
+const clientOverlay = document.getElementById("client-modal-overlay");
+const clientForm = document.getElementById("client-form");
+document.getElementById("add-client-btn").addEventListener("click", ()=>{
+  clientForm.reset();
+  clientOverlay.classList.add("open");
+  document.getElementById("c-name").focus();
+});
+document.getElementById("client-cancel-btn").addEventListener("click", ()=> clientOverlay.classList.remove("open"));
+clientOverlay.addEventListener("click", (e)=>{ if(e.target===clientOverlay) clientOverlay.classList.remove("open"); });
+clientForm.addEventListener("submit", (e)=>{
+  e.preventDefault();
+  const name = document.getElementById("c-name").value.trim();
+  if(!name) return;
+  const arr = loadLS(LS_CLIENTS);
+  arr.push({
+    id: uid(), name,
+    contact: document.getElementById("c-contact").value.trim(),
+    note: document.getElementById("c-note").value.trim(),
+    isMain: document.getElementById("c-isMain").checked
+  });
+  saveLS(LS_CLIENTS, arr);
+  showToast("거래처를 등록했어요.");
+  clientOverlay.classList.remove("open");
+  renderAll();
+});
+
+function populateClientSelect(){
+  const sel = document.getElementById("t-client");
+  const clients = allClients();
+  sel.innerHTML = clients.length
+    ? clients.map(c=>`<option value="${c.id}">${c.isMain?"★ ":""}${escapeHtml(c.name)}</option>`).join("")
+    : `<option value="">거래처를 먼저 등록해주세요</option>`;
+}
+
+// ── 거래 추가/수정 모달
+const txnOverlay = document.getElementById("txn-modal-overlay");
+const txnForm = document.getElementById("txn-form");
+let editingTxnId = null;
+
+function openTxnForm(existing){
+  if(!allClients().length){ showToast("거래처를 먼저 등록해주세요."); return; }
+  editingTxnId = existing ? existing.id : null;
+  document.getElementById("txn-modal-title").textContent = existing ? "거래 수정" : "거래 추가";
+  populateClientSelect();
+  document.getElementById("t-client").value = existing?.clientId || allClients()[0].id;
+  document.querySelector(`input[name="t-type"][value="${existing?.type || "sale"}"]`).checked = true;
+  document.getElementById("t-date").value = existing?.date || new Date().toISOString().slice(0,10);
+  document.getElementById("t-amount").value = existing?.amount || "";
+  document.getElementById("t-work").value = existing?.workDesc || "";
+  document.getElementById("t-taxInvoice").checked = !!existing?.taxInvoice;
+  document.getElementById("t-quote").checked = !!existing?.quote;
+  document.getElementById("t-paid").checked = !!existing?.paid;
+  document.getElementById("t-note").value = existing?.note || "";
+  txnOverlay.classList.add("open");
+}
+document.getElementById("add-txn-btn").addEventListener("click", ()=> openTxnForm(null));
+document.getElementById("txn-cancel-btn").addEventListener("click", ()=> txnOverlay.classList.remove("open"));
+txnOverlay.addEventListener("click", (e)=>{ if(e.target===txnOverlay) txnOverlay.classList.remove("open"); });
+
+txnForm.addEventListener("submit", (e)=>{
+  e.preventDefault();
+  const clientId = document.getElementById("t-client").value;
+  if(!clientId) return;
+  const obj = {
+    id: editingTxnId || uid(),
+    clientId,
+    type: document.querySelector('input[name="t-type"]:checked').value,
+    date: document.getElementById("t-date").value,
+    amount: document.getElementById("t-amount").value,
+    workDesc: document.getElementById("t-work").value.trim(),
+    taxInvoice: document.getElementById("t-taxInvoice").checked,
+    quote: document.getElementById("t-quote").checked,
+    paid: document.getElementById("t-paid").checked,
+    note: document.getElementById("t-note").value.trim()
+  };
+  const arr = loadLS(LS_TXNS);
+  const idx = arr.findIndex(x=>x.id===obj.id);
+  if(idx>=0) arr[idx]=obj; else arr.push(obj);
+  saveLS(LS_TXNS, arr);
+  showToast(editingTxnId ? "수정했어요." : "추가했어요.");
+  txnOverlay.classList.remove("open");
+  renderAll();
+});
+
+// ── 내보내기
+document.getElementById("export-btn").addEventListener("click", async ()=>{
+  if(!window.claude || !window.claude.downloads){ showToast("이 화면에서는 내보내기를 쓸 수 없어요."); return; }
+  const payload = { exportedAt: new Date().toISOString(), clients: loadLS(LS_CLIENTS), txns: loadLS(LS_TXNS) };
+  if(!payload.clients.length && !payload.txns.length){ showToast("내보낼 항목이 없어요."); return; }
+  const today = new Date().toISOString().slice(0,10);
+  try{
+    await window.claude.downloads.save({ filename: `경동로ENG재무_백업_${today}.json`, data: JSON.stringify(payload, null, 2) });
+    showToast("백업 파일을 저장했어요. 망고한테 보내주면 정식 등록해줄게요!");
+  }catch(err){
+    showToast(err && err.code==="declined" ? "내보내기를 취소했어요." : ("내보내기 실패: " + (err?.message||"알 수 없는 오류")));
+  }
+});
+
+renderAll();
+</script>

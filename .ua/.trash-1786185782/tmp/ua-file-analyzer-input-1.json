@@ -1,0 +1,21 @@
+{
+  "projectRoot": "C:\\Users\\PC\\Desktop\\클로드 도윤",
+  "batchFiles": [
+    {"path": ".claude/settings.local.json", "language": "json", "sizeLines": 44, "fileCategory": "config"},
+    {"path": "CLAUDE.md", "language": "markdown", "sizeLines": 49, "fileCategory": "docs"},
+    {"path": "경동로ENG재무/index.html", "language": "html", "sizeLines": 645, "fileCategory": "markup"},
+    {"path": "내위스키컬렉션/index.html", "language": "html", "sizeLines": 593, "fileCategory": "markup"},
+    {"path": "위스키체크/LOG.md", "language": "markdown", "sizeLines": 54, "fileCategory": "docs"},
+    {"path": "위스키체크/reports/2026-08-06_리포트.html", "language": "html", "sizeLines": 724, "fileCategory": "markup"},
+    {"path": "위스키체크/reports/2026-08-08_리포트.html", "language": "html", "sizeLines": 805, "fileCategory": "markup"}
+  ],
+  "batchImportData": {
+    ".claude/settings.local.json": [],
+    "CLAUDE.md": [],
+    "경동로ENG재무/index.html": [],
+    "내위스키컬렉션/index.html": [],
+    "위스키체크/LOG.md": [],
+    "위스키체크/reports/2026-08-06_리포트.html": [],
+    "위스키체크/reports/2026-08-08_리포트.html": []
+  }
+}

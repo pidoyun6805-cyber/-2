@@ -1,0 +1,37 @@
+[
+  {
+    "id": "layer:project-config",
+    "name": "프로젝트 설정 및 문서",
+    "description": "저장소 전체를 아우르는 작업 가이드 문서와 Claude Code 세션 권한 설정을 포함하는 최상위 지원 계층",
+    "nodeIds": [
+      "document:CLAUDE.md",
+      "config:.claude/settings.local.json"
+    ]
+  },
+  {
+    "id": "layer:gyeongdongro-finance",
+    "name": "경동로ENG 재무 관리",
+    "description": "거래처별 매출·매입 내역과 세금계산서 발행 여부를 로컬 스토리지 기반으로 관리하는 독립형 단일 페이지 재무 앱",
+    "nodeIds": [
+      "file:경동로ENG재무/index.html"
+    ]
+  },
+  {
+    "id": "layer:whisky-collection",
+    "name": "개인 위스키 컬렉션",
+    "description": "개인이 보유한 위스키 목록과 시음 행사 기록을 로컬 스토리지에 저장·조회하는 독립형 단일 페이지 앱",
+    "nodeIds": [
+      "file:내위스키컬렉션/index.html"
+    ]
+  },
+  {
+    "id": "layer:whisky-auction-check",
+    "name": "위스키 경매 체크 리포트",
+    "description": "카에루몰 위스키 경매 메리트를 날짜별로 조사·기록하고 정적 HTML 리포트로 발행하는 리서치 및 리포팅 프로젝트",
+    "nodeIds": [
+      "document:위스키체크/LOG.md",
+      "file:위스키체크/reports/2026-08-06_리포트.html",
+      "file:위스키체크/reports/2026-08-08_리포트.html"
+    ]
+  }
+]
