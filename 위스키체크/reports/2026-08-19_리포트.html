@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>카에루몰 위스키 체크 - 2026-08-19</title>
+<style>
+:root {
+  --bg: #ece5d6;
+  --surface: #f9f5ec;
+  --border: #d8cdb4;
+  --text: #2a2117;
+  --text-dim: #6e6047;
+  --accent: #9c5a1e;
+  --accent-bg: #e3d2ad;
+  --badge-bg: #7d9b76;
+  --badge-text: #f9f5ec;
+  --card-shadow: rgba(42,33,23,0.10);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1611;
+    --surface: #241d16;
+    --border: #43362566;
+    --text: #ecdfc9;
+    --text-dim: #b3a087;
+    --accent: #e0a851;
+    --accent-bg: #3c2d18;
+    --badge-bg: #7fae76;
+    --badge-text: #14200f;
+    --card-shadow: rgba(0,0,0,0.35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1611;
+  --surface: #241d16;
+  --border: #43362566;
+  --text: #ecdfc9;
+  --text-dim: #b3a087;
+  --accent: #e0a851;
+  --accent-bg: #3c2d18;
+  --badge-bg: #7fae76;
+  --badge-text: #14200f;
+  --card-shadow: rgba(0,0,0,0.35);
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  margin: 0;
+  padding: 24px 16px 64px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+.wrap { max-width: 1100px; margin: 0 auto; }
+h1 {
+  font-family: Georgia, "Noto Serif KR", serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin-bottom: 4px;
+  text-wrap: balance;
+}
+.subtitle { color: var(--text-dim); margin-bottom: 28px; font-size: 0.95rem; }
+.section { margin-bottom: 40px; }
+.section h2 {
+  font-family: Georgia, "Noto Serif KR", serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+}
+.count { color: var(--text-dim); font-weight: normal; font-size: 0.9rem; }
+.distillery-group { margin-bottom: 28px; }
+.distillery-group h3 {
+  font-size: 1rem;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  background: var(--accent-bg);
+  border-radius: 6px;
+  display: inline-block;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px var(--card-shadow);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.card.wb90 { border-color: var(--badge-bg); border-width: 2px; }
+.badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  z-index: 2;
+}
+.card img { width: 100%; height: 180px; object-fit: contain; background: var(--bg); display: block; }
+.noimg { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); background: var(--bg); font-size: 0.85rem; }
+.card-body { padding: 10px 12px 12px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.card-title { font-size: 0.88rem; font-weight: 600; min-height: 2.6em; }
+.card-meta, .card-meta2 { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-dim); }
+.price { color: var(--accent); font-weight: 700; font-size: 0.95rem; }
+.reason { font-size: 0.78rem; color: var(--text-dim); border-top: 1px dashed var(--border); padding-top: 6px; }
+.auctionno { font-size: 0.7rem; color: var(--text-dim); opacity: 0.7; }
+.top10-section { padding: 18px 20px; background: var(--accent-bg); border-radius: 14px; }
+.top10-section h2 { border-bottom-color: var(--text); }
+.top10-card { border-width: 2px; border-color: var(--accent); }
+.top10-card.wb90 { border-color: var(--badge-bg); }
+.rank {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--accent);
+  color: var(--badge-text);
+  font-family: Georgia, "Noto Serif KR", serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🥃 카에루몰 위스키 체크 리포트</h1>
+  <div class="subtitle">2026-08-19 · 14개 증류소 경매 조사 · 53,000엔(면세한도) 이하, WhiskyBase 84점 초과 후보만 · 총 50개 (올드바틀 14 + 현행바틀 36)</div>
+
+  <section class="section top10-section">
+    <h2>🏆 TOP 10 <span class="count">(인기·가격·희귀성 종합)</span></h2>
+    <div class="grid">
+  <div class="card top10-card">
+    <div class="rank">1</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/c1a5dc934663ef77528b0d1e83f7703a3c370ec0849a6bc0f608034d55484dcb/i-img903x1200-17869208536089qhrixx34.jpg" alt="Bowmore 2003 23yr for Bar Caol Ila (23주년 기념병)">
+    <div class="card-body">
+      <div class="card-title">Bowmore 2003 23yr for Bar Caol Ila (23주년 기념병)</div>
+      <div class="card-meta">
+        <span class="price">36,500엔</span>
+        <span class="bids">입찰 40건 (매우 고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">바 익스클루시브 23년, 입찰 40건으로 매우 높은 관심도</div>
+      <div class="auctionno">BOWMORE · 옥션넘버: w1240979499</div>
+    </div>
+  </div>
+
+  <div class="card top10-card">
+    <div class="rank">2</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/12781da5808f5a208955f4484c7bd93e550652c642d1aea22b2a0fb352b6d541/i-img675x1200-17868744560625sdxszo2649.jpg" alt="Laphroaig Càirdeas 200th Anniversary Edition">
+    <div class="card-body">
+      <div class="card-title">Laphroaig Càirdeas 200th Anniversary Edition</div>
+      <div class="card-meta">
+        <span class="price">19,000엔</span>
+        <span class="bids">입찰 25건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 1日</span>
+        <span class="wb">WB 88.23 (508평점)</span>
+      </div>
+      <div class="reason">508명 대규모 표본에 88점대, 입찰 매우 활발</div>
+      <div class="auctionno">LAPHROAIG · 옥션넘버: l1240947464</div>
+    </div>
+  </div>
+
+  <div class="card top10-card">
+    <div class="rank">3</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/22cc18e0ea6cedc9a34dd01617a4333ac80d33352907aad29c1800fc93e5befc/i-img1024x768-17867744888656u9ibhw25.jpg" alt="Bowmore 1990 Vintage 54.9%">
+    <div class="card-body">
+      <div class="card-title">Bowmore 1990 Vintage 54.9%</div>
+      <div class="card-meta">
+        <span class="price">24,860엔</span>
+        <span class="bids">입찰 23건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 9時間 (종료임박)</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">1990년 빈티지, 입찰 23건 활발 — 종료 임박 주의</div>
+      <div class="auctionno">BOWMORE · 옥션넘버: l1240825969</div>
+    </div>
+  </div>
+
+  <div class="card top10-card">
+    <div class="rank">4</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/22cc18e0ea6cedc9a34dd01617a4333ac80d33352907aad29c1800fc93e5befc/i-img1024x683-178677561410450clbki21270.jpg" alt="Springbank 12yr Rum Wood Expressions (단종)">
+    <div class="card-body">
+      <div class="card-title">Springbank 12yr Rum Wood Expressions (단종)</div>
+      <div class="card-meta">
+        <span class="price">33,550엔</span>
+        <span class="bids">입찰 20건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 9時間</span>
+        <span class="wb">WB 89.00</span>
+      </div>
+      <div class="reason">단종된 럼우드 시리즈, 고평점, 입찰 매우 활발</div>
+      <div class="auctionno">SPRINGBANK · 옥션넘버: d1240815899</div>
+    </div>
+  </div>
+
+  <div class="card top10-card wb90">
+    <div class="rank">5</div>
+    <div class="badge">WB 90+</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/7a3b5636353eebbbc73734e058233f3eaa17627f17418c63e1f6306e347b884e/i-img900x1200-178684042676059684frip8.jpg" alt="Glendronach 1990 27yr Single Cask (미개봉 박스)">
+    <div class="card-body">
+      <div class="card-title">Glendronach 1990 27yr Single Cask (미개봉 박스)</div>
+      <div class="card-meta">
+        <span class="price">21,000엔</span>
+        <span class="bids">입찰 17건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB ~91.14 (30평점)</span>
+      </div>
+      <div class="reason">90점대 초반 고평점, 27년 장기숙성 싱글캐스크가 2만엔대</div>
+      <div class="auctionno">GLENDRONACH · 옥션넘버: j1240883530</div>
+    </div>
+  </div>
+
+  <div class="card top10-card">
+    <div class="rank">6</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/81c2c1bdfb1c21be638b3a161fe78bc8d50d51dd884817117bc8c2821ea68cf7/i-img900x1200-17868908111264ntwcif34.jpg" alt="Bowmore 18yr Fèis Ìle 2020">
+    <div class="card-body">
+      <div class="card-title">Bowmore 18yr Fèis Ìle 2020</div>
+      <div class="card-meta">
+        <span class="price">12,500엔</span>
+        <span class="bids">입찰 17건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 89.31</span>
+      </div>
+      <div class="reason">아일라 페스티벌 한정판, 고평점에 저렴한 가격, 입찰 활발</div>
+      <div class="auctionno">BOWMORE · 옥션넘버: n1240941392</div>
+    </div>
+  </div>
+
+  <div class="card top10-card">
+    <div class="rank">7</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/de1043fcb0f0072e8f6380f3c0b7405feb2ade1abcf542d4c93e348dba0b2e2b/i-img1200x1200-17865443856885bzqxy41083.jpg" alt="Springbank 15yr (구형 라벨, 나무상자)">
+    <div class="card-body">
+      <div class="card-title">Springbank 15yr (구형 라벨, 나무상자)</div>
+      <div class="card-meta">
+        <span class="price">14,000엔</span>
+        <span class="bids">입찰 16건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 8時間</span>
+        <span class="wb">WB 87.87</span>
+      </div>
+      <div class="reason">절판 구형 라벨 15년, 입찰 매우 활발</div>
+      <div class="auctionno">SPRINGBANK · 옥션넘버: x1240543649</div>
+    </div>
+  </div>
+
+  <div class="card top10-card wb90">
+    <div class="rank">8</div>
+    <div class="badge">WB 90+</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/6e44824df97d50e96760f5edcd2b84d6d2544bd2caf34d898005cdd6d6544ffb/i-img1200x1200-1786694011702648fane27.jpg" alt="Laphroaig 1998 SMWS 29.102 13yr &quot;Cowboy's Campfire Dram&quot;">
+    <div class="card-body">
+      <div class="card-title">Laphroaig 1998 SMWS 29.102 13yr &quot;Cowboy's Campfire Dram&quot;</div>
+      <div class="card-meta">
+        <span class="price">28,050엔</span>
+        <span class="bids">입찰 10건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 10時間</span>
+        <span class="wb">WB 90.58 (21평점)</span>
+      </div>
+      <div class="reason">90점대 초고평점, 카스크스트렝스 64.1%</div>
+      <div class="auctionno">LAPHROAIG · 옥션넘버: l1240725443</div>
+    </div>
+  </div>
+
+  <div class="card top10-card">
+    <div class="rank">9</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/6e44824df97d50e96760f5edcd2b84d6d2544bd2caf34d898005cdd6d6544ffb/i-img1200x1200-17852121740045pw5mki3808.jpg" alt="Macallan Cooper's Choice 1990 17yr Sherry Cask">
+    <div class="card-body">
+      <div class="card-title">Macallan Cooper's Choice 1990 17yr Sherry Cask</div>
+      <div class="card-meta">
+        <span class="price">36,861엔</span>
+        <span class="bids">입찰 12건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 11時間</span>
+        <span class="wb">WB 87.15 (22평점)</span>
+      </div>
+      <div class="reason">독립병입 17년 셰리캐스크, 87점대에 입찰 활발</div>
+      <div class="auctionno">MACALLAN · 옥션넘버: q1238734715</div>
+    </div>
+  </div>
+
+  <div class="card top10-card">
+    <div class="rank">10</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/d8fdf5e03fb677460cc151cefbf0582508a45368ee53a5b71f7c8599119d45ad/i-img900x1200-17859045888707hobbjy419516.jpg" alt="Chichibu Tequila(Añejo) Cask 2015-2025 10yr #4341 59%">
+    <div class="card-body">
+      <div class="card-title">Chichibu Tequila(Añejo) Cask 2015-2025 10yr #4341 59%</div>
+      <div class="card-meta">
+        <span class="price">1,241엔 (경매중)</span>
+        <span class="bids">입찰 10건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 86.33 (3평점)</span>
+      </div>
+      <div class="reason">희귀 캐스크타입(테킬라 아녜호), 극저가에서 입찰 활발</div>
+      <div class="auctionno">CHICHIBU · 옥션넘버: b1239710284</div>
+    </div>
+  </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>올드바틀 <span class="count">(14개)</span></h2>
+
+    <div class="distillery-group">
+      <h3>GLENDRONACH</h3>
+      <div class="grid">
+  <div class="card wb90">
+    <div class="badge">WB 90+</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/7a3b5636353eebbbc73734e058233f3eaa17627f17418c63e1f6306e347b884e/i-img900x1200-178684042676059684frip8.jpg" alt="Glendronach 1990 27yr Single Cask (미개봉 박스)">
+    <div class="card-body">
+      <div class="card-title">Glendronach 1990 27yr Single Cask (미개봉 박스)</div>
+      <div class="card-meta">
+        <span class="price">21,000엔</span>
+        <span class="bids">입찰 17건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB ~91.14 (30평점)</span>
+      </div>
+      <div class="reason">90점대 초반 고평점, 27년 장기숙성 싱글캐스크가 2만엔대</div>
+      <div class="auctionno">옥션넘버: j1240883530</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>MACALLAN</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/6e44824df97d50e96760f5edcd2b84d6d2544bd2caf34d898005cdd6d6544ffb/i-img1200x1200-17852121740045pw5mki3808.jpg" alt="Macallan Cooper's Choice 1990 17yr Sherry Cask">
+    <div class="card-body">
+      <div class="card-title">Macallan Cooper's Choice 1990 17yr Sherry Cask</div>
+      <div class="card-meta">
+        <span class="price">36,861엔</span>
+        <span class="bids">입찰 12건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 11時間</span>
+        <span class="wb">WB 87.15 (22평점)</span>
+      </div>
+      <div class="reason">독립병입 17년 셰리캐스크, 87점대에 입찰 활발</div>
+      <div class="auctionno">옥션넘버: q1238734715</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/00ec5572000efbc38e08c584c7df5b2a54cda576ca9a99ce7d87eb11b1cb0f5a/i-img900x1200-17863444446221wznt2a419516.jpg" alt="Macallan Estate Reserve (단종 1824 Collection)">
+    <div class="card-body">
+      <div class="card-title">Macallan Estate Reserve (단종 1824 Collection)</div>
+      <div class="card-meta">
+        <span class="price">39,000엔 (즉결 44,000)</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 87.09 (181평점)</span>
+      </div>
+      <div class="reason">단종된 프리미엄 스탠다드품, 181명 표본 87점대</div>
+      <div class="auctionno">옥션넘버: c1240299598</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>SPRINGBANK</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/22cc18e0ea6cedc9a34dd01617a4333ac80d33352907aad29c1800fc93e5befc/i-img1024x683-178677561410450clbki21270.jpg" alt="Springbank 12yr Rum Wood Expressions (단종)">
+    <div class="card-body">
+      <div class="card-title">Springbank 12yr Rum Wood Expressions (단종)</div>
+      <div class="card-meta">
+        <span class="price">33,550엔</span>
+        <span class="bids">입찰 20건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 9時間</span>
+        <span class="wb">WB 89.00</span>
+      </div>
+      <div class="reason">단종된 럼우드 시리즈, 고평점, 입찰 매우 활발</div>
+      <div class="auctionno">옥션넘버: d1240815899</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/de1043fcb0f0072e8f6380f3c0b7405feb2ade1abcf542d4c93e348dba0b2e2b/i-img1200x1200-17865443856885bzqxy41083.jpg" alt="Springbank 15yr (구형 라벨, 나무상자)">
+    <div class="card-body">
+      <div class="card-title">Springbank 15yr (구형 라벨, 나무상자)</div>
+      <div class="card-meta">
+        <span class="price">14,000엔</span>
+        <span class="bids">입찰 16건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 8時間</span>
+        <span class="wb">WB 87.87</span>
+      </div>
+      <div class="reason">절판 구형 라벨 15년, 입찰 매우 활발</div>
+      <div class="auctionno">옥션넘버: x1240543649</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>BOWMORE</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/3db5f715e2f61b6bf9e272ac873394a22462810cf183f665241623979d7450c7/i-img640x480-17828808190230jxnfet11038.jpg" alt="Bowmore Tempest 10yr Small Batch Release No.1 (2009년 최초 배치)">
+    <div class="card-body">
+      <div class="card-title">Bowmore Tempest 10yr Small Batch Release No.1 (2009년 최초 배치)</div>
+      <div class="card-meta">
+        <span class="price">33,000엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 86.59</span>
+      </div>
+      <div class="reason">유명 Tempest 시리즈의 사상 첫 배치, 수집가치 높음</div>
+      <div class="auctionno">옥션넘버: w1235521343</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/22cc18e0ea6cedc9a34dd01617a4333ac80d33352907aad29c1800fc93e5befc/i-img1024x768-17867744888656u9ibhw25.jpg" alt="Bowmore 1990 Vintage 54.9%">
+    <div class="card-body">
+      <div class="card-title">Bowmore 1990 Vintage 54.9%</div>
+      <div class="card-meta">
+        <span class="price">24,860엔</span>
+        <span class="bids">입찰 23건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 9時間 (종료임박)</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">1990년 빈티지, 입찰 23건 활발 — 종료 임박 주의</div>
+      <div class="auctionno">옥션넘버: l1240825969</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>GLEN GRANT</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0511/user/86431165f86002f7b17a5dffc212bcc188586bada1d2e0e1b435ca821118f422/i-img899x1200-17316518522975v8oxwz20206.jpg" alt="Glen Grant 25yr 메몬 라벨 (314병 한정, 구형라벨)">
+    <div class="card-body">
+      <div class="card-title">Glen Grant 25yr 메몬 라벨 (314병 한정, 구형라벨)</div>
+      <div class="card-meta">
+        <span class="price">52,800엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 2日</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">314병 넘버링 한정, 25년 숙성, 구형 라벨</div>
+      <div class="auctionno">옥션넘버: s1161286561</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>AKKESHI</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/51591571bc1a6a5f644e340c8af2342c009ff4f8729dcc45d1fe60fa7a39db56/i-img675x1200-17862537576922xbgw1235.jpg" alt="Akkeshi 24절기 시리즈 제1탄 &quot;寒露(칸로)&quot;">
+    <div class="card-body">
+      <div class="card-title">Akkeshi 24절기 시리즈 제1탄 &quot;寒露(칸로)&quot;</div>
+      <div class="card-meta">
+        <span class="price">50,000엔 (즉결 60,000)</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 2日</span>
+        <span class="wb">WB 87.83 (94평점)</span>
+      </div>
+      <div class="reason">24절기 시리즈의 상징적 1탄, 94명 표본 신뢰도 최상</div>
+      <div class="auctionno">옥션넘버: m1240179941</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0203/user/62d8b7bf450d5e796f7b6124e00c034dc699dcff140542b98ec71dec7ab361fa/i-img600x600-17727170050867fffhxw271749.jpg" alt="Akkeshi 위스키문화연구소 설립 20주년 기념병">
+    <div class="card-body">
+      <div class="card-title">Akkeshi 위스키문화연구소 설립 20주년 기념병</div>
+      <div class="card-meta">
+        <span class="price">50,000엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 10時間</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">극희귀 단발성 기념병</div>
+      <div class="auctionno">옥션넘버: c1221900504</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>CHICHIBU</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0206/user/a78d33c3debe4bba127969c529a2e4bbe350cb150437d259bc885d7e2b49f9ce/i-img900x1200-17818255967794ckxqto35.jpg" alt="Chichibu Ichiro's Malt &quot;The First Ten&quot; (2020년 최초 발매)">
+    <div class="card-body">
+      <div class="card-title">Chichibu Ichiro's Malt &quot;The First Ten&quot; (2020년 최초 발매)</div>
+      <div class="card-meta">
+        <span class="price">50,000엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 1日</span>
+        <span class="wb">WB 89.15 (156평점)</span>
+      </div>
+      <div class="reason">치치부 최초 연수표기 상징적 릴리즈, 156명 표본 신뢰도</div>
+      <div class="auctionno">옥션넘버: n1234072999</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>CLYNELISH</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0201/user/ed6b2a99a2c78d4be39adbae727f23daccad4a600457563aed32811eaa2ec714/i-img1197x1200-1769133449060115dzepwu8.jpg" alt="Clynelish Signatory 1995-2006 10yr Vintage Sherry Butt (677병)">
+    <div class="card-body">
+      <div class="card-title">Clynelish Signatory 1995-2006 10yr Vintage Sherry Butt (677병)</div>
+      <div class="card-meta">
+        <span class="price">45,800엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 10時間</span>
+        <span class="wb">WB 88.33 (6평점)</span>
+      </div>
+      <div class="reason">단종 배치 셰리버트 싱글캐스크, 88점대</div>
+      <div class="auctionno">옥션넘버: t1216987552</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0206/user/3db5f715e2f61b6bf9e272ac873394a22462810cf183f665241623979d7450c7/i-img640x480-17815019044801szpev2189283.jpg" alt="Clynelish Sansibar &quot;Secret Highland&quot; 13yr 2007-2020 (689병 한정)">
+    <div class="card-body">
+      <div class="card-title">Clynelish Sansibar &quot;Secret Highland&quot; 13yr 2007-2020 (689병 한정)</div>
+      <div class="card-meta">
+        <span class="price">25,300엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 85.83 (71평점)</span>
+      </div>
+      <div class="reason">689병 한정 독립병입, 71명 평가로 안정적</div>
+      <div class="auctionno">옥션넘버: k1233640553</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>GLENFARCLAS</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0107/user/2b5e79c15e65f3f5b12654a4159e80309e5086535d18e2a9ef28044271f6616a/i-img1200x1200-17519855534275jadwtc33.jpg" alt="Glenfarclas Family Casks 1997-2018 21yr (캐스크#5134)">
+    <div class="card-body">
+      <div class="card-title">Glenfarclas Family Casks 1997-2018 21yr (캐스크#5134)</div>
+      <div class="card-meta">
+        <span class="price">49,800엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 89.82 (58평점)</span>
+      </div>
+      <div class="reason">시장 최저가(€375≈6만엔) 대비 확실한 저가, 89.82 고평점</div>
+      <div class="auctionno">옥션넘버: c1191865488</div>
+    </div>
+  </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>현행바틀 <span class="count">(36개)</span></h2>
+
+    <div class="distillery-group">
+      <h3>DAFTMILL</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/3310b7950f35777f2f0b2a2ae9cc0ef9c1de75edc6ce44e35d07db699b2641dc/i-img1200x1200-178697016737211bylsj504.jpg" alt="Daftmill 2011 Summer Batch Release 46%">
+    <div class="card-body">
+      <div class="card-title">Daftmill 2011 Summer Batch Release 46%</div>
+      <div class="card-meta">
+        <span class="price">21,230엔</span>
+        <span class="bids">입찰 1건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 11時間</span>
+        <span class="wb">WB 86.64 (252평점)</span>
+      </div>
+      <div class="reason">연간 한정 배치만 존재하는 증류소, 대규모 평점 표본에 준수한 점수</div>
+      <div class="auctionno">옥션넘버: x1241073175</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>GLENDRONACH</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/f5ffc3dff83427a670086298a7eafe31f42948c6865e27ae48cc3f3d061b5528/i-img1200x1200-17870400635590ulltw435.jpg" alt="Glendronach 2011 10yr Hart Brothers Sherry Butt 56.8%">
+    <div class="card-body">
+      <div class="card-title">Glendronach 2011 10yr Hart Brothers Sherry Butt 56.8%</div>
+      <div class="card-meta">
+        <span class="price">19,800엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 1日</span>
+        <span class="wb">WB 88.00 (15평점)</span>
+      </div>
+      <div class="reason">독립병입 싱글캐스크, 2만엔 이하에 88점</div>
+      <div class="auctionno">옥션넘버: s1241184684</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/1d0ad0c93c0003ae1d9d6cd349619329d46cf8a2256283e9efbd666329621381/i-img1200x1200-17828982378368zmduka16208.jpg" alt="Glendronach Cask Strength Batch 12">
+    <div class="card-body">
+      <div class="card-title">Glendronach Cask Strength Batch 12</div>
+      <div class="card-meta">
+        <span class="price">22,000엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 9時間</span>
+        <span class="wb">WB 86.20 (271평점)</span>
+      </div>
+      <div class="reason">271명 대규모 표본, 신뢰도 높은 86점대</div>
+      <div class="auctionno">옥션넘버: p1235557485</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/869ffeb0126c2b9ffe36ea8288d32f3e854e7e414d6d2920fe5350c0921a776c/i-img433x577-17861012317306sq1uta19585.jpg" alt="Glendronach &quot;Ode to the Dark&quot; (Master's Anthology, 단종)">
+    <div class="card-body">
+      <div class="card-title">Glendronach &quot;Ode to the Dark&quot; (Master's Anthology, 단종)</div>
+      <div class="card-meta">
+        <span class="price">14,800엔 (즉결)</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 2日</span>
+        <span class="wb">WB 85.37 (474평점)</span>
+      </div>
+      <div class="reason">단종 한정 시리즈, 474명 표본의 안정적 85점대</div>
+      <div class="auctionno">옥션넘버: 1239992993</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>MACALLAN</h3>
+      <div class="grid">
+  <div class="card wb90">
+    <div class="badge">WB 90+</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/fed19d362d21221c966f0d68b6539f9c90ae991105849ca5b2ae994445fd11bc/i-img963x1200-17869543464264p9o0l235.jpg" alt="Macallan Rare Cask Black">
+    <div class="card-body">
+      <div class="card-title">Macallan Rare Cask Black</div>
+      <div class="card-meta">
+        <span class="price">45,000엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 5日</span>
+        <span class="wb">WB ~90.12 (53평점)</span>
+      </div>
+      <div class="reason">캐스크스트렝스 48%, 90점대 고평점</div>
+      <div class="auctionno">옥션넘버: g1241064655</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/644ebe47b3b7f40816660f400908a1554efe456357ac918e2a8ca603b735e021/i-img938x938-17869377888454bxgjxo33.jpg" alt="Macallan Rare Cask 2023 Release">
+    <div class="card-body">
+      <div class="card-title">Macallan Rare Cask 2023 Release</div>
+      <div class="card-meta">
+        <span class="price">11,500엔</span>
+        <span class="bids">입찰 10건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 5日</span>
+        <span class="wb">WB 87.22 (83평점)</span>
+      </div>
+      <div class="reason">1.1만엔대에 87점, 매우 우수한 가성비</div>
+      <div class="auctionno">옥션넘버: o1241049756</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>LAPHROAIG</h3>
+      <div class="grid">
+  <div class="card wb90">
+    <div class="badge">WB 90+</div>
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/6e44824df97d50e96760f5edcd2b84d6d2544bd2caf34d898005cdd6d6544ffb/i-img1200x1200-1786694011702648fane27.jpg" alt="Laphroaig 1998 SMWS 29.102 13yr &quot;Cowboy's Campfire Dram&quot;">
+    <div class="card-body">
+      <div class="card-title">Laphroaig 1998 SMWS 29.102 13yr &quot;Cowboy's Campfire Dram&quot;</div>
+      <div class="card-meta">
+        <span class="price">28,050엔</span>
+        <span class="bids">입찰 10건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 10時間</span>
+        <span class="wb">WB 90.58 (21평점)</span>
+      </div>
+      <div class="reason">90점대 초고평점, 카스크스트렝스 64.1%</div>
+      <div class="auctionno">옥션넘버: l1240725443</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/12781da5808f5a208955f4484c7bd93e550652c642d1aea22b2a0fb352b6d541/i-img675x1200-17868744560625sdxszo2649.jpg" alt="Laphroaig Càirdeas 200th Anniversary Edition">
+    <div class="card-body">
+      <div class="card-title">Laphroaig Càirdeas 200th Anniversary Edition</div>
+      <div class="card-meta">
+        <span class="price">19,000엔</span>
+        <span class="bids">입찰 25건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 1日</span>
+        <span class="wb">WB 88.23 (508평점)</span>
+      </div>
+      <div class="reason">508명 대규모 표본에 88점대, 입찰 매우 활발</div>
+      <div class="auctionno">옥션넘버: l1240947464</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/869ffeb0126c2b9ffe36ea8288d32f3e854e7e414d6d2920fe5350c0921a776c/i-img900x1200-178360137206885zdhij35.jpg" alt="Laphroaig 10yr Cask Strength Batch #017">
+    <div class="card-body">
+      <div class="card-title">Laphroaig 10yr Cask Strength Batch #017</div>
+      <div class="card-meta">
+        <span class="price">12,800엔 (즉결)</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 1日</span>
+        <span class="wb">WB 87.96 (561평점)</span>
+      </div>
+      <div class="reason">561명 표본, 88점대에 1.3만엔</div>
+      <div class="auctionno">옥션넘버: m1236519120</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0206/user/1d0ad0c93c0003ae1d9d6cd349619329d46cf8a2256283e9efbd666329621381/i-img1200x1200-17818807342200dujouk548.jpg" alt="Laphroaig Càirdeas Fèis Ìle 2018 (Fino Cask, 단종)">
+    <div class="card-body">
+      <div class="card-title">Laphroaig Càirdeas Fèis Ìle 2018 (Fino Cask, 단종)</div>
+      <div class="card-meta">
+        <span class="price">33,000엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 9時間</span>
+        <span class="wb">WB 86.20 (697평점)</span>
+      </div>
+      <div class="reason">697명 표본으로 매우 신뢰도 높은 평점, 단종 페스티벌 에디션</div>
+      <div class="auctionno">옥션넘버: 1234186784</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>YAMAZAKURA</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/9780b8ccee5f5117a7b748b27511360ffad39d15ee38214320c5d17a220dfe81/i-img600x400-17864402776654p2l7is16307.jpg" alt="야마자쿠라 안적(Asaka) THE FIRST Single Malt">
+    <div class="card-body">
+      <div class="card-title">야마자쿠라 안적(Asaka) THE FIRST Single Malt</div>
+      <div class="card-meta">
+        <span class="price">10,448엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 10時間</span>
+        <span class="wb">WB 88.00 (2평점)</span>
+      </div>
+      <div class="reason">소규모 증류소 정규 라인업(한국 미유통), 저렴하고 평점 우수</div>
+      <div class="auctionno">옥션넘버: x1240421156</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0203/user/62d8b7bf450d5e796f7b6124e00c034dc699dcff140542b98ec71dec7ab361fa/i-img600x600-1773323929546743bbnw13505.jpg" alt="야마자쿠라 안적 Sherrywood Reserve">
+    <div class="card-body">
+      <div class="card-title">야마자쿠라 안적 Sherrywood Reserve</div>
+      <div class="card-meta">
+        <span class="price">29,000엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 10時間</span>
+        <span class="wb">WB 87.50 (2평점)</span>
+      </div>
+      <div class="reason">셰리우드 리저브, 우수한 평점</div>
+      <div class="auctionno">옥션넘버: w1222705292</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0206/user/62d8b7bf450d5e796f7b6124e00c034dc699dcff140542b98ec71dec7ab361fa/i-img600x600-17824859398026d60fqu5196.jpg" alt="야마자쿠라 안적 Art Selection &quot;Three Rivers&quot; Dual Cask (세계 325병 한정)">
+    <div class="card-body">
+      <div class="card-title">야마자쿠라 안적 Art Selection &quot;Three Rivers&quot; Dual Cask (세계 325병 한정)</div>
+      <div class="card-meta">
+        <span class="price">12,999엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 1日</span>
+        <span class="wb">WB 87.00 (1평점)</span>
+      </div>
+      <div class="reason">세계 325병 한정 아트 콜라보 싱글몰트</div>
+      <div class="auctionno">옥션넘버: k1235029224</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>SPRINGBANK</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0205/user/832a1609fa6a221ae8c893a83b3d0f3bf45f341eaf6930372a06aab6400fab4a/i-img900x1200-17797289736922weeert71374.jpg" alt="Springbank Kingsbury Demerara Rum Single Cask (초희소)">
+    <div class="card-body">
+      <div class="card-title">Springbank Kingsbury Demerara Rum Single Cask (초희소)</div>
+      <div class="card-meta">
+        <span class="price">16,150엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">킹스버리 독립병입 럼캐스크, 초희소 로트, 매우 저렴</div>
+      <div class="auctionno">옥션넘버: r1231195731</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0206/user/1d0ad0c93c0003ae1d9d6cd349619329d46cf8a2256283e9efbd666329621381/i-img1200x1200-17817035582562ep8v1r834.jpg" alt="Springbank Tasting Room Baby Bottle 200ml (증류소 방문객 익스클루시브)">
+    <div class="card-body">
+      <div class="card-title">Springbank Tasting Room Baby Bottle 200ml (증류소 방문객 익스클루시브)</div>
+      <div class="card-meta">
+        <span class="price">16,500엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 9時間</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">증류소 현지 방문객만 구할 수 있는 소용량 익스클루시브</div>
+      <div class="auctionno">옥션넘버: v1233926078</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>BOWMORE</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/81c2c1bdfb1c21be638b3a161fe78bc8d50d51dd884817117bc8c2821ea68cf7/i-img900x1200-17868908111264ntwcif34.jpg" alt="Bowmore 18yr Fèis Ìle 2020">
+    <div class="card-body">
+      <div class="card-title">Bowmore 18yr Fèis Ìle 2020</div>
+      <div class="card-meta">
+        <span class="price">12,500엔</span>
+        <span class="bids">입찰 17건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 89.31</span>
+      </div>
+      <div class="reason">아일라 페스티벌 한정판, 고평점에 저렴한 가격, 입찰 활발</div>
+      <div class="auctionno">옥션넘버: n1240941392</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/c1a5dc934663ef77528b0d1e83f7703a3c370ec0849a6bc0f608034d55484dcb/i-img903x1200-17869208536089qhrixx34.jpg" alt="Bowmore 2003 23yr for Bar Caol Ila (23주년 기념병)">
+    <div class="card-body">
+      <div class="card-title">Bowmore 2003 23yr for Bar Caol Ila (23주년 기념병)</div>
+      <div class="card-meta">
+        <span class="price">36,500엔</span>
+        <span class="bids">입찰 40건 (매우 고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">바 익스클루시브 23년, 입찰 40건으로 매우 높은 관심도</div>
+      <div class="auctionno">옥션넘버: w1240979499</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>GLEN GRANT</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0205/user/e504dc7157eb9de7993e7125dcd5fed8b52717c948b60f4270633128a985da75/i-img480x640-17795154447486wilfvp5135.jpg" alt="Glen Grant 26yr 1998 Oloroso Sherry Hogshead CS &quot;더 도박꾼&quot;">
+    <div class="card-body">
+      <div class="card-title">Glen Grant 26yr 1998 Oloroso Sherry Hogshead CS &quot;더 도박꾼&quot;</div>
+      <div class="card-meta">
+        <span class="price">49,995엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 2日</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">26년 셰리 호그스헤드 캐스크스트롱, 상한선 바로 아래 가격</div>
+      <div class="auctionno">옥션넘버: n1230926227</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0103/users/2c6322eaa50d9e62e269ab8b3c59cf57602c0f10/i-img1200x837-1741096302lfm3hr1699.jpg" alt="Glen Grant 2006 OKETANI Private Cask (세계 168병 한정, 2병 세트)">
+    <div class="card-body">
+      <div class="card-title">Glen Grant 2006 OKETANI Private Cask (세계 168병 한정, 2병 세트)</div>
+      <div class="card-meta">
+        <span class="price">50,000엔 (2병)</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 1日</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">세계 168병 한정 프라이빗캐스크, 병당 2.5만엔 수준</div>
+      <div class="auctionno">옥션넘버: h1175771624</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/1d0ad0c93c0003ae1d9d6cd349619329d46cf8a2256283e9efbd666329621381/i-img1200x1200-17863250597311y5shhz269762.jpg" alt="Carn Mor Glen Grant 2008 14yr Sauternes Cask Finish">
+    <div class="card-body">
+      <div class="card-title">Carn Mor Glen Grant 2008 14yr Sauternes Cask Finish</div>
+      <div class="card-meta">
+        <span class="price">12,100엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 9時間</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">독립병입 소테른 와인캐스크 피니시, 캐스크스트렝스, 매우 저렴</div>
+      <div class="auctionno">옥션넘버: j1240254816</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>BEN NEVIS</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0204/user/12fb8b328d899c99c9619df40354c62c3f91880558ac4a97d170e4b735abe2c3/i-img900x1200-1775958698152973doz4xt31.jpg" alt="Ben Nevis Boutique-y Whisky Co. &quot;Batch 16&quot; 25yr (10주년 기념)">
+    <div class="card-body">
+      <div class="card-title">Ben Nevis Boutique-y Whisky Co. &quot;Batch 16&quot; 25yr (10주년 기념)</div>
+      <div class="card-meta">
+        <span class="price">45,000엔 (즉결)</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 24時間</span>
+        <span class="wb">WB 87.00 (52평점)</span>
+      </div>
+      <div class="reason">캐스크스트렝스 25년 독립병입, 부티크위스키컴퍼니 10주년 한정</div>
+      <div class="auctionno">옥션넘버: g1226244022</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0109/user/ac385aed0a3cdae75b30c3e6d65877c21c1c10ca76d6c4d0f1062c26ff964858/i-img1200x900-17566945913771xd7o7m315.jpg" alt="Ben Nevis Hepburn's Choice 11yr 2011-2023">
+    <div class="card-body">
+      <div class="card-title">Ben Nevis Hepburn's Choice 11yr 2011-2023</div>
+      <div class="card-meta">
+        <span class="price">13,200엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 11時間</span>
+        <span class="wb">WB 84.25 (21평점)</span>
+      </div>
+      <div class="reason">저가 독립병입, 평점은 경계선급이나 매우 저렴</div>
+      <div class="auctionno">옥션넘버: w1198455622</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>SIGNATORY</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0204/user/e65688f906cda7a86ba4c9af90bc3fbc008ce3856f4e025cf52181dbe3dbb492/i-img900x1200-17756109072912ecdmmw114644.jpg" alt="Signatory Orkney(HP) [비공개 하이랜드파크] 2005 18yr">
+    <div class="card-body">
+      <div class="card-title">Signatory Orkney(HP) [비공개 하이랜드파크] 2005 18yr</div>
+      <div class="card-meta">
+        <span class="price">39,800엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 88.45 (37평점)</span>
+      </div>
+      <div class="reason">하이랜드파크의 비공개 병입, 37명 표본의 88점대 최상급</div>
+      <div class="auctionno">옥션넘버: u1225743015</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0204/user/e65688f906cda7a86ba4c9af90bc3fbc008ce3856f4e025cf52181dbe3dbb492/i-img1200x1200-177561053963935ibs89232.jpg" alt="Signatory Speyside(M) [비공개 매캘란] 2005 18yr CS">
+    <div class="card-body">
+      <div class="card-title">Signatory Speyside(M) [비공개 매캘란] 2005 18yr CS</div>
+      <div class="card-meta">
+        <span class="price">49,800엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 88.33 (5평점)</span>
+      </div>
+      <div class="reason">매캘란의 비공개(secret) 병입, 정가보다 매우 저렴하면서 88점대</div>
+      <div class="auctionno">옥션넘버: 1225736527</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/3310b7950f35777f2f0b2a2ae9cc0ef9c1de75edc6ce44e35d07db699b2641dc/i-img1200x1200-17869603277539er1tjc452.jpg" alt="Signatory Aultmore 2009 16yr &quot;100 Proof #14&quot;">
+    <div class="card-body">
+      <div class="card-title">Signatory Aultmore 2009 16yr &quot;100 Proof #14&quot;</div>
+      <div class="card-meta">
+        <span class="price">14,080엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 11時間</span>
+        <span class="wb">WB 86.76 (31평점)</span>
+      </div>
+      <div class="reason">저가+독립병입 단일캐스크, 표본 31명 신뢰도</div>
+      <div class="auctionno">옥션넘버: s1241079483</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/6c31223bc805cc9667cb206fa1dbfe5979b25a8dc32bb23378c375be1b639cd4/i-img1200x1200-178695713305954iaf0k5044.jpg" alt="Signatory Linkwood 2009 13yr">
+    <div class="card-body">
+      <div class="card-title">Signatory Linkwood 2009 13yr</div>
+      <div class="card-meta">
+        <span class="price">2,100엔</span>
+        <span class="bids">입찰 7건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 3日</span>
+        <span class="wb">WB ~85-86 (배치상이)</span>
+      </div>
+      <div class="reason">극저가(2천엔대) 독립병입 싱글캐스크, 입찰 활발</div>
+      <div class="auctionno">옥션넘버: v1241073590</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>AKKESHI</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0111/user/6c0a47fbf1ba1a9e9175c4be67638831d370c371d593fa30fc1a91f10f84f11d/i-img534x534-17626811656661g3pcqv40931.jpg" alt="Akkeshi Hokusai 시리즈 제1탄 &quot;翠嶺&quot; (ANA 기내면세 한정)">
+    <div class="card-body">
+      <div class="card-title">Akkeshi Hokusai 시리즈 제1탄 &quot;翠嶺&quot; (ANA 기내면세 한정)</div>
+      <div class="card-meta">
+        <span class="price">48,000엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 2日</span>
+        <span class="wb">WB 89.00 (2평점)</span>
+      </div>
+      <div class="reason">ANA 기내면세 전용 유통, 일반매장 구매 불가</div>
+      <div class="auctionno">옥션넘버: w1207174138</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0206/user/4ac13fa4b4055d3e2a4dfcf0531bdb43e2bed9b8ae740978f0a80af70007d0e4/i-img900x1200-17826620505305p75kfm182031.jpg" alt="Akkeshi Peated 2018-2026 7yr for Shinanoya Single Cask 56%">
+    <div class="card-body">
+      <div class="card-title">Akkeshi Peated 2018-2026 7yr for Shinanoya Single Cask 56%</div>
+      <div class="card-meta">
+        <span class="price">53,000엔 (면세한도)</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 10時間</span>
+        <span class="wb">WB 미확인</span>
+      </div>
+      <div class="reason">시나노야 전용 피티드 캐스크스트렝스, 상한선 턱걸이지만 인지도 높은 싱글캐스크</div>
+      <div class="auctionno">옥션넘버: n1235220028</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>CHICHIBU</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0207/user/abb35ae5d386d6c762c81ca5b81a2000fbbc6ae63bc3b16e71fd20311cfc9875/i-img795x1200-17847042867104kdplbb1156.jpg" alt="Chichibu &quot;On The Way&quot; 2015 (단종)">
+    <div class="card-body">
+      <div class="card-title">Chichibu &quot;On The Way&quot; 2015 (단종)</div>
+      <div class="card-meta">
+        <span class="price">51,000엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 12時間</span>
+        <span class="wb">WB 87.76 (166평점)</span>
+      </div>
+      <div class="reason">단종 릴리즈, 166명 표본 신뢰도 높은 87점대</div>
+      <div class="auctionno">옥션넘버: x1238025918</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/0780ba8df9b9ffcb59d65d3fc7f89f6d0d7654bb01ec6f1c46f0ecc28190f2a2/i-img1200x1200-17871053209722fplh6b34.jpg" alt="Chichibu Travel Exclusive 53.5% (면세점 전용)">
+    <div class="card-body">
+      <div class="card-title">Chichibu Travel Exclusive 53.5% (면세점 전용)</div>
+      <div class="card-meta">
+        <span class="price">35,000엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 87.60 (7평점)</span>
+      </div>
+      <div class="reason">면세점 전용 트래블 익스클루시브</div>
+      <div class="auctionno">옥션넘버: e1241279555</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0208/user/d8fdf5e03fb677460cc151cefbf0582508a45368ee53a5b71f7c8599119d45ad/i-img900x1200-17859045888707hobbjy419516.jpg" alt="Chichibu Tequila(Añejo) Cask 2015-2025 10yr #4341 59%">
+    <div class="card-body">
+      <div class="card-title">Chichibu Tequila(Añejo) Cask 2015-2025 10yr #4341 59%</div>
+      <div class="card-meta">
+        <span class="price">1,241엔 (경매중)</span>
+        <span class="bids">입찰 10건 (고입찰)</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 86.33 (3평점)</span>
+      </div>
+      <div class="reason">희귀 캐스크타입(테킬라 아녜호), 극저가에서 입찰 활발</div>
+      <div class="auctionno">옥션넘버: b1239710284</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>CLYNELISH</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0107/user/951e91e5c3ce772ffe50d9acf3fb085abc1f02cd5620eb40c1de636e4da6327b/i-img900x1200-1752747675695637lytuij8.jpg" alt="Clynelish &quot;Hidden Spirits&quot; 10th Anniversary 2013-2023 10yr">
+    <div class="card-body">
+      <div class="card-title">Clynelish &quot;Hidden Spirits&quot; 10th Anniversary 2013-2023 10yr</div>
+      <div class="card-meta">
+        <span class="price">29,800엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 1日</span>
+        <span class="wb">WB 88.44 (89평점)</span>
+      </div>
+      <div class="reason">89명 표본, 시장 최저가와 거의 동일한 가격에 88점대</div>
+      <div class="auctionno">옥션넘버: g1193038209</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0310/users/5a063cf365994fb78eb98c37d1aeeae03ab67075/i-img1200x900-1665925788eg6w8i664800.jpg" alt="Clynelish Diageo Special Release 2022 12yr 58.5%">
+    <div class="card-body">
+      <div class="card-title">Clynelish Diageo Special Release 2022 12yr 58.5%</div>
+      <div class="card-meta">
+        <span class="price">29,800엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 4日</span>
+        <span class="wb">WB 85.91 (411평점)</span>
+      </div>
+      <div class="reason">411명 대규모 표본, 단종 연례 스페셜 릴리스</div>
+      <div class="auctionno">옥션넘버: v1067466792</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <div class="distillery-group">
+      <h3>GLENFARCLAS</h3>
+      <div class="grid">
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0206/user/e504dc7157eb9de7993e7125dcd5fed8b52717c948b60f4270633128a985da75/i-img480x640-17815748798066gka0oz7869.jpg" alt="Glenfarclas Family Casks 2006 17yr (캐스크#3418, 599병)">
+    <div class="card-body">
+      <div class="card-title">Glenfarclas Family Casks 2006 17yr (캐스크#3418, 599병)</div>
+      <div class="card-meta">
+        <span class="price">36,800엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 5日</span>
+        <span class="wb">WB 89.07 (49평점)</span>
+      </div>
+      <div class="reason">캐스크번호 정확 매칭, Family Casks 중 최고평점</div>
+      <div class="auctionno">옥션넘버: c1233718530</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0104/user/e504dc7157eb9de7993e7125dcd5fed8b52717c948b60f4270633128a985da75/i-img480x640-17454753139165xulg7g34.jpg" alt="Glenfarclas 108 12yr 2012 for Highlander Inn Chichibu 61.6% (613병)">
+    <div class="card-body">
+      <div class="card-title">Glenfarclas 108 12yr 2012 for Highlander Inn Chichibu 61.6% (613병)</div>
+      <div class="card-meta">
+        <span class="price">32,890엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 3日</span>
+        <span class="wb">WB 88.13 (18평점)</span>
+      </div>
+      <div class="reason">일본시장 전용, 캐스크번호 정확 매칭, 시세와 거의 동일한 가격</div>
+      <div class="auctionno">옥션넘버: v1182285884</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0205/user/e504dc7157eb9de7993e7125dcd5fed8b52717c948b60f4270633128a985da75/i-img480x640-17795153243143ayukng33.jpg" alt="Glenfarclas 185th Anniversary 46%">
+    <div class="card-body">
+      <div class="card-title">Glenfarclas 185th Anniversary 46%</div>
+      <div class="card-meta">
+        <span class="price">26,800엔</span>
+        <span class="bids">입찰 0건</span>
+      </div>
+      <div class="card-meta2">
+        <span class="time">남은시간 1日</span>
+        <span class="wb">WB 88.04 (707평점)</span>
+      </div>
+      <div class="reason">707명 평가로 신뢰도 매우 높은 88점대</div>
+      <div class="auctionno">옥션넘버: u1230922197</div>
+    </div>
+  </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
