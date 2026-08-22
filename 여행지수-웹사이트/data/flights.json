@@ -1,0 +1,8 @@
+{
+  "PUS-KIX": {
+    "route": "부산(PUS) → 오사카(KIX)",
+    "avgPrice": 185000,
+    "currentPrice": 165000,
+    "updatedAt": "2026-08-22"
+  }
+}

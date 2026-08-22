@@ -1,0 +1,7 @@
+[
+  { "startMonth": 1, "startDay": 1, "endMonth": 1, "endDay": 2, "category": "super_peak", "label": "신정 연휴" },
+  { "startMonth": 7, "startDay": 25, "endMonth": 8, "endDay": 15, "category": "super_peak", "label": "여름휴가 절정" },
+  { "startMonth": 12, "startDay": 20, "endMonth": 12, "endDay": 31, "category": "super_peak", "label": "연말 연휴" },
+  { "startMonth": 5, "startDay": 1, "endMonth": 5, "endDay": 8, "category": "peak", "label": "어린이날 연휴" },
+  { "startMonth": 8, "startDay": 1, "endMonth": 8, "endDay": 24, "category": "shoulder", "label": "여름 방학" }
+]
