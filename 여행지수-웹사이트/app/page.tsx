@@ -8,7 +8,14 @@ interface IndexResponse {
   travelIndex: {
     totalScore: number;
     grade: Grade;
-    breakdown: Record<string, number>;
+    breakdown: {
+      flight: number | null;
+      hotel: number;
+      exchangeRate: number;
+      peakSeason: number;
+      weather: number;
+      temperature: number;
+    };
   };
   totalCost: {
     flightTotal: number;
@@ -152,7 +159,12 @@ export default function Home() {
             </div>
 
             <ul className="grid grid-cols-2 gap-2 text-sm text-zinc-600">
-              <li>항공권: {Math.round(result.travelIndex.breakdown.flight)}점</li>
+              <li>
+                항공권:{" "}
+                {result.travelIndex.breakdown.flight === null
+                  ? "가격 데이터 수집 중"
+                  : `${Math.round(result.travelIndex.breakdown.flight)}점`}
+              </li>
               <li>호텔: {Math.round(result.travelIndex.breakdown.hotel)}점</li>
               <li>환율: {Math.round(result.travelIndex.breakdown.exchangeRate)}점</li>
               <li>성수기: {Math.round(result.travelIndex.breakdown.peakSeason)}점</li>

@@ -38,9 +38,8 @@ function interpolate(points: [number, number][], x: number): number {
   return last[1];
 }
 
-// 항공권 가격: 최근 평균가 대비 편차(%). 예: -0.3 = 30% 더 저렴.
-// 사용자 확정값: -30%=100, -15%=80, 0%=60, +20%=40, +40%=20 (양끝 saturate)
-const PRICE_DEVIATION_POINTS: [number, number][] = [
+// 호텔 가격: 최근 평균가 대비 편차(%). 예: -0.3 = 30% 더 저렴. (조정 가능한 기본값)
+const HOTEL_PRICE_DEVIATION_POINTS: [number, number][] = [
   [-0.3, 100],
   [-0.15, 80],
   [0, 60],
@@ -48,13 +47,93 @@ const PRICE_DEVIATION_POINTS: [number, number][] = [
   [0.4, 20],
 ];
 
-export function scoreFlightPrice(deviationPct: number): number {
-  return interpolate(PRICE_DEVIATION_POINTS, deviationPct);
+export function scoreHotelPrice(deviationPct: number): number {
+  return interpolate(HOTEL_PRICE_DEVIATION_POINTS, deviationPct);
 }
 
-// 호텔 가격: 항공권과 동일한 상대평가 구간 재사용 (조정 가능한 기본값)
-export function scoreHotelPrice(deviationPct: number): number {
-  return interpolate(PRICE_DEVIATION_POINTS, deviationPct);
+// 항공권 가격: 절대값이나 다른 노선과 비교하지 않고, 같은 노선의 비슷한 시기 과거 가격 평균("기준가")
+// 대비 지금 가격이 얼마나 싸거나 비싼지로 채점 (사용자 확정값).
+// 할인율 0%(기준가와 동일)=60점. 할인(+)될수록 30%에서 100점까지 완만하게 상승(1%당 40/30점).
+// 프리미엄(-)일수록 -30%에서 0점까지 더 가파르게 하락(1%당 60/30점) — 비싸지는 쪽에 더 민감.
+// 기준가를 아직 모르면(과거 데이터 부족) 점수를 매기지 않고 null을 반환한다.
+export function flightDealScore(currentPrice: number, baseline: number | null): number | null {
+  if (baseline === null || !Number.isFinite(baseline) || baseline <= 0) return null;
+  if (!Number.isFinite(currentPrice)) return null;
+
+  const discountRate = ((baseline - currentPrice) / baseline) * 100;
+
+  const score =
+    discountRate >= 0 ? 60 + (40 / 30) * discountRate : 60 + (60 / 30) * discountRate;
+
+  return Math.round(Math.max(0, Math.min(100, score)));
+}
+
+// route별 기준가: 같은 시기 과거 가격들의 평균. 데이터가 없으면 null(=아직 기준가를 모름).
+export function calculateBaseline(historicalPrices: number[] | null | undefined): number | null {
+  if (!historicalPrices || historicalPrices.length === 0) return null;
+  return historicalPrices.reduce((a, b) => a + b, 0) / historicalPrices.length;
+}
+
+export type DistanceBand = "short" | "medium" | "long";
+
+export function getDistanceBand(distanceKm: number): DistanceBand {
+  if (distanceKm <= 1500) return "short";
+  if (distanceKm <= 4000) return "medium";
+  return "long";
+}
+
+export interface RoutePriceSample {
+  price: number;
+  distanceKm: number;
+}
+
+// 같은 거리대 비교 노선이 이보다 적으면 백분위 비교가 통계적으로 의미 없다고 보고 채점하지 않는다.
+// (자기 자신 하나뿐이면 rank=1/percentile=1.0으로 항상 0점이 나오는 문제가 있었음 — 검증된 값은 아니고,
+// "최소 이 정도는 있어야 순위 매기는 의미가 있다"는 감으로 잡은 임시 기준. 조정 가능.)
+const MIN_BAND_SAMPLES_FOR_FALLBACK = 3;
+
+// 노선의 과거 가격 데이터가 부족해 flightDealScore를 못 쓸 때 쓰는 임시 채점.
+// 같은 거리대(단/중/장거리)의 다른 노선들과 km당 가격을 비교해 백분위로 매긴다 (사용자 확정값).
+// 비교할 같은 거리대 노선이 충분치 않으면(자기 자신뿐인 경우 포함) null.
+export function flightPriceScoreFallback(
+  price: number,
+  distanceKm: number,
+  allRoutes: RoutePriceSample[]
+): number | null {
+  if (!Number.isFinite(price) || !Number.isFinite(distanceKm) || distanceKm <= 0) return null;
+
+  const pricePerKm = price / distanceKm;
+  const band = getDistanceBand(distanceKm);
+
+  const bandPrices = allRoutes
+    .filter((r) => getDistanceBand(r.distanceKm) === band)
+    .map((r) => r.price / r.distanceKm)
+    .sort((a, b) => a - b);
+
+  if (bandPrices.length < MIN_BAND_SAMPLES_FOR_FALLBACK) return null;
+
+  const rank = bandPrices.filter((p) => p <= pricePerKm).length;
+  const percentile = rank / bandPrices.length;
+
+  return Math.round((1 - percentile) * 100);
+}
+
+const MIN_HISTORICAL_SAMPLES_FOR_BASELINE = 5;
+
+export interface FlightRouteScoreInput {
+  currentPrice: number;
+  distanceKm: number;
+  historicalPrices: number[]; // 이미 "비슷한 시기"로 필터링된 과거 가격들
+  allRoutes: RoutePriceSample[]; // 폴백용 - 전체 노선의 현재가/거리
+}
+
+// 과거 가격 데이터가 5개 이상이면 할인율 방식(flightDealScore), 부족하면 거리대 폴백을 쓴다.
+export function getFlightPriceScore(input: FlightRouteScoreInput): number | null {
+  if (input.historicalPrices.length >= MIN_HISTORICAL_SAMPLES_FOR_BASELINE) {
+    const baseline = calculateBaseline(input.historicalPrices);
+    return flightDealScore(input.currentPrice, baseline);
+  }
+  return flightPriceScoreFallback(input.currentPrice, input.distanceKm, input.allRoutes);
 }
 
 // 환율: 최근 6개월 평균 대비 원화 강세(%). 양수 = 여행자에게 유리.
@@ -98,45 +177,79 @@ export function scoreWeatherCondition(condition: WeatherCondition): number {
   return WEATHER_SCORES[condition];
 }
 
-// 기온: 봄(3~5월)/가을(9~11월)=100 고정 (사용자 확정)
-// 여름(6~8월): 28도 이하=100, 28~40도 선형 감소, 40도 이상=0 (사용자 확정)
-// 겨울(12~2월): 5도 이상=100, 5~-10도 선형 감소, -10도 이하=0 (조정 가능한 기본값, 여름과 대칭 형태로 임시 설정)
-const SUMMER_TEMP_POINTS: [number, number][] = [
-  [28, 100],
-  [40, 0],
-];
+// 기온: 특정 온도(℃) 하나를 0~100점으로 채점 (사용자 확정값).
+// 12~23도가 만점. 더운 쪽은 33.54도, 추운 쪽은 -12도에서 0점이 되도록 구간별로 점점 가파르게 감점.
+// 온도가 없거나(null/undefined) 숫자가 아니면(NaN/Infinity) 채점 불가로 보고 null을 반환한다.
+export function temperatureScore(temp: number | null | undefined): number | null {
+  if (temp === null || temp === undefined || !Number.isFinite(temp)) return null;
 
-const WINTER_TEMP_POINTS: [number, number][] = [
-  [-10, 0],
-  [5, 100],
-];
+  if (temp >= 12 && temp <= 23) return 100;
 
-export function scoreTemperature(month: number, avgTempC: number): number {
-  const isSpringOrFall = [3, 4, 5, 9, 10, 11].includes(month);
-  if (isSpringOrFall) return 100;
+  if (temp > 23 && temp <= 25) return 100 - 5 * (temp - 23);
+  if (temp > 25 && temp <= 28) return 90 - 8 * (temp - 25);
+  if (temp > 28 && temp <= 31) return 66 - 11 * (temp - 28);
+  if (temp > 31 && temp <= 33.54) return Math.max(0, 33 - 13 * (temp - 31));
+  if (temp > 33.54) return 0;
 
-  const isSummer = [6, 7, 8].includes(month);
-  if (isSummer) return interpolate(SUMMER_TEMP_POINTS, avgTempC);
+  if (temp < 12 && temp >= -3) return 100 - ((12 - temp) / (12 - -3)) * 60;
+  if (temp < -3 && temp >= -12) return 40 - ((-3 - temp) / (-3 - -12)) * 40;
+  return 0; // -12도 미만
+}
 
-  // 겨울 (12, 1, 2)
-  return interpolate(WINTER_TEMP_POINTS, avgTempC);
+// 하루치 기온 점수: 낮 기온 70% + 밤 기온 30% 가중평균.
+// 한쪽 값만 없으면 있는 값만으로 채점하고, 둘 다 없으면 그날은 채점 불가(null)로 본다.
+export function dailyTemperatureScore(
+  dayTemp: number | null | undefined,
+  nightTemp: number | null | undefined
+): number | null {
+  const dayScore = temperatureScore(dayTemp);
+  const nightScore = temperatureScore(nightTemp);
+
+  if (dayScore === null && nightScore === null) return null;
+  if (dayScore === null) return nightScore;
+  if (nightScore === null) return dayScore;
+  return dayScore * 0.7 + nightScore * 0.3;
+}
+
+export interface DayTemperature {
+  day: number | null | undefined;
+  night: number | null | undefined;
+}
+
+// 여행 기간 전체의 기온 점수: 날짜별 점수를 평균. 채점 불가한 날짜는 평균에서 제외.
+// days가 비어 있거나 모든 날짜가 채점 불가면, 상위 시스템(외부 날씨 API 호출부)이
+// 잘못된 입력을 넘긴 것이므로 조용히 기본값을 만들어내지 않고 에러를 던진다.
+export function periodTemperatureScore(days: DayTemperature[]): number {
+  if (!Array.isArray(days) || days.length === 0) {
+    throw new Error("periodTemperatureScore: days 배열이 비어 있습니다.");
+  }
+
+  const scores = days
+    .map((d) => dailyTemperatureScore(d.day, d.night))
+    .filter((s): s is number => s !== null);
+
+  if (scores.length === 0) {
+    throw new Error("periodTemperatureScore: 유효한 기온 데이터가 하나도 없습니다.");
+  }
+
+  const avg = scores.reduce((sum, s) => sum + s, 0) / scores.length;
+  return Math.round(avg * 10) / 10;
 }
 
 export interface TravelIndexInputs {
-  flightDeviationPct: number;
+  flightScore: number | null; // getFlightPriceScore()로 미리 계산해서 넘긴다
   hotelDeviationPct: number;
   exchangeFavorableDeviationPct: number;
   peakCategory: PeakCategory;
   weatherCondition: WeatherCondition;
-  month: number;
-  avgTempC: number;
+  temperatureDays: DayTemperature[];
 }
 
 export interface TravelIndexResult {
   totalScore: number;
   grade: Grade;
   breakdown: {
-    flight: number;
+    flight: number | null;
     hotel: number;
     exchangeRate: number;
     peakSeason: number;
@@ -147,21 +260,26 @@ export interface TravelIndexResult {
 
 export function calcTravelIndex(inputs: TravelIndexInputs): TravelIndexResult {
   const breakdown = {
-    flight: scoreFlightPrice(inputs.flightDeviationPct),
+    flight: inputs.flightScore,
     hotel: scoreHotelPrice(inputs.hotelDeviationPct),
     exchangeRate: scoreExchangeRate(inputs.exchangeFavorableDeviationPct),
     peakSeason: scorePeakSeason(inputs.peakCategory),
     weather: scoreWeatherCondition(inputs.weatherCondition),
-    temperature: scoreTemperature(inputs.month, inputs.avgTempC),
+    temperature: periodTemperatureScore(inputs.temperatureDays),
   };
 
-  const totalScore =
-    breakdown.flight * WEIGHTS.flight +
-    breakdown.hotel * WEIGHTS.hotel +
-    breakdown.exchangeRate * WEIGHTS.exchangeRate +
-    breakdown.peakSeason * WEIGHTS.peakSeason +
-    breakdown.weather * WEIGHTS.weather +
-    breakdown.temperature * WEIGHTS.temperature;
+  // 항공권처럼 채점 불가(null)한 요소는 총점 계산에서 제외하고, 남은 요소끼리 가중치를 재분배한다.
+  const weighted: [number | null, number][] = [
+    [breakdown.flight, WEIGHTS.flight],
+    [breakdown.hotel, WEIGHTS.hotel],
+    [breakdown.exchangeRate, WEIGHTS.exchangeRate],
+    [breakdown.peakSeason, WEIGHTS.peakSeason],
+    [breakdown.weather, WEIGHTS.weather],
+    [breakdown.temperature, WEIGHTS.temperature],
+  ];
+  const available = weighted.filter((w): w is [number, number] => w[0] !== null);
+  const totalWeight = available.reduce((sum, [, w]) => sum + w, 0);
+  const totalScore = available.reduce((sum, [s, w]) => sum + s * w, 0) / totalWeight;
 
   return {
     totalScore: Math.round(totalScore),

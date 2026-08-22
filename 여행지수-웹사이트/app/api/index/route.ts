@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { calcTravelIndex } from "@/lib/scoring";
+import { calcTravelIndex, getFlightPriceScore, type RoutePriceSample } from "@/lib/scoring";
 import { calcTotalCost } from "@/lib/cost";
 import { DESTINATIONS } from "@/lib/destinations";
 import { lookupPeakCategory } from "@/lib/peakSeason";
-import { getExchangeFavorability, getSeasonalWeather } from "@/lib/externalApi";
+import { getExchangeFavorability, getSeasonalWeather, getPeriodTemperatures } from "@/lib/externalApi";
+import { getHistoricalPricesNearDate } from "@/lib/flightHistory";
+import { getAllRoutes } from "@/lib/routes";
+import { kvFlightHistoryStore } from "@/lib/kvFlightHistoryStore";
 import flights from "@/data/flights.json";
 import hotels from "@/data/hotels.json";
 import dailyCosts from "@/data/dailyCost.json";
@@ -40,23 +43,41 @@ export async function POST(req: NextRequest) {
   const month = depart.getMonth() + 1;
   const day = depart.getDate();
 
-  const [exchangeFavorableDeviationPct, seasonalWeather] = await Promise.all([
+  const [exchangeFavorableDeviationPct, seasonalWeather, temperatureDays, routeHistory] = await Promise.all([
     getExchangeFavorability(destination.currency),
     getSeasonalWeather(destination.lat, destination.lon, month, day),
+    getPeriodTemperatures(destination.lat, destination.lon, departDate, returnDate),
+    kvFlightHistoryStore.get(destination.flightRouteKey),
   ]);
 
-  const flightDeviationPct = (flight.currentPrice - flight.avgPrice) / flight.avgPrice;
   const hotelDeviationPct = (hotel.currentPrice - hotel.avgPrice) / hotel.avgPrice;
   const peakCategory = lookupPeakCategory(month, day);
 
+  const historicalPrices = getHistoricalPricesNearDate(routeHistory, departDate);
+
+  const allRoutes = getAllRoutes();
+  const currentRoute = allRoutes.find((r) => r.routeKey === destination.flightRouteKey);
+  const flightsByRoute = flights as Record<string, { currentPrice: number }>;
+  const allRoutePrices: RoutePriceSample[] = allRoutes
+    .filter((r) => flightsByRoute[r.routeKey])
+    .map((r) => ({ price: flightsByRoute[r.routeKey].currentPrice, distanceKm: r.distanceKm }));
+
+  const flightScore = currentRoute
+    ? getFlightPriceScore({
+        currentPrice: flight.currentPrice,
+        distanceKm: currentRoute.distanceKm,
+        historicalPrices,
+        allRoutes: allRoutePrices,
+      })
+    : null;
+
   const travelIndex = calcTravelIndex({
-    flightDeviationPct,
+    flightScore,
     hotelDeviationPct,
     exchangeFavorableDeviationPct,
     peakCategory,
     weatherCondition: seasonalWeather.condition,
-    month,
-    avgTempC: seasonalWeather.avgTempC,
+    temperatureDays,
   });
 
   const totalCost = calcTotalCost({
