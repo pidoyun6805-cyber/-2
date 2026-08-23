@@ -176,7 +176,7 @@ export default function Home() {
               <li>
                 환율:{" "}
                 {result.travelIndex.breakdown.exchangeRate === null ? (
-                  "환율 데이터 수집 중"
+                  "환율 정보 없음"
                 ) : (
                   <>
                     {Math.round(result.travelIndex.breakdown.exchangeRate)}점{" "}

@@ -43,17 +43,19 @@ export async function POST(req: NextRequest) {
   const month = depart.getMonth() + 1;
   const day = depart.getDate();
 
+  // 환율 API(Frankfurter.app)가 목적지 통화를 지원하지 않는 경우(예: TWD, VND)
+  // getExchangeRateHistory가 던지는데, 이것 때문에 여행지수 전체가 500으로 죽지 않도록
+  // 여기서만 null로 눌러서 "환율 정보 없음"으로 처리한다.
   const [exchangeRateHistory, seasonalWeather, climateDays, routeHistory] = await Promise.all([
-    getExchangeRateHistory(destination.currency),
+    getExchangeRateHistory(destination.currency).catch(() => null),
     getSeasonalWeather(destination.lat, destination.lon, month, day),
     getPeriodClimate(destination.lat, destination.lon, departDate, returnDate),
     kvFlightHistoryStore.get(destination.flightRouteKey),
   ]);
 
-  const exchangeScore = exchangeRateScore(
-    exchangeRateHistory.currentRate,
-    exchangeRateHistory.historicalRates
-  );
+  const exchangeScore = exchangeRateHistory
+    ? exchangeRateScore(exchangeRateHistory.currentRate, exchangeRateHistory.historicalRates)
+    : null;
 
   const hotelDeviationPct = (hotel.currentPrice - hotel.avgPrice) / hotel.avgPrice;
   const peakCategory = lookupPeakCategory(month, day);
