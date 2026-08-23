@@ -36,12 +36,16 @@ function weatherCodeToCondition(code: number): WeatherCondition {
 
 // 날씨/기온: Open-Meteo 과거 데이터(무료, 키 불필요)로 최근 3년 같은 날짜의 평균 기온/대표 날씨를 조회.
 // 실제 여행일 예보 대신 "이맘때 평균적으로 어떤지"를 계절 지표로 사용.
+// getPeriodClimate()와 동일하게, 특정 연도 응답이 실패하거나(!res.ok) 형식이 이상하면
+// 그 해만 건너뛰고(null) 나머지 연도로 평균 낸다. 부하로 3개년이 전부 실패하면
+// 채점 불가로 보고 null을 반환한다(예외를 던지지 않음 — 이 값은 화면 표시용일 뿐
+// 여행지수 계산에는 쓰이지 않으므로, 죽이는 대신 없는 채로 응답해도 무방).
 export async function getSeasonalWeather(
   lat: number,
   lon: number,
   month: number,
   day: number
-): Promise<{ avgTempC: number; condition: WeatherCondition }> {
+): Promise<{ avgTempC: number | null; condition: WeatherCondition | null }> {
   const now = new Date();
   const years = [1, 2, 3].map((n) => now.getFullYear() - n);
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -53,18 +57,22 @@ export async function getSeasonalWeather(
         `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}` +
         `&start_date=${dateStr}&end_date=${dateStr}&daily=temperature_2m_mean,weathercode&timezone=auto`;
       const res = await fetch(url);
+      if (!res.ok) return null;
       const json = await res.json();
-      return {
-        temp: json.daily.temperature_2m_mean[0] as number,
-        code: json.daily.weathercode[0] as number,
-      };
+      const temp = json?.daily?.temperature_2m_mean?.[0];
+      const code = json?.daily?.weathercode?.[0];
+      if (typeof temp !== "number" || typeof code !== "number") return null;
+      return { temp, code };
     })
   );
 
-  const avgTempC = results.reduce((sum, r) => sum + r.temp, 0) / results.length;
+  const validResults = results.filter((r): r is { temp: number; code: number } => r !== null);
+  if (validResults.length === 0) return { avgTempC: null, condition: null };
+
+  const avgTempC = validResults.reduce((sum, r) => sum + r.temp, 0) / validResults.length;
 
   const codeCounts = new Map<number, number>();
-  for (const r of results) codeCounts.set(r.code, (codeCounts.get(r.code) ?? 0) + 1);
+  for (const r of validResults) codeCounts.set(r.code, (codeCounts.get(r.code) ?? 0) + 1);
   const modeCode = [...codeCounts.entries()].sort((a, b) => b[1] - a[1])[0][0];
 
   return { avgTempC, condition: weatherCodeToCondition(modeCode) };

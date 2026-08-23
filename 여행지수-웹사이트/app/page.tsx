@@ -28,7 +28,7 @@ interface IndexResponse {
   };
   nights: number;
   peakCategory: string;
-  seasonalWeather: { avgTempC: number; condition: string };
+  seasonalWeather: { avgTempC: number | null; condition: string | null };
   error?: string;
 }
 
