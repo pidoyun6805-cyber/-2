@@ -70,5 +70,37 @@
     "avgPrice": 474988,
     "currentPrice": 474988,
     "updatedAt": "2026-08-23"
+  },
+  "PUS-SIN": {
+    "route": "부산(PUS) → 싱가포르(SIN)",
+    "avgPrice": 451033,
+    "currentPrice": 451033,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-KUL": {
+    "route": "부산(PUS) → 쿠알라룸푸르(KUL)",
+    "avgPrice": 532488,
+    "currentPrice": 532488,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-DPS": {
+    "route": "부산(PUS) → 발리(DPS)",
+    "avgPrice": 783930,
+    "currentPrice": 783930,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-GUM": {
+    "route": "부산(PUS) → 괌(GUM)",
+    "avgPrice": 420000,
+    "currentPrice": 420000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "PUS-SPN": {
+    "route": "부산(PUS) → 사이판(SPN)",
+    "avgPrice": 550000,
+    "currentPrice": 550000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
   }
 }

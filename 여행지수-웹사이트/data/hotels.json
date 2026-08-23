@@ -69,5 +69,35 @@
     "currentPrice": 55000,
     "updatedAt": "2026-08-23",
     "isEstimate": true
+  },
+  "싱가포르": {
+    "avgPrice": 150000,
+    "currentPrice": 150000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "쿠알라룸푸르": {
+    "avgPrice": 80000,
+    "currentPrice": 80000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "발리": {
+    "avgPrice": 70000,
+    "currentPrice": 70000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "괌": {
+    "avgPrice": 180000,
+    "currentPrice": 180000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "사이판": {
+    "avgPrice": 140000,
+    "currentPrice": 140000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
   }
 }

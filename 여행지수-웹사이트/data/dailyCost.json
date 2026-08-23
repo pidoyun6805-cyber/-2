@@ -69,5 +69,35 @@
     "localTransport": 5000,
     "misc": 6000,
     "isEstimate": true
+  },
+  "싱가포르": {
+    "food": 25000,
+    "localTransport": 8000,
+    "misc": 10000,
+    "isEstimate": true
+  },
+  "쿠알라룸푸르": {
+    "food": 15000,
+    "localTransport": 5000,
+    "misc": 6000,
+    "isEstimate": true
+  },
+  "발리": {
+    "food": 15000,
+    "localTransport": 5000,
+    "misc": 6000,
+    "isEstimate": true
+  },
+  "괌": {
+    "food": 30000,
+    "localTransport": 8000,
+    "misc": 10000,
+    "isEstimate": true
+  },
+  "사이판": {
+    "food": 25000,
+    "localTransport": 7000,
+    "misc": 8000,
+    "isEstimate": true
   }
 }
