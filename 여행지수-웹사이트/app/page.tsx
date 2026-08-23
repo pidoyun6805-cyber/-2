@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { DESTINATIONS } from "@/lib/destinations";
 import type { Grade } from "@/lib/scoring";
+import { useTravelpayoutsWidget } from "@/hooks/useTravelpayoutsWidget";
+
+const AVIASALES_WIDGET_SRC =
+  "https://tpwgt.com/content?currency=krw&trs=565302&shmarker=768270&show_hotels=true&powered_by=true&locale=ko&searchUrl=www.aviasales.com%2Fsearch&primary_override=%2332a8dd&color_button=%2332a8dd&color_icons=%2332a8dd&dark=%23262626&light=%23FFFFFF&secondary=%23FFFFFF&special=%23C4C4C4&color_focused=%2332a8dd&border_radius=0&plain=false&promo_id=7879&campaign_id=100";
 
 interface IndexResponse {
   travelIndex: {
@@ -11,10 +15,9 @@ interface IndexResponse {
     breakdown: {
       flight: number | null;
       hotel: number;
-      exchangeRate: number;
+      exchangeRate: number | null;
       peakSeason: number;
-      weather: number;
-      temperature: number;
+      climateComfort: number;
     };
   };
   totalCost: {
@@ -50,6 +53,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<IndexResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const aviasalesWidgetRef = useRef<HTMLDivElement>(null);
+  useTravelpayoutsWidget(AVIASALES_WIDGET_SRC, aviasalesWidgetRef);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -81,6 +86,8 @@ export default function Home() {
       <main className="mx-auto max-w-xl">
         <h1 className="mb-2 text-3xl font-bold text-zinc-900">여행지수</h1>
         <p className="mb-8 text-zinc-500">출발지·목적지·날짜·인원수만 입력하면 지금이 여행 가기 좋은 때인지, 총 경비는 얼마쯤 드는지 알려드려요.</p>
+
+        <div ref={aviasalesWidgetRef} className="mb-8 rounded-xl bg-white p-6 shadow-sm" />
 
         <form onSubmit={handleSubmit} className="mb-8 flex flex-col gap-4 rounded-xl bg-white p-6 shadow-sm">
           <div>
@@ -166,10 +173,27 @@ export default function Home() {
                   : `${Math.round(result.travelIndex.breakdown.flight)}점`}
               </li>
               <li>호텔: {Math.round(result.travelIndex.breakdown.hotel)}점</li>
-              <li>환율: {Math.round(result.travelIndex.breakdown.exchangeRate)}점</li>
+              <li>
+                환율:{" "}
+                {result.travelIndex.breakdown.exchangeRate === null ? (
+                  "환율 데이터 수집 중"
+                ) : (
+                  <>
+                    {Math.round(result.travelIndex.breakdown.exchangeRate)}점{" "}
+                    <span
+                      className="ml-1 rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500"
+                      title="여행일의 환율은 미리 알 수 없어서 오늘 환율을 대신 써요. 단기~중기 환율은 오늘 값이 가장 나은 예측치라는 연구(Meese-Rogoff)에 따른 설계예요."
+                    >
+                      📅 오늘 기준
+                    </span>
+                    <p className="mt-0.5 text-xs text-zinc-400">
+                      오늘 기준 환율입니다. 실제 여행일 환율은 다를 수 있어요 — 출발일이 가까워지면 다시 확인해보세요.
+                    </p>
+                  </>
+                )}
+              </li>
               <li>성수기: {Math.round(result.travelIndex.breakdown.peakSeason)}점</li>
-              <li>날씨: {Math.round(result.travelIndex.breakdown.weather)}점</li>
-              <li>기온: {Math.round(result.travelIndex.breakdown.temperature)}점</li>
+              <li>기후쾌적지수: {Math.round(result.travelIndex.breakdown.climateComfort)}점</li>
             </ul>
 
             <hr className="my-2 border-zinc-100" />
