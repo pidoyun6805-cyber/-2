@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { calcTravelIndex, getFlightPriceScore, type RoutePriceSample } from "@/lib/scoring";
+import { calcTravelIndex, getFlightPriceScore, exchangeRateScore, type RoutePriceSample } from "@/lib/scoring";
 import { calcTotalCost } from "@/lib/cost";
 import { DESTINATIONS } from "@/lib/destinations";
 import { lookupPeakCategory } from "@/lib/peakSeason";
-import { getExchangeFavorability, getSeasonalWeather, getPeriodTemperatures } from "@/lib/externalApi";
+import { getExchangeRateHistory, getSeasonalWeather, getPeriodClimate } from "@/lib/externalApi";
 import { getHistoricalPricesNearDate } from "@/lib/flightHistory";
 import { getAllRoutes } from "@/lib/routes";
 import { kvFlightHistoryStore } from "@/lib/kvFlightHistoryStore";
@@ -43,12 +43,17 @@ export async function POST(req: NextRequest) {
   const month = depart.getMonth() + 1;
   const day = depart.getDate();
 
-  const [exchangeFavorableDeviationPct, seasonalWeather, temperatureDays, routeHistory] = await Promise.all([
-    getExchangeFavorability(destination.currency),
+  const [exchangeRateHistory, seasonalWeather, climateDays, routeHistory] = await Promise.all([
+    getExchangeRateHistory(destination.currency),
     getSeasonalWeather(destination.lat, destination.lon, month, day),
-    getPeriodTemperatures(destination.lat, destination.lon, departDate, returnDate),
+    getPeriodClimate(destination.lat, destination.lon, departDate, returnDate),
     kvFlightHistoryStore.get(destination.flightRouteKey),
   ]);
+
+  const exchangeScore = exchangeRateScore(
+    exchangeRateHistory.currentRate,
+    exchangeRateHistory.historicalRates
+  );
 
   const hotelDeviationPct = (hotel.currentPrice - hotel.avgPrice) / hotel.avgPrice;
   const peakCategory = lookupPeakCategory(month, day);
@@ -74,10 +79,9 @@ export async function POST(req: NextRequest) {
   const travelIndex = calcTravelIndex({
     flightScore,
     hotelDeviationPct,
-    exchangeFavorableDeviationPct,
+    exchangeRateScore: exchangeScore,
     peakCategory,
-    weatherCondition: seasonalWeather.condition,
-    temperatureDays,
+    climateDays,
   });
 
   const totalCost = calcTotalCost({

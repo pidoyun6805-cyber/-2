@@ -1,27 +1,29 @@
-import type { DayTemperature, WeatherCondition } from "./scoring";
+import type { ClimateDay, WeatherCondition } from "./scoring";
 
-// 환율: Frankfurter.app (무료, 키 불필요). 최근 6개월 평균 대비 현재 환율의 유리한 정도(%)를 반환.
-// 원화가 강세일수록(외화를 더 싸게 살 수 있을수록) 양수.
-export async function getExchangeFavorability(currency: string): Promise<number> {
+// 환율: Frankfurter.app (무료, 키 불필요). 오늘 환율과 최근 2년(730일)치 일별 환율을 가져온다.
+// exchangeRateScore()의 z-score 채점에 넘길 원본 데이터.
+export async function getExchangeRateHistory(
+  currency: string
+): Promise<{ currentRate: number; historicalRates: number[] }> {
   const today = new Date();
-  const sixMonthsAgo = new Date(today);
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  const twoYearsAgo = new Date(today);
+  twoYearsAgo.setDate(twoYearsAgo.getDate() - 730);
   const fmt = (d: Date) => d.toISOString().slice(0, 10);
 
   const [currentRes, seriesRes] = await Promise.all([
     fetch(`https://api.frankfurter.dev/v1/latest?base=${currency}&symbols=KRW`),
-    fetch(`https://api.frankfurter.dev/v1/${fmt(sixMonthsAgo)}..${fmt(today)}?base=${currency}&symbols=KRW`),
+    fetch(`https://api.frankfurter.dev/v1/${fmt(twoYearsAgo)}..${fmt(today)}?base=${currency}&symbols=KRW`),
   ]);
 
   const current = await currentRes.json();
   const series = await seriesRes.json();
 
   const currentRate: number = current.rates.KRW;
-  const rates: number[] = Object.values(series.rates).map((r: unknown) => (r as { KRW: number }).KRW);
-  const avgRate = rates.reduce((sum, r) => sum + r, 0) / rates.length;
+  const historicalRates: number[] = Object.values(series.rates).map(
+    (r: unknown) => (r as { KRW: number }).KRW
+  );
 
-  // 환율(원/외화)이 평균보다 낮을수록 원화 강세 = 여행자에게 유리
-  return (avgRate - currentRate) / avgRate;
+  return { currentRate, historicalRates };
 }
 
 // WMO weathercode -> 카테고리 매핑 (Open-Meteo 기준)
@@ -74,14 +76,15 @@ function averageValid(values: (number | null | undefined)[]): number | null {
   return valid.reduce((sum, v) => sum + v, 0) / valid.length;
 }
 
-// 여행 기간(가는 날~오는 날) 동안의 날짜별 낮/밤 기온을 최근 3년 같은 날짜대의 평균으로 추정.
-// day = 일 최고기온 평균, night = 일 최저기온 평균. Open-Meteo 응답에 값이 없으면 해당 연도는 평균에서 제외.
-export async function getPeriodTemperatures(
+// 여행 기간(가는 날~오는 날) 동안의 날짜별 기온/습도/구름량/강수량/풍속을
+// 최근 3년 같은 날짜대의 평균으로 추정 (기후쾌적지수 HCI:Urban 계산용 입력).
+// Open-Meteo 응답에 값이 없으면 해당 연도는 평균에서 제외.
+export async function getPeriodClimate(
   lat: number,
   lon: number,
   departDate: string,
   returnDate: string
-): Promise<DayTemperature[]> {
+): Promise<ClimateDay[]> {
   const depart = new Date(departDate);
   const ret = new Date(returnDate);
   const tripDayCount = Math.max(
@@ -101,23 +104,30 @@ export async function getPeriodTemperatures(
       const url =
         `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}` +
         `&start_date=${fmt(shiftedStart)}&end_date=${fmt(shiftedEnd)}` +
-        `&daily=temperature_2m_max,temperature_2m_min&timezone=auto`;
+        `&daily=temperature_2m_mean,relative_humidity_2m_mean,cloud_cover_mean,precipitation_sum,wind_speed_10m_max` +
+        `&timezone=auto`;
 
       const res = await fetch(url);
       if (!res.ok) return null;
       const json = await res.json();
       return {
-        max: json?.daily?.temperature_2m_max as (number | null)[] | undefined,
-        min: json?.daily?.temperature_2m_min as (number | null)[] | undefined,
+        temp: json?.daily?.temperature_2m_mean as (number | null)[] | undefined,
+        humidity: json?.daily?.relative_humidity_2m_mean as (number | null)[] | undefined,
+        cloud: json?.daily?.cloud_cover_mean as (number | null)[] | undefined,
+        precip: json?.daily?.precipitation_sum as (number | null)[] | undefined,
+        wind: json?.daily?.wind_speed_10m_max as (number | null)[] | undefined,
       };
     })
   );
 
-  const days: DayTemperature[] = [];
+  const days: ClimateDay[] = [];
   for (let i = 0; i < tripDayCount; i++) {
     days.push({
-      day: averageValid(perYear.map((y) => y?.max?.[i])),
-      night: averageValid(perYear.map((y) => y?.min?.[i])),
+      tempC: averageValid(perYear.map((y) => y?.temp?.[i])),
+      relHumidity: averageValid(perYear.map((y) => y?.humidity?.[i])),
+      cloudCoverPct: averageValid(perYear.map((y) => y?.cloud?.[i])),
+      precipMm: averageValid(perYear.map((y) => y?.precip?.[i])),
+      windKmh: averageValid(perYear.map((y) => y?.wind?.[i])),
     });
   }
 

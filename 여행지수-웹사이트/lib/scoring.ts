@@ -7,8 +7,7 @@ export const WEIGHTS = {
   flight: 0.2,
   peakSeason: 0.2,
   exchangeRate: 0.2,
-  weather: 0.15,
-  temperature: 0.15,
+  climateComfort: 0.3,
   hotel: 0.1,
 } as const;
 
@@ -136,17 +135,41 @@ export function getFlightPriceScore(input: FlightRouteScoreInput): number | null
   return flightPriceScoreFallback(input.currentPrice, input.distanceKm, input.allRoutes);
 }
 
-// 환율: 최근 6개월 평균 대비 원화 강세(%). 양수 = 여행자에게 유리.
-// 조정 가능한 기본값: 유리+5%=100, 평균=60, 불리-5%=40, 불리-10%=20
-const EXCHANGE_RATE_POINTS: [number, number][] = [
-  [-0.1, 20],
-  [-0.05, 40],
-  [0, 60],
-  [0.05, 100],
-];
+// 환율: 최근 2년(730일) 일별 환율의 평균/표준편차 대비 오늘 환율이 몇 시그마 떨어져 있는지로 채점(z-score).
+// 평균과 같으면 50점(중립), ±SATURATION_SIGMA에서 0점/100점으로 포화.
+// 과거의 "1%p당 4점/8점 비대칭 감점" 방식은 환율이 무작위로 움직여도 점수가 60~80점대로 쏠리는
+// 편향이 있어서 폐기. 과거 데이터가 2개 미만이면 채점 불가로 null.
+//
+// SATURATION_SIGMA=3.3은 이론적으로 도출된 값이 아니라, 실제 관측 데이터(오사카/JPY 기준
+// z≈2.97) 기준으로 역산해서 정한 값이다. 2σ/2.5σ로 포화시키면 오늘자 같은 극단치가 이미
+// 100점에 딱 붙어버려서 앞으로 환율이 더 극단적으로 움직여도 점수로 구분이 안 되는 문제가
+// 있었음 — 그래서 오늘 같은 상황에서도 100점까지 약간의 여유(headroom)가 남도록 넓혔다.
+// 다른 통화(변동성이 다른)를 추가하면서 재조정이 필요할 수 있어 상수로 분리해둔다.
+const SATURATION_SIGMA = 3.3;
 
-export function scoreExchangeRate(favorableDeviationPct: number): number {
-  return interpolate(EXCHANGE_RATE_POINTS, favorableDeviationPct);
+export function exchangeRateScore(currentRate: number, historicalRates: number[]): number | null {
+  if (historicalRates.length < 2) return null;
+
+  const baseline = historicalRates.reduce((a, b) => a + b, 0) / historicalRates.length;
+  const variance =
+    historicalRates.reduce((sum, r) => sum + (r - baseline) ** 2, 0) / historicalRates.length;
+  const stdDev = Math.sqrt(variance);
+
+  if (stdDev === 0) {
+    const score = currentRate <= baseline ? 100 : 0;
+    console.log(
+      `[exchangeRateScore] n=${historicalRates.length} baseline=${baseline} stdDev=0 currentRate=${currentRate} score=${score}`
+    );
+    return score;
+  }
+
+  const z = (baseline - currentRate) / stdDev; // 원화 강세일수록(환율이 낮을수록) +
+  const score = Math.round(Math.max(0, Math.min(100, 50 + z * (50 / SATURATION_SIGMA))));
+  console.log(
+    `[exchangeRateScore] n=${historicalRates.length} baseline=${baseline.toFixed(4)} ` +
+      `stdDev=${stdDev.toFixed(4)} currentRate=${currentRate} z=${z.toFixed(3)} score=${score}`
+  );
+  return score;
 }
 
 // 성수기/혼잡도: 조정 가능한 기본값 4단계
@@ -163,73 +186,133 @@ export function scorePeakSeason(category: PeakCategory): number {
   return PEAK_SEASON_SCORES[category];
 }
 
-// 날씨(하늘 상태): 사용자 확정값
+// 날씨(하늘 상태): getSeasonalWeather()의 계절 참고 표시(condition)에서 여전히 쓰는 타입.
+// 채점 자체는 더 이상 이 타입을 쓰지 않고 climateComfortScore(HCI:Urban)로 대체됨.
 export type WeatherCondition = "clear" | "cloudy" | "rain" | "snow";
 
-const WEATHER_SCORES: Record<WeatherCondition, number> = {
-  clear: 100,
-  cloudy: 75,
-  rain: 20,
-  snow: 35,
-};
+// 기후쾌적지수(HCI:Urban) — Scott, D., Rutty, M., Amelung, B., Tang, M. (2016).
+// "An Inter-Comparison of the Holiday Climate Index (HCI) and the Tourism Climate Index (TCI)
+// in Europe." Atmosphere, 7(6), 80.
+// HCI:Urban = 4*TC + 2*A + (3*P + W), 만점 100. 기존에 따로 채점하던 기온(0.15)+날씨(0.15)를
+// 이 지수 하나(가중치 0.3)로 통합.
 
-export function scoreWeatherCondition(condition: WeatherCondition): number {
-  return WEATHER_SCORES[condition];
+// TC(체감온도) 계산에 원 논문은 유효온도(ET)를 쓰지만, 저자가 Humidex로 대체 가능하다고 명시함.
+export function humidex(tempC: number, relHumidity: number): number {
+  const e = 6.112 * Math.pow(10, (7.5 * tempC) / (237.7 + tempC)) * (relHumidity / 100);
+  if (e < 10) return tempC; // 건조/저온에서는 험덱스 보정 안 함
+  return tempC + (5 / 9) * (e - 10);
 }
 
-// 기온: 특정 온도(℃) 하나를 0~100점으로 채점 (사용자 확정값).
-// 12~23도가 만점. 더운 쪽은 33.54도, 추운 쪽은 -12도에서 0점이 되도록 구간별로 점점 가파르게 감점.
-// 온도가 없거나(null/undefined) 숫자가 아니면(NaN/Infinity) 채점 불가로 보고 null을 반환한다.
-export function temperatureScore(temp: number | null | undefined): number | null {
-  if (temp === null || temp === undefined || !Number.isFinite(temp)) return null;
-
-  if (temp >= 12 && temp <= 23) return 100;
-
-  if (temp > 23 && temp <= 25) return 100 - 5 * (temp - 23);
-  if (temp > 25 && temp <= 28) return 90 - 8 * (temp - 25);
-  if (temp > 28 && temp <= 31) return 66 - 11 * (temp - 28);
-  if (temp > 31 && temp <= 33.54) return Math.max(0, 33 - 13 * (temp - 31));
-  if (temp > 33.54) return 0;
-
-  if (temp < 12 && temp >= -3) return 100 - ((12 - temp) / (12 - -3)) * 60;
-  if (temp < -3 && temp >= -12) return 40 - ((-3 - temp) / (-3 - -12)) * 40;
-  return 0; // -12도 미만
+export function tcScore(effectiveTemp: number): number {
+  const t = effectiveTemp;
+  if (t >= 39) return 0;
+  if (t >= 37) return 2;
+  if (t >= 35) return 4;
+  if (t >= 33) return 5;
+  if (t >= 31) return 6;
+  if (t >= 29) return 7;
+  if (t >= 27) return 8;
+  if (t >= 26) return 9;
+  if (t >= 23) return 10; // 23~25 최적
+  if (t >= 20) return 9;
+  if (t >= 18) return 7;
+  if (t >= 15) return 6;
+  if (t >= 11) return 5;
+  if (t >= 7) return 4;
+  if (t >= 0) return 3;
+  if (t >= -5) return 2;
+  return 1; // -6 이하
 }
 
-// 하루치 기온 점수: 낮 기온 70% + 밤 기온 30% 가중평균.
-// 한쪽 값만 없으면 있는 값만으로 채점하고, 둘 다 없으면 그날은 채점 불가(null)로 본다.
-export function dailyTemperatureScore(
-  dayTemp: number | null | undefined,
-  nightTemp: number | null | undefined
+// A(구름량 미관) 계산. 공인 HCI 표 기준: 0%는 8점(최고점 아님), 1~10%는 9점,
+// 11~20%가 최고점 10점, 21~30%는 다시 9점, 그 뒤로는 구름이 많아질수록 계속 감점.
+export function aScore(cloudCoverPct: number): number {
+  const c = cloudCoverPct;
+  if (c >= 100) return 1;
+  if (c >= 90) return 2;
+  if (c >= 81) return 3;
+  if (c >= 71) return 4;
+  if (c >= 61) return 5;
+  if (c >= 51) return 6;
+  if (c >= 41) return 7;
+  if (c >= 31) return 8;
+  if (c >= 21) return 9;
+  if (c >= 11) return 10;
+  if (c >= 1) return 9;
+  return 8; // 0%
+}
+
+export function pScore(precipMm: number): number {
+  if (precipMm > 12) return 0;
+  if (precipMm >= 9) return 2;
+  if (precipMm >= 6) return 5;
+  if (precipMm >= 3) return 8;
+  if (precipMm > 0) return 9;
+  return 10; // 0.00mm
+}
+
+export function wScore(windKmh: number): number {
+  if (windKmh >= 50) return 0; // 50km/h 이상은 표에 명시 없어 0으로 고정
+  if (windKmh >= 40) return 3;
+  if (windKmh >= 30) return 6;
+  if (windKmh >= 20) return 8;
+  if (windKmh >= 10) return 9;
+  return 10; // 1~9
+}
+
+function isFiniteNum(v: number | null | undefined): v is number {
+  return v !== null && v !== undefined && Number.isFinite(v);
+}
+
+// 위 4개 하위지표(TC/A/P/W)를 합산해 하루치 기후쾌적지수를 낸다.
+// 다섯 입력값 중 하나라도 없으면(null/undefined/NaN) 채점 불가로 보고 null을 반환한다.
+export function climateComfortScore(
+  tempC: number | null | undefined,
+  relHumidity: number | null | undefined,
+  cloudCoverPct: number | null | undefined,
+  precipMm: number | null | undefined,
+  windKmh: number | null | undefined
 ): number | null {
-  const dayScore = temperatureScore(dayTemp);
-  const nightScore = temperatureScore(nightTemp);
+  if (
+    !isFiniteNum(tempC) ||
+    !isFiniteNum(relHumidity) ||
+    !isFiniteNum(cloudCoverPct) ||
+    !isFiniteNum(precipMm) ||
+    !isFiniteNum(windKmh)
+  ) {
+    return null;
+  }
 
-  if (dayScore === null && nightScore === null) return null;
-  if (dayScore === null) return nightScore;
-  if (nightScore === null) return dayScore;
-  return dayScore * 0.7 + nightScore * 0.3;
+  const TC = tcScore(humidex(tempC, relHumidity));
+  const A = aScore(cloudCoverPct);
+  const P = pScore(precipMm);
+  const W = wScore(windKmh);
+
+  return 4 * TC + 2 * A + 3 * P + W;
 }
 
-export interface DayTemperature {
-  day: number | null | undefined;
-  night: number | null | undefined;
+export interface ClimateDay {
+  tempC: number | null | undefined;
+  relHumidity: number | null | undefined;
+  cloudCoverPct: number | null | undefined;
+  precipMm: number | null | undefined;
+  windKmh: number | null | undefined;
 }
 
-// 여행 기간 전체의 기온 점수: 날짜별 점수를 평균. 채점 불가한 날짜는 평균에서 제외.
+// 여행 기간 전체의 기후쾌적지수: 날짜별 점수를 평균. 채점 불가한 날짜는 평균에서 제외.
 // days가 비어 있거나 모든 날짜가 채점 불가면, 상위 시스템(외부 날씨 API 호출부)이
 // 잘못된 입력을 넘긴 것이므로 조용히 기본값을 만들어내지 않고 에러를 던진다.
-export function periodTemperatureScore(days: DayTemperature[]): number {
+export function periodClimateComfortScore(days: ClimateDay[]): number {
   if (!Array.isArray(days) || days.length === 0) {
-    throw new Error("periodTemperatureScore: days 배열이 비어 있습니다.");
+    throw new Error("periodClimateComfortScore: days 배열이 비어 있습니다.");
   }
 
   const scores = days
-    .map((d) => dailyTemperatureScore(d.day, d.night))
+    .map((d) => climateComfortScore(d.tempC, d.relHumidity, d.cloudCoverPct, d.precipMm, d.windKmh))
     .filter((s): s is number => s !== null);
 
   if (scores.length === 0) {
-    throw new Error("periodTemperatureScore: 유효한 기온 데이터가 하나도 없습니다.");
+    throw new Error("periodClimateComfortScore: 유효한 기후 데이터가 하나도 없습니다.");
   }
 
   const avg = scores.reduce((sum, s) => sum + s, 0) / scores.length;
@@ -239,10 +322,9 @@ export function periodTemperatureScore(days: DayTemperature[]): number {
 export interface TravelIndexInputs {
   flightScore: number | null; // getFlightPriceScore()로 미리 계산해서 넘긴다
   hotelDeviationPct: number;
-  exchangeFavorableDeviationPct: number;
+  exchangeRateScore: number | null; // exchangeRateScore()로 미리 계산해서 넘긴다
   peakCategory: PeakCategory;
-  weatherCondition: WeatherCondition;
-  temperatureDays: DayTemperature[];
+  climateDays: ClimateDay[];
 }
 
 export interface TravelIndexResult {
@@ -251,10 +333,9 @@ export interface TravelIndexResult {
   breakdown: {
     flight: number | null;
     hotel: number;
-    exchangeRate: number;
+    exchangeRate: number | null;
     peakSeason: number;
-    weather: number;
-    temperature: number;
+    climateComfort: number;
   };
 }
 
@@ -262,10 +343,9 @@ export function calcTravelIndex(inputs: TravelIndexInputs): TravelIndexResult {
   const breakdown = {
     flight: inputs.flightScore,
     hotel: scoreHotelPrice(inputs.hotelDeviationPct),
-    exchangeRate: scoreExchangeRate(inputs.exchangeFavorableDeviationPct),
+    exchangeRate: inputs.exchangeRateScore,
     peakSeason: scorePeakSeason(inputs.peakCategory),
-    weather: scoreWeatherCondition(inputs.weatherCondition),
-    temperature: periodTemperatureScore(inputs.temperatureDays),
+    climateComfort: periodClimateComfortScore(inputs.climateDays),
   };
 
   // 항공권처럼 채점 불가(null)한 요소는 총점 계산에서 제외하고, 남은 요소끼리 가중치를 재분배한다.
@@ -274,8 +354,7 @@ export function calcTravelIndex(inputs: TravelIndexInputs): TravelIndexResult {
     [breakdown.hotel, WEIGHTS.hotel],
     [breakdown.exchangeRate, WEIGHTS.exchangeRate],
     [breakdown.peakSeason, WEIGHTS.peakSeason],
-    [breakdown.weather, WEIGHTS.weather],
-    [breakdown.temperature, WEIGHTS.temperature],
+    [breakdown.climateComfort, WEIGHTS.climateComfort],
   ];
   const available = weighted.filter((w): w is [number, number] => w[0] !== null);
   const totalWeight = available.reduce((sum, [, w]) => sum + w, 0);
