@@ -108,6 +108,14 @@ test("periodClimateComfortScore: 빈 배열이면 에러", () => {
   assert.throws(() => periodClimateComfortScore([]));
 });
 
+test("periodClimateComfortScore: 날짜는 있지만 유효한 기후 데이터가 하나도 없으면 null(예외 아님)", () => {
+  const days = [
+    { tempC: null, relHumidity: null, cloudCoverPct: null, precipMm: null, windKmh: null },
+    { tempC: null, relHumidity: null, cloudCoverPct: null, precipMm: null, windKmh: null },
+  ];
+  assert.equal(periodClimateComfortScore(days), null);
+});
+
 test("exchangeRateScore: 오늘 환율이 과거 평균과 같으면 중립 50점", () => {
   const historicalRates = [9, 10, 11, 9, 10, 11]; // 평균 10
   assert.equal(exchangeRateScore(10, historicalRates), 50);
@@ -186,5 +194,22 @@ test("calcTravelIndex: 환율 데이터가 없으면(null) 남은 요소끼리 �
   assert.equal(result.breakdown.exchangeRate, null);
   // exchangeRate(0.2) 제외한 나머지 가중치 합 0.8로 재분배
   const expected = (60 * 0.2 + 60 * 0.1 + 100 * 0.2 + 83 * 0.3) / 0.8;
+  assert.equal(result.totalScore, Math.round(expected));
+});
+
+test("calcTravelIndex: 기후 데이터가 없으면(null) 남은 요소끼리 가중치를 재분배한다", () => {
+  const result = calcTravelIndex({
+    flightScore: 60,
+    hotelDeviationPct: 0,
+    exchangeRateScore: 60,
+    peakCategory: "off",
+    climateDays: [
+      { tempC: null, relHumidity: null, cloudCoverPct: null, precipMm: null, windKmh: null },
+    ],
+  });
+
+  assert.equal(result.breakdown.climateComfort, null);
+  // climateComfort(0.3) 제외한 나머지 가중치 합 0.7로 재분배
+  const expected = (60 * 0.2 + 60 * 0.1 + 60 * 0.2 + 100 * 0.2) / 0.7;
   assert.equal(result.totalScore, Math.round(expected));
 });

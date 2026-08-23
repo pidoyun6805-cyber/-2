@@ -300,9 +300,11 @@ export interface ClimateDay {
 }
 
 // 여행 기간 전체의 기후쾌적지수: 날짜별 점수를 평균. 채점 불가한 날짜는 평균에서 제외.
-// days가 비어 있거나 모든 날짜가 채점 불가면, 상위 시스템(외부 날씨 API 호출부)이
-// 잘못된 입력을 넘긴 것이므로 조용히 기본값을 만들어내지 않고 에러를 던진다.
-export function periodClimateComfortScore(days: ClimateDay[]): number {
+// days가 비어 있으면(호출부가 애초에 빈 배열을 넘긴, 잘못된 사용) 에러를 던진다.
+// 반면 days는 있는데 Open-Meteo 부하 등으로 모든 날짜가 채점 불가한 경우는 외부 API의
+// 정상적인 실패 시나리오이므로, 조용히 null을 반환해 상위(calcTravelIndex)에서
+// exchangeRate처럼 그 항목만 빼고 나머지 요소로 가중치를 재분배하게 한다.
+export function periodClimateComfortScore(days: ClimateDay[]): number | null {
   if (!Array.isArray(days) || days.length === 0) {
     throw new Error("periodClimateComfortScore: days 배열이 비어 있습니다.");
   }
@@ -312,7 +314,7 @@ export function periodClimateComfortScore(days: ClimateDay[]): number {
     .filter((s): s is number => s !== null);
 
   if (scores.length === 0) {
-    throw new Error("periodClimateComfortScore: 유효한 기후 데이터가 하나도 없습니다.");
+    return null;
   }
 
   const avg = scores.reduce((sum, s) => sum + s, 0) / scores.length;
@@ -335,7 +337,7 @@ export interface TravelIndexResult {
     hotel: number;
     exchangeRate: number | null;
     peakSeason: number;
-    climateComfort: number;
+    climateComfort: number | null;
   };
 }
 

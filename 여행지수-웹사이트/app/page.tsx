@@ -17,7 +17,7 @@ interface IndexResponse {
       hotel: number;
       exchangeRate: number | null;
       peakSeason: number;
-      climateComfort: number;
+      climateComfort: number | null;
     };
   };
   totalCost: {
@@ -193,7 +193,12 @@ export default function Home() {
                 )}
               </li>
               <li>성수기: {Math.round(result.travelIndex.breakdown.peakSeason)}점</li>
-              <li>기후쾌적지수: {Math.round(result.travelIndex.breakdown.climateComfort)}점</li>
+              <li>
+                기후쾌적지수:{" "}
+                {result.travelIndex.breakdown.climateComfort === null
+                  ? "기후 데이터 없음"
+                  : `${Math.round(result.travelIndex.breakdown.climateComfort)}점`}
+              </li>
             </ul>
 
             <hr className="my-2 border-zinc-100" />
