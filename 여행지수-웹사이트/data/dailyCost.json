@@ -3,5 +3,71 @@
     "food": 30000,
     "localTransport": 8000,
     "misc": 10000
+  },
+  "후쿠오카": {
+    "food": 28000,
+    "localTransport": 7000,
+    "misc": 9000,
+    "isEstimate": true
+  },
+  "도쿄": {
+    "food": 32000,
+    "localTransport": 9000,
+    "misc": 11000,
+    "isEstimate": true
+  },
+  "삿포로": {
+    "food": 30000,
+    "localTransport": 8000,
+    "misc": 10000,
+    "isEstimate": true
+  },
+  "오키나와": {
+    "food": 28000,
+    "localTransport": 7000,
+    "misc": 10000,
+    "isEstimate": true
+  },
+  "타이베이": {
+    "food": 18000,
+    "localTransport": 5000,
+    "misc": 7000,
+    "isEstimate": true
+  },
+  "홍콩": {
+    "food": 25000,
+    "localTransport": 6000,
+    "misc": 9000,
+    "isEstimate": true
+  },
+  "칭다오": {
+    "food": 15000,
+    "localTransport": 4000,
+    "misc": 6000,
+    "isEstimate": true
+  },
+  "다낭": {
+    "food": 12000,
+    "localTransport": 4000,
+    "misc": 5000,
+    "isEstimate": true
+  },
+  "세부": {
+    "food": 15000,
+    "localTransport": 5000,
+    "misc": 6000,
+    "isEstimate": true
+  },
+  "방콕": {
+    "food": 15000,
+    "localTransport": 5000,
+    "misc": 7000,
+    "isEstimate": true
+  },
+  "마닐라": {
+    "food": 15000,
+    "localTransport": 5000,
+    "misc": 6000,
+    "isEstimate": true
   }
 }

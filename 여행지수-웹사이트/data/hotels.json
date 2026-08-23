@@ -3,5 +3,71 @@
     "avgPrice": 90000,
     "currentPrice": 80000,
     "updatedAt": "2026-08-22"
+  },
+  "후쿠오카": {
+    "avgPrice": 70000,
+    "currentPrice": 70000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "도쿄": {
+    "avgPrice": 95000,
+    "currentPrice": 95000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "삿포로": {
+    "avgPrice": 85000,
+    "currentPrice": 85000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "오키나와": {
+    "avgPrice": 90000,
+    "currentPrice": 90000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "타이베이": {
+    "avgPrice": 55000,
+    "currentPrice": 55000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "홍콩": {
+    "avgPrice": 120000,
+    "currentPrice": 120000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "칭다오": {
+    "avgPrice": 50000,
+    "currentPrice": 50000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "다낭": {
+    "avgPrice": 45000,
+    "currentPrice": 45000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "세부": {
+    "avgPrice": 55000,
+    "currentPrice": 55000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "방콕": {
+    "avgPrice": 55000,
+    "currentPrice": 55000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
+  },
+  "마닐라": {
+    "avgPrice": 55000,
+    "currentPrice": 55000,
+    "updatedAt": "2026-08-23",
+    "isEstimate": true
   }
 }

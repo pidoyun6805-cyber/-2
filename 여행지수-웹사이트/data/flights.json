@@ -4,5 +4,71 @@
     "avgPrice": 185000,
     "currentPrice": 165000,
     "updatedAt": "2026-08-22"
+  },
+  "PUS-FUK": {
+    "route": "부산(PUS) → 후쿠오카(FUK)",
+    "avgPrice": 173037,
+    "currentPrice": 173037,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-NRT": {
+    "route": "부산(PUS) → 도쿄(NRT)",
+    "avgPrice": 295514,
+    "currentPrice": 295514,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-CTS": {
+    "route": "부산(PUS) → 삿포로(CTS)",
+    "avgPrice": 355210,
+    "currentPrice": 355210,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-OKA": {
+    "route": "부산(PUS) → 오키나와(OKA)",
+    "avgPrice": 262958,
+    "currentPrice": 262958,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-TPE": {
+    "route": "부산(PUS) → 타이베이(TPE)",
+    "avgPrice": 266110,
+    "currentPrice": 266110,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-HKG": {
+    "route": "부산(PUS) → 홍콩(HKG)",
+    "avgPrice": 507024,
+    "currentPrice": 507024,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-TAO": {
+    "route": "부산(PUS) → 칭다오(TAO)",
+    "avgPrice": 371488,
+    "currentPrice": 371488,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-DAD": {
+    "route": "부산(PUS) → 다낭(DAD)",
+    "avgPrice": 342587,
+    "currentPrice": 342587,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-CEB": {
+    "route": "부산(PUS) → 세부(CEB)",
+    "avgPrice": 369476,
+    "currentPrice": 369476,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-BKK": {
+    "route": "부산(PUS) → 방콕(BKK)",
+    "avgPrice": 331456,
+    "currentPrice": 331456,
+    "updatedAt": "2026-08-23"
+  },
+  "PUS-MNL": {
+    "route": "부산(PUS) → 마닐라(MNL)",
+    "avgPrice": 474988,
+    "currentPrice": 474988,
+    "updatedAt": "2026-08-23"
   }
 }
