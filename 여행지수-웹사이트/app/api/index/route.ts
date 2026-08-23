@@ -7,6 +7,13 @@ import { getExchangeRateHistory, getSeasonalWeather, getPeriodClimate } from "@/
 import { getHistoricalPricesNearDate } from "@/lib/flightHistory";
 import { getAllRoutes } from "@/lib/routes";
 import { kvFlightHistoryStore } from "@/lib/kvFlightHistoryStore";
+import {
+  explainFlightPrice,
+  explainExchangeRate,
+  explainHotelPrice,
+  explainPeakSeason,
+  explainClimateComfort,
+} from "@/lib/insights";
 import flights from "@/data/flights.json";
 import hotels from "@/data/hotels.json";
 import dailyCosts from "@/data/dailyCost.json";
@@ -94,11 +101,41 @@ export async function POST(req: NextRequest) {
     dailyCost,
   });
 
+  // 각 하위 지수 점수 옆에 보여줄 "왜 이 점수인지" 문장. 이미 위에서 계산한 실제 값
+  // (baseline/편차/평균 등)을 그대로 넘겨서 만든다 — 고정 문구가 아니라 매 요청마다 재계산됨.
+  const reasons = {
+    flight: explainFlightPrice(flight.currentPrice, historicalPrices),
+    hotel: explainHotelPrice(hotelDeviationPct),
+    exchangeRate: exchangeRateHistory
+      ? explainExchangeRate(exchangeRateHistory.currentRate, exchangeRateHistory.historicalRates)
+      : null,
+    peakSeason: explainPeakSeason(peakCategory),
+    climateComfort: explainClimateComfort(climateDays, travelIndex.breakdown.climateComfort),
+  };
+
+  const exchangeRateDetail = exchangeRateHistory
+    ? {
+        currentRate: exchangeRateHistory.currentRate,
+        baseline:
+          exchangeRateHistory.historicalRates.reduce((a, b) => a + b, 0) /
+          exchangeRateHistory.historicalRates.length,
+      }
+    : null;
+
+  const cheapestFlightRecord =
+    routeHistory.length > 0
+      ? routeHistory.reduce((min, r) => (r.price < min.price ? r : min), routeHistory[0])
+      : null;
+
   return NextResponse.json({
     travelIndex,
     totalCost,
     nights,
     peakCategory,
     seasonalWeather,
+    reasons,
+    exchangeRateDetail,
+    flightPriceHistory: routeHistory,
+    cheapestFlightRecord,
   });
 }
