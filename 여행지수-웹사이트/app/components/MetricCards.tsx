@@ -93,15 +93,21 @@ function ExchangeCard({ result }: { result: DestinationResult }) {
 function PeakCard({ result, peakSeasonYearCurve }: { result: DestinationResult; peakSeasonYearCurve: PeakSeasonCurvePoint[] }) {
   const score = result.breakdown.peakSeason;
   const points: LineChartPoint[] = peakSeasonYearCurve.map((p) => ({ x: p.date, y: p.score }));
-  const avg = average(points);
+  const avg = points.length > 0 ? average(points) : null;
   const markerScore = peakSeasonYearCurve[result.peakMarkerIndex]?.score ?? score ?? 0;
-  const pct = Math.round((Math.abs(markerScore - avg) / avg) * 100);
-  const dir = markerScore > avg ? "한산해요" : "붐벼요";
+  const pct = avg !== null ? Math.round((Math.abs(markerScore - avg) / avg) * 100) : null;
+  const dir = avg !== null && markerScore > avg ? "한산해요" : "붐벼요";
 
   return (
     <CardShell band={bandFromScore(score)} icon="📅" label="성수기" score={score}>
-      <LineChart points={points} markerIndex={result.peakMarkerIndex} showAverageLine colorVar="--chart" />
-      <p className="mt-2 text-xs text-[var(--muted)]">이 시기 혼잡도는 연중 평균보다 {pct}% {dir}.</p>
+      {points.length >= 2 ? (
+        <>
+          <LineChart points={points} markerIndex={result.peakMarkerIndex} showAverageLine colorVar="--chart" />
+          <p className="mt-2 text-xs text-[var(--muted)]">이 시기 혼잡도는 연중 평균보다 {pct}% {dir}.</p>
+        </>
+      ) : (
+        <p className="text-xs text-[var(--muted)]">데이터가 더 쌓이면 추이 그래프가 보여요.</p>
+      )}
     </CardShell>
   );
 }
