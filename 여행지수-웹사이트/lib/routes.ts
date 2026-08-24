@@ -1,5 +1,5 @@
-import { DESTINATIONS } from "./destinations";
-import { ORIGIN_AIRPORT, haversineDistanceKm } from "./geo";
+import { DESTINATIONS } from "./destinations.ts";
+import { ORIGIN_AIRPORT, haversineDistanceKm } from "./geo.ts";
 
 export interface RouteMeta {
   destinationKey: string;
