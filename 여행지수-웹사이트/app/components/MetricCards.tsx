@@ -12,16 +12,19 @@ function bandFromScore(score: number | null): Band {
   return "serious";
 }
 
-const BAND_TEXT: Record<Band, string> = { good: "text-[var(--good)]", warning: "text-[var(--warning)]", serious: "text-[var(--serious)]" };
-const BAND_BG: Record<Band, string> = { good: "bg-[var(--good-track)]", warning: "bg-[var(--warning-track)]", serious: "bg-[var(--serious-track)]" };
-
-function CardShell({ band, icon, label, score, children }: { band: Band; icon: string; label: string; score: number | null; children: React.ReactNode }) {
+function CardShell({ band, label, code, score, children }: { band: Band; label: string; code: string; score: number | null; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
-      <div className="mb-3 flex items-center gap-2.5">
-        <div className={`flex h-8 w-8 items-center justify-center rounded-lg text-base ${BAND_BG[band]}`}>{icon}</div>
-        <div className="flex-1 text-sm font-bold">{label}</div>
-        <div className={`text-sm font-bold ${BAND_TEXT[band]}`}>{score === null ? "정보 없음" : `${Math.round(score)}점`}</div>
+    <div className="paper-grain relative flex flex-col overflow-hidden rounded-xl px-5 pt-4 pb-5">
+      {/* 카드 상단 절취선 — 티켓에서 뜯어낸 조각이라는 신호 */}
+      <div className="perf-h absolute top-3 right-0 left-0" aria-hidden="true" />
+      <div className="mt-2 mb-3 flex items-baseline justify-between gap-2">
+        <div>
+          <div className="ticket-num text-[8.5px] font-medium tracking-[0.16em] text-[var(--muted)] uppercase">{code}</div>
+          <div className="text-[13.5px] font-bold text-[var(--ink)]">{label}</div>
+        </div>
+        <div className="ticket-num text-[20px] font-semibold" style={{ color: `var(--${band})` }}>
+          {score === null ? <span className="text-[12px] font-semibold">정보 없음</span> : Math.round(score)}
+        </div>
       </div>
       {children}
     </div>
@@ -38,11 +41,11 @@ function FlightCard({ result }: { result: DestinationResult }) {
   const dir = avg && today && today.y < avg ? "저렴한" : "비싼";
 
   return (
-    <CardShell band={band} icon="✈️" label="항공권" score={score}>
+    <CardShell band={band} label="항공권" code="Flight" score={score}>
       {points.length >= 2 ? (
         <>
           <LineChart points={points} highlight="min" colorVar="--chart" />
-          <p className="mt-2 text-xs text-[var(--muted)]">
+          <p className="mt-2 text-[11.5px] leading-relaxed text-[var(--ink-2)]">
             {/* 이력이 이제 막 쌓이는 중이라 표본은 최대 30일이지 30일이 아니다 — 실제 표본 일수를 그대로 쓴다.
                 3일 미만이면 평균 비교가 사실상 의미 없어서 비교 문구 없이 현재가만 알린다. */}
             {points.length >= 3 && avg !== null
@@ -51,7 +54,7 @@ function FlightCard({ result }: { result: DestinationResult }) {
           </p>
         </>
       ) : (
-        <p className="text-xs text-[var(--muted)]">가격 데이터가 더 쌓이면 추이 그래프가 보여요.</p>
+        <p className="text-[11.5px] text-[var(--ink-2)]">가격 데이터가 더 쌓이면 추이 그래프가 보여요.</p>
       )}
     </CardShell>
   );
@@ -60,10 +63,10 @@ function FlightCard({ result }: { result: DestinationResult }) {
 function HotelCard({ result }: { result: DestinationResult }) {
   const score = result.breakdown.hotel;
   return (
-    <CardShell band={bandFromScore(score)} icon="🏨" label="호텔" score={score}>
-      <p className="text-xs text-[var(--muted)]">현지 숙박은 고정 추정치를 기준으로 채점돼요. 실제 이력 데이터가 쌓이면 그래프가 추가될 예정이에요.</p>
-      <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-dashed border-[var(--border)] bg-[var(--surface-2)] px-2.5 py-1 text-[10.5px] font-bold text-[var(--muted)]">
-        <span className="h-1.5 w-1.5 rounded-full bg-[var(--muted)]" /> 실시간 가격 추이 연동 준비 중 — 지금은 고정 추정치예요
+    <CardShell band={bandFromScore(score)} label="호텔" code="Stay" score={score}>
+      <p className="text-[11.5px] leading-relaxed text-[var(--ink-2)]">현지 숙박은 고정 추정치를 기준으로 채점돼요. 실제 이력 데이터가 쌓이면 그래프가 추가될 예정이에요.</p>
+      <div className="mt-2.5 inline-flex items-center gap-1.5 self-start rounded-full border border-dashed border-[var(--rule)] bg-[var(--paper-2)] px-2.5 py-1 text-[10px] font-bold text-[var(--muted)]">
+        <span className="h-1.5 w-1.5 rounded-full bg-[var(--muted)]" aria-hidden="true" /> 실시간 가격 추이 연동 준비 중 — 지금은 고정 추정치예요
       </div>
     </CardShell>
   );
@@ -79,16 +82,16 @@ function ExchangeCard({ result }: { result: DestinationResult }) {
   const dir = avg !== null && current !== null && current < avg ? "낮아요" : "높아요";
 
   return (
-    <CardShell band={bandFromScore(score)} icon="💱" label="환율" score={score}>
+    <CardShell band={bandFromScore(score)} label="환율" code="FX" score={score}>
       {series && points.length >= 2 ? (
         <>
           <LineChart points={points} highlight="last" showAverageLine colorVar="--chart" />
-          <p className="mt-2 text-xs text-[var(--muted)]">
+          <p className="mt-2 text-[11.5px] leading-relaxed text-[var(--ink-2)]">
             오늘 환율은 최근 2년 평균보다 {pct}% {dir}.
           </p>
         </>
       ) : (
-        <p className="text-xs text-[var(--muted)]">이 통화는 아직 환율 데이터가 없어서 표시할 수 없어요.</p>
+        <p className="text-[11.5px] text-[var(--ink-2)]">이 통화는 아직 환율 데이터가 없어서 표시할 수 없어요.</p>
       )}
     </CardShell>
   );
@@ -103,14 +106,16 @@ function PeakCard({ result, peakSeasonYearCurve }: { result: DestinationResult; 
   const dir = avg !== null && markerScore > avg ? "한산해요" : "붐벼요";
 
   return (
-    <CardShell band={bandFromScore(score)} icon="📅" label="성수기" score={score}>
+    <CardShell band={bandFromScore(score)} label="성수기" code="Season" score={score}>
       {points.length >= 2 ? (
         <>
           <LineChart points={points} markerIndex={result.peakMarkerIndex} showAverageLine colorVar="--chart" />
-          <p className="mt-2 text-xs text-[var(--muted)]">이 시기 혼잡도는 연중 평균보다 {pct}% {dir}.</p>
+          <p className="mt-2 text-[11.5px] leading-relaxed text-[var(--ink-2)]">
+            이 시기 혼잡도는 연중 평균보다 {pct}% {dir}.
+          </p>
         </>
       ) : (
-        <p className="text-xs text-[var(--muted)]">데이터가 더 쌓이면 추이 그래프가 보여요.</p>
+        <p className="text-[11.5px] text-[var(--ink-2)]">데이터가 더 쌓이면 추이 그래프가 보여요.</p>
       )}
     </CardShell>
   );
@@ -134,22 +139,28 @@ function ClimateCard({ result }: { result: DestinationResult }) {
   const avgWind = validWind.length > 0 ? validWind.reduce((s, v) => s + v, 0) / validWind.length : null;
 
   return (
-    <CardShell band={bandFromScore(score)} icon="🌤️" label="기후쾌적지수" score={score}>
+    <CardShell band={bandFromScore(score)} label="기후쾌적지수" code="Climate" score={score}>
       {avgTemp !== null ? (
-        <p className="text-xs text-[var(--muted)]">
-          평균기온 {avgTemp.toFixed(1)}℃({Number.isFinite(lo) ? `최저 ${lo.toFixed(0)}℃·최고 ${hi.toFixed(0)}℃` : "일자별 상세 없음"})
+        <p className="text-[11.5px] leading-relaxed text-[var(--ink-2)]">
+          평균기온 <span className="ticket-num font-semibold text-[var(--ink)]">{avgTemp.toFixed(1)}℃</span>
+          {Number.isFinite(lo) && (
+            <>
+              {" "}
+              (최저 <span className="ticket-num">{lo.toFixed(0)}</span>℃·최고 <span className="ticket-num">{hi.toFixed(0)}</span>℃)
+            </>
+          )}
           {delta !== null && `, 평년보다 ${Math.abs(delta).toFixed(1)}℃ ${delta >= 0 ? "높아요" : "낮아요"}`}. 습도{" "}
           {avgHumidity !== null ? `${avgHumidity.toFixed(0)}%` : "정보 없음"} · 풍속 {avgWind !== null ? `${avgWind.toFixed(1)}m/s` : "정보 없음"}
         </p>
       ) : (
-        <p className="text-xs text-[var(--muted)]">기후 데이터가 아직 없어요.</p>
+        <p className="text-[11.5px] text-[var(--ink-2)]">기후 데이터가 아직 없어요.</p>
       )}
       <div className="mt-3 flex gap-2">
         {days.map((d) => (
-          <div key={d.date} className="flex-1 rounded-lg bg-[var(--surface-2)] px-1.5 py-2 text-center">
-            <div className="text-[10px] font-bold text-[var(--muted)]">{d.date.slice(5)}</div>
-            <div className="my-1 text-lg">{d.condition ? CONDITION_ICON[d.condition] : "❔"}</div>
-            <div className="text-[11.5px] font-bold tabular-nums">
+          <div key={d.date} className="flex-1 rounded-lg border border-[var(--rule)] bg-[var(--paper-2)] px-1.5 py-2 text-center">
+            <div className="ticket-num text-[9.5px] font-medium text-[var(--muted)]">{d.date.slice(5)}</div>
+            <div className="my-1 text-[17px]">{d.condition ? CONDITION_ICON[d.condition] : "❔"}</div>
+            <div className="ticket-num text-[11px] font-semibold text-[var(--ink)]">
               {d.tempMinC !== null && d.tempMaxC !== null ? `${d.tempMinC.toFixed(0)}~${d.tempMaxC.toFixed(0)}℃` : "-"}
             </div>
             <div className="text-[9.5px] text-[var(--muted)]">{d.condition ? CONDITION_LABEL[d.condition] : "-"}</div>
@@ -162,7 +173,7 @@ function ClimateCard({ result }: { result: DestinationResult }) {
 
 export function MetricCards({ result, peakSeasonYearCurve }: { result: DestinationResult; peakSeasonYearCurve: PeakSeasonCurvePoint[] }) {
   return (
-    <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       <FlightCard result={result} />
       <HotelCard result={result} />
       <ExchangeCard result={result} />

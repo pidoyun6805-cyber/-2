@@ -95,23 +95,23 @@ export default function Home() {
       <main className="mx-auto max-w-[1040px]">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <div className="font-serif text-lg font-bold">여행지수</div>
-            <div className="text-[11px] text-[var(--muted)]">실제 데이터로 계산하는 다음 여행</div>
+            <div className="font-display text-lg font-bold">여행지수</div>
+            <div className="text-[11px] text-[var(--page-muted)]">실제 데이터로 계산하는 다음 여행</div>
           </div>
         </div>
 
-        {topError && <p className="mb-6 text-sm text-[var(--muted)]">{topError}</p>}
+        {topError && <p className="mb-6 text-sm text-[var(--page-muted)]">{topError}</p>}
 
         {selectedResult && topData && (
           <>
             <Hero result={selectedResult} computedAt={topData.computedAt} />
 
-            <div ref={aviasalesWidgetRef} className="mt-5 rounded-xl bg-[var(--surface)] p-4 shadow-sm" />
+            <div ref={aviasalesWidgetRef} className="mt-5 paper-grain rounded-xl p-4 text-[var(--ink)]" />
 
-            <form onSubmit={handleSubmit} className="mt-5 flex flex-wrap items-end gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+            <form onSubmit={handleSubmit} className="mt-5 flex flex-wrap items-end gap-3 paper-grain rounded-2xl p-5 text-[var(--ink)]">
               <div className="min-w-[180px] flex-[1.6]">
                 <label className="mb-1.5 block text-[11.5px] font-semibold text-[var(--ink-2)]">목적지</label>
-                <select value={destinationKey} onChange={(e) => setDestinationKey(e.target.value)} className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 text-sm">
+                <select value={destinationKey} onChange={(e) => setDestinationKey(e.target.value)} className="w-full rounded-lg border border-[var(--rule)] bg-[var(--paper-2)] px-3 py-2.5 text-sm">
                   {destinationKeys.map((key) => (
                     <option key={key} value={key}>
                       {DESTINATIONS[key].label}
@@ -121,24 +121,24 @@ export default function Home() {
               </div>
               <div className="min-w-[140px] flex-1">
                 <label className="mb-1.5 block text-[11.5px] font-semibold text-[var(--ink-2)]">가는 날</label>
-                <input type="date" required value={departDate} onChange={(e) => setDepartDate(e.target.value)} className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 text-sm" />
+                <input type="date" required value={departDate} onChange={(e) => setDepartDate(e.target.value)} className="w-full rounded-lg border border-[var(--rule)] bg-[var(--paper-2)] px-3 py-2.5 text-sm" />
               </div>
               <div className="min-w-[140px] flex-1">
                 <label className="mb-1.5 block text-[11.5px] font-semibold text-[var(--ink-2)]">오는 날</label>
-                <input type="date" required value={returnDate} onChange={(e) => setReturnDate(e.target.value)} className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 text-sm" />
+                <input type="date" required value={returnDate} onChange={(e) => setReturnDate(e.target.value)} className="w-full rounded-lg border border-[var(--rule)] bg-[var(--paper-2)] px-3 py-2.5 text-sm" />
               </div>
               <div className="min-w-[90px] flex-[0.6]">
                 <label className="mb-1.5 block text-[11.5px] font-semibold text-[var(--ink-2)]">인원수</label>
-                <input type="number" min={1} required value={people} onChange={(e) => setPeople(Number(e.target.value))} className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 text-sm" />
+                <input type="number" min={1} required value={people} onChange={(e) => setPeople(Number(e.target.value))} className="w-full rounded-lg border border-[var(--rule)] bg-[var(--paper-2)] px-3 py-2.5 text-sm" />
               </div>
-              <button type="submit" disabled={loading} className="rounded-lg bg-[var(--hero-bg-2)] px-5 py-2.5 text-[13.5px] font-bold text-[var(--hero-ink)] disabled:opacity-50">
+              <button type="submit" disabled={loading} className="rounded-lg bg-[var(--brand)] px-5 py-2.5 text-[13.5px] font-bold text-[var(--brand-ink)] cursor-pointer disabled:opacity-50">
                 {loading ? "계산 중..." : "여행지수 계산하기"}
               </button>
             </form>
 
             {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
             {result && (
-              <div className="mt-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+              <div className="mt-4 paper-grain rounded-2xl p-5 text-[var(--ink)]">
                 <div className="text-2xl font-extrabold">{result.travelIndex.totalScore}점 · {result.travelIndex.grade}</div>
                 <div className="mt-2 text-sm text-[var(--muted)]">
                   총 {formatKRW(result.totalCost.grandTotal)} ({result.nights}박 {people}인)
@@ -147,18 +147,18 @@ export default function Home() {
             )}
 
             <div className="mt-8 mb-3.5 flex items-baseline justify-between">
-              <h2 className="font-serif text-[19px] font-bold">{selectedResult.label}는 지금 왜 좋은가요</h2>
+              <h2 className="font-display text-[19px] font-bold">{selectedResult.label}는 지금 왜 좋은가요</h2>
             </div>
             <MetricCards result={selectedResult} peakSeasonYearCurve={topData.peakSeasonYearCurve} />
 
             <div className="mt-8 mb-3.5">
-              <h2 className="font-serif text-[19px] font-bold">등록된 목적지 (17곳)</h2>
+              <h2 className="font-display text-[19px] font-bold">등록된 목적지 (17곳)</h2>
             </div>
             <DestinationList results={listResults} selectedKey={selectedResult.destinationKey} onSelect={setSelectedKey} />
           </>
         )}
 
-        {!selectedResult && !topError && <p className="text-sm text-[var(--muted)]">오늘의 추천을 계산하는 중이에요...</p>}
+        {!selectedResult && !topError && <p className="text-sm text-[var(--page-muted)]">오늘의 추천을 계산하는 중이에요...</p>}
       </main>
     </div>
   );
