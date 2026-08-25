@@ -4,13 +4,12 @@ import { calcTravelIndex, getFlightPriceScore, exchangeRateScore, type RoutePric
 import { lookupPeakCategory } from "./peakSeason.ts";
 import { getPeriodClimate, getExchangeRateHistory } from "./externalApi.ts";
 import { getAllRoutes } from "./routes.ts";
-import { kvFlightHistoryStore } from "./kvFlightHistoryStore.ts";
+import { loadRoutePriceMap, type RoutePriceMapEntry } from "./currentFlightPrice.ts";
 import { getHistoricalPricesNearDate, type FlightPriceRecord } from "./flightHistory.ts";
 import { deriveTopChips, type TopChip } from "./topChips.ts";
 import { buildPeakSeasonYearCurve, findCurveIndexForDate, type PeakSeasonCurvePoint } from "./peakSeasonCurve.ts";
 import { getPeriodClimateDaily, getClimateBaseline10y, type ClimateDayDetail } from "./climateDetail.ts";
 import hotels from "../data/hotels.json" with { type: "json" };
-import flights from "../data/flights.json" with { type: "json" };
 
 export type Band = "good" | "warning" | "serious";
 
@@ -84,26 +83,26 @@ async function computeOneDestination(
   destinationKey: string,
   destination: DestinationConfig,
   windows: CandidateWindow[],
-  peakSeasonYearCurve: PeakSeasonCurvePoint[]
+  peakSeasonYearCurve: PeakSeasonCurvePoint[],
+  routePriceMap: Map<string, RoutePriceMapEntry>
 ): Promise<{ result: DestinationResult; rankingScore: number }> {
   const hotel = (hotels as Record<string, { avgPrice: number; currentPrice: number }>)[destinationKey];
   const hotelDeviationPct = (hotel.currentPrice - hotel.avgPrice) / hotel.avgPrice;
 
-  const [exchangeRateHistory, routeHistory] = await Promise.all([
-    getExchangeRateHistory(destination.currency).catch(() => null),
-    kvFlightHistoryStore.get(destination.flightRouteKey),
-  ]);
+  const exchangeRateHistory = await getExchangeRateHistory(destination.currency).catch(() => null);
   const exchangeScore = exchangeRateHistory
     ? exchangeRateScore(exchangeRateHistory.currentRate, exchangeRateHistory.historicalRates)
     : null;
 
-  const allRoutes = getAllRoutes();
-  const currentRoute = allRoutes.find((r) => r.routeKey === destination.flightRouteKey);
-  const flightsByRoute = flights as Record<string, { currentPrice: number }>;
-  const flight = flightsByRoute[destination.flightRouteKey] as { currentPrice: number } | undefined;
-  const allRoutePrices: RoutePriceSample[] = allRoutes
-    .filter((r) => flightsByRoute[r.routeKey])
-    .map((r) => ({ price: flightsByRoute[r.routeKey].currentPrice, distanceKm: r.distanceKm }));
+  // 항공권 가격은 flights.json 고정 추정치가 아니라 매일 수집한 실데이터에서 온다.
+  // 실데이터가 없는 노선(캐시가 비어있는 괌·사이판 등)은 price가 null이고,
+  // 그러면 flightScore도 null이 되어 화면에 "정보 없음"으로 정직하게 빠진다.
+  const own = routePriceMap.get(destination.flightRouteKey);
+  const routeHistory = own?.history ?? [];
+  const currentRoute = getAllRoutes().find((r) => r.routeKey === destination.flightRouteKey);
+  const allRoutePrices: RoutePriceSample[] = [...routePriceMap.values()]
+    .filter((e): e is RoutePriceMapEntry & { price: number } => e.price !== null)
+    .map((e) => ({ price: e.price, distanceKm: e.distanceKm }));
 
   const evaluated = await Promise.all(
     windows.map(async (window) => {
@@ -113,9 +112,9 @@ async function computeOneDestination(
       const peakCategory = lookupPeakCategory(month, day);
       const historicalPrices = getHistoricalPricesNearDate(routeHistory, window.departDate);
       const flightScore =
-        currentRoute && flight
+        currentRoute && own?.price != null
           ? getFlightPriceScore({
-              currentPrice: flight.currentPrice,
+              currentPrice: own.price,
               distanceKm: currentRoute.distanceKm,
               historicalPrices,
               allRoutes: allRoutePrices,
@@ -194,7 +193,8 @@ export async function computeResultForWindow(
   if (!destination) throw new Error(`지원하지 않는 목적지: ${destinationKey}`);
 
   const peakSeasonYearCurve = buildPeakSeasonYearCurve();
-  const { result } = await computeOneDestination(destinationKey, destination, [{ departDate, returnDate }], peakSeasonYearCurve);
+  const routePriceMap = await loadRoutePriceMap();
+  const { result } = await computeOneDestination(destinationKey, destination, [{ departDate, returnDate }], peakSeasonYearCurve, routePriceMap);
   return { result, peakSeasonYearCurve };
 }
 
@@ -202,9 +202,13 @@ export async function computeAllDestinationResults(): Promise<TopDestinationsPay
   const peakSeasonYearCurve = buildPeakSeasonYearCurve();
   const windows = candidateWindows();
 
+  // 노선별 실데이터 시세를 한 번만 읽어 모든 목적지 계산에 공유한다
+  // (목적지마다 읽으면 거리대 폴백 때문에 17x17번 읽게 된다).
+  const routePriceMap = await loadRoutePriceMap();
+
   const computed = await Promise.all(
     Object.entries(DESTINATIONS).map(([destinationKey, destination]) =>
-      computeOneDestination(destinationKey, destination, windows, peakSeasonYearCurve)
+      computeOneDestination(destinationKey, destination, windows, peakSeasonYearCurve, routePriceMap)
     )
   );
 

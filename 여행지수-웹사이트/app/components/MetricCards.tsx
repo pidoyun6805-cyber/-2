@@ -2,6 +2,7 @@
 
 import { LineChart, average, type LineChartPoint } from "./LineChart";
 import type { DestinationResult } from "@/lib/topDestination";
+import { countDistinctDates } from "@/lib/flightHistory";
 import type { PeakSeasonCurvePoint } from "@/lib/peakSeasonCurve";
 import type { Band } from "@/lib/topDestination";
 
@@ -30,12 +31,25 @@ function CardShell({ band, icon, label, score, children }: { band: Band; icon: s
 
 function FlightCard({ result }: { result: DestinationResult }) {
   const score = result.breakdown.flight;
-  const points: LineChartPoint[] = result.flightPriceHistory30d.map((p) => ({ x: p.date, y: p.price / 10000 }));
+  const history = result.flightPriceHistory30d;
+  const points: LineChartPoint[] = history.map((p) => ({ x: p.date, y: p.price / 10000 }));
   const band = bandFromScore(score);
   const today = points[points.length - 1];
   const avg = points.length > 0 ? average(points) : null;
   const pct = avg && today ? Math.round((Math.abs(today.y - avg) / avg) * 1000) / 10 : null;
   const dir = avg && today && today.y < avg ? "저렴한" : "비싼";
+  // "며칠치"는 항목 수가 아니라 고유 날짜 수다. 예전에 항목 수로 세는 바람에
+  // 같은 날짜가 3번 중복된 이력이 "최근 4일"로 표시되고 있었다.
+  const distinctDays = countDistinctDates(history);
+
+  // 점수가 null이면 이 노선은 실가격 자체를 못 받은 것 — 그래프도 문구도 만들지 않는다.
+  if (score === null) {
+    return (
+      <CardShell band={band} icon="✈️" label="항공권" score={null}>
+        <p className="text-xs text-[var(--muted)]">이 노선은 아직 실시간 가격 데이터를 받지 못했어요. 받는 대로 점수와 추이가 표시됩니다.</p>
+      </CardShell>
+    );
+  }
 
   return (
     <CardShell band={band} icon="✈️" label="항공권" score={score}>
@@ -43,15 +57,16 @@ function FlightCard({ result }: { result: DestinationResult }) {
         <>
           <LineChart points={points} highlight="min" colorVar="--chart" />
           <p className="mt-2 text-xs text-[var(--muted)]">
-            {/* 이력이 이제 막 쌓이는 중이라 표본은 최대 30일이지 30일이 아니다 — 실제 표본 일수를 그대로 쓴다.
-                3일 미만이면 평균 비교가 사실상 의미 없어서 비교 문구 없이 현재가만 알린다. */}
-            {points.length >= 3 && avg !== null
-              ? `최근 ${points.length}일 평균 ${avg.toFixed(1)}만원보다 ${pct}% ${dir} ${today.y.toFixed(1)}만원대예요.`
+            {/* 고유 날짜가 1일뿐이면 비교 대상이 자기 자신이라 평균 비교가 무의미하다 — 현재가만 알린다. */}
+            {distinctDays >= 2 && avg !== null
+              ? `최근 ${distinctDays}일 평균 ${avg.toFixed(1)}만원보다 ${pct}% ${dir} ${today.y.toFixed(1)}만원대예요.`
               : `지금 ${today.y.toFixed(1)}만원대예요. 비교할 가격 이력이 더 쌓이는 중이에요.`}
           </p>
         </>
       ) : (
-        <p className="text-xs text-[var(--muted)]">가격 데이터가 더 쌓이면 추이 그래프가 보여요.</p>
+        <p className="text-xs text-[var(--muted)]">
+          {today ? `지금 ${today.y.toFixed(1)}만원대예요. ` : ""}가격 데이터가 더 쌓이면 추이 그래프가 보여요.
+        </p>
       )}
     </CardShell>
   );

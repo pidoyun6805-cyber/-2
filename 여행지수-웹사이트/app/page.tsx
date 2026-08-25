@@ -18,7 +18,8 @@ const TOP_N = 5; // 목적지 목록은 상위 5곳만 (17곳은 읽기 부담)
 
 interface IndexResponse {
   travelIndex: { totalScore: number; grade: Grade; breakdown: Record<string, number | null> };
-  totalCost: { flightTotal: number; hotelTotal: number; dailyCostTotal: number; grandTotal: number };
+  // 항공권 실가격을 못 받은 노선은 총경비를 계산할 수 없어 null로 온다(고정값으로 메우지 않는다).
+  totalCost: { flightTotal: number; hotelTotal: number; dailyCostTotal: number; grandTotal: number } | null;
   nights: number;
   // 검색 결과로도 지수 카드 5개를 그리기 위한 상세 데이터
   result: DestinationResult;
@@ -189,8 +190,12 @@ export default function Home() {
                       {searched.result.label} · {formatWindowLabel(searched.result.departDate, searched.result.returnDate).replace(" 기준", "")}
                     </div>
                     <div className="mt-1 text-[13px] font-semibold text-[var(--ink-2)]">
-                      {searched.result.grade} · 총 {formatKRW(searched.totalCost.grandTotal)}
+                      {searched.result.grade}
+                      {searched.totalCost ? ` · 총 ${formatKRW(searched.totalCost.grandTotal)}` : ""}
                     </div>
+                    {!searched.totalCost && (
+                      <div className="mt-1 text-[11.5px] text-[var(--muted)]">항공권 실시간 가격을 못 받아서 총경비는 계산하지 못했어요.</div>
+                    )}
                   </div>
                 </div>
 
