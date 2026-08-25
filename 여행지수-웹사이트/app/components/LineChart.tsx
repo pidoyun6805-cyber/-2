@@ -24,7 +24,7 @@ export function average(points: LineChartPoint[]): number {
 
 export function LineChart({ points, highlight, markerIndex, showAverageLine = false, colorVar = "--chart", height = 76 }: LineChartProps) {
   if (points.length < 2) {
-    return <p className="text-[11.5px] text-[var(--ink-2)]">데이터가 더 쌓이면 추이 그래프가 보여요.</p>;
+    return <p className="text-sm text-zinc-500 dark:text-zinc-400">데이터가 더 쌓이면 추이 그래프가 보여요.</p>;
   }
 
   const values = points.map((p) => p.y);
@@ -55,14 +55,14 @@ export function LineChart({ points, highlight, markerIndex, showAverageLine = fa
 
   return (
     <svg viewBox={`0 0 ${WIDTH} ${height}`} className="w-full overflow-visible" style={{ display: "block" }}>
-      <line x1={0} y1={PAD_TOP} x2={WIDTH} y2={PAD_TOP} stroke="var(--grid, #e2ded4)" strokeWidth={1} />
-      <line x1={0} y1={height - PAD_BOTTOM} x2={WIDTH} y2={height - PAD_BOTTOM} stroke="var(--grid, #e2ded4)" strokeWidth={1} />
+      <line x1={0} y1={PAD_TOP} x2={WIDTH} y2={PAD_TOP} stroke="var(--grid, #e7ded0)" strokeWidth={1} />
+      <line x1={0} y1={height - PAD_BOTTOM} x2={WIDTH} y2={height - PAD_BOTTOM} stroke="var(--grid, #e7ded0)" strokeWidth={1} />
       {avgY !== null && (
-        <line x1={0} y1={avgY} x2={WIDTH} y2={avgY} stroke="var(--muted, #8c8c97)" strokeWidth={1} strokeDasharray="3 3" />
+        <line x1={0} y1={avgY} x2={WIDTH} y2={avgY} stroke="var(--muted, #8c8672)" strokeWidth={1} strokeDasharray="3 3" />
       )}
       <path d={areaPath} fill={`var(${colorVar})`} fillOpacity={0.1} stroke="none" />
       <polyline points={pts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ")} fill="none" stroke={`var(${colorVar})`} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-      {hl && <circle cx={hl.x} cy={hl.y} r={4} stroke={`var(${colorVar})`} strokeWidth={2} fill="var(--paper, #fffefb)" />}
+      {hl && <circle cx={hl.x} cy={hl.y} r={4} stroke={`var(${colorVar})`} strokeWidth={2} fill="var(--surface, #fffdf8)" />}
     </svg>
   );
 }
