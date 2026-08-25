@@ -25,7 +25,8 @@ test("구조적 결손(환율)은 지수 자체를 전 목적지에서 뺀다", 
     { destinationKey: "타이베이", breakdown: full({ exchangeRate: null }) },
     { destinationKey: "오사카", breakdown: full() },
   ]);
-  assert.deepEqual(e.excludedMetrics, ["exchangeRate"]);
+  assert.deepEqual(e.excludedMetrics.map((m) => m.metric), ["exchangeRate"]);
+  assert.deepEqual(e.excludedMetrics[0].missingDestinations, ["타이베이"]);
   // 목적지는 하나도 빠지지 않는다 — 타이베이를 영원히 후보에서 빼는 건 과하다.
   assert.deepEqual(e.excludedDestinations, []);
 });
@@ -50,7 +51,7 @@ test("구조적/개별 결손이 동시에 있어도 각각 규칙대로 처리�
     { destinationKey: "괌", breakdown: full({ flight: null }) },
     { destinationKey: "마닐라", breakdown: full({ climateComfort: null }) },
   ]);
-  assert.deepEqual(e.excludedMetrics, ["exchangeRate"]);
+  assert.deepEqual(e.excludedMetrics.map((m) => m.metric), ["exchangeRate"]);
   assert.deepEqual(e.excludedDestinations.map((d) => d.destinationKey).sort(), ["괌", "마닐라"]);
 });
 
@@ -103,7 +104,30 @@ test("eligibilityNotice: 제외된 목적지와 사유를 밝힌다", () => {
     { destinationKey: "오사카", breakdown: full() },
   ]);
   const msg = eligibilityNotice(e, (k) => k);
-  assert.ok(msg && msg.includes("항공권"));
-  assert.ok(msg && msg.includes("2곳"));
-  assert.ok(msg && msg.includes("괌"));
+  assert.equal(msg, "항공권 데이터가 없는 괌·사이판 2곳은 순위 비교에서 제외했어요.");
+});
+
+test("eligibilityNotice: 구조적 결손은 지수명 뒤에 고정어(지수는)를 붙여 조사 처리가 필요 없다", () => {
+  const e = computeRankingEligibility([
+    { destinationKey: "타이베이", breakdown: full({ exchangeRate: null }) },
+    { destinationKey: "다낭", breakdown: full({ exchangeRate: null }) },
+    { destinationKey: "오사카", breakdown: full() },
+  ]);
+  const msg = eligibilityNotice(e, (k) => k);
+  assert.equal(
+    msg,
+    "타이베이·다낭처럼 영구적으로 받을 수 없는 곳이 있어서, 공정한 비교를 위해 환율 지수는 모든 목적지의 순위 계산에서 뺐어요."
+  );
+  // 변수 바로 뒤에 조사가 붙는 자리가 없어야 한다
+  assert.ok(!msg!.includes("은(는)"));
+});
+
+test("eligibilityNotice: 목적지명의 괄호 설명은 떼서 목록을 짧게 유지한다", () => {
+  const e = computeRankingEligibility([
+    { destinationKey: "도쿄", breakdown: full({ flight: null }) },
+    { destinationKey: "오사카", breakdown: full() },
+  ]);
+  const msg = eligibilityNotice(e, (k) => (k === "도쿄" ? "도쿄 (일본)" : k));
+  assert.ok(msg!.includes("도쿄 1곳은"));
+  assert.ok(!msg!.includes("(일본)"));
 });
