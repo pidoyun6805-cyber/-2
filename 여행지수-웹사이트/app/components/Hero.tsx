@@ -10,7 +10,9 @@ function formatMonthDay(dateStr: string) {
 }
 
 export function Hero({ result, computedAt }: { result: DestinationResult; computedAt: string }) {
-  const landmark = (landmarks as Record<string, { imageUrl: string; landmarkLabel: string; credit: string }>)[result.destinationKey];
+  const landmark = (landmarks as Record<string, { imageUrl: string; landmarkLabel: string; author: string; license: string; licenseUrl: string; sourcePage: string }>)[
+    result.destinationKey
+  ];
   const computedDate = new Date(computedAt);
 
   return (
@@ -57,7 +59,18 @@ export function Hero({ result, computedAt }: { result: DestinationResult; comput
             {/* eslint-disable-next-line @next/next/no-img-element -- 외부(Wikimedia) 호스트 이미지, next/image 최적화 대상 아님 */}
             <img src={landmark.imageUrl} alt={landmark.landmarkLabel} className="h-full w-full object-cover" />
             <div className="absolute bottom-3 left-4 z-10 text-[10.5px] font-semibold text-white drop-shadow">📍 {landmark.landmarkLabel}</div>
-            <div className="absolute right-2 bottom-1 z-10 text-[8.5px] text-white/70">{landmark.credit}</div>
+            {/* CC BY-SA는 저작자 표시만으로 부족하다 — 라이선스 링크와 원본 페이지 링크까지 있어야 조건을 만족한다. */}
+            <div className="absolute right-2 bottom-1 z-10 text-[8.5px] text-white/75">
+              {landmark.author} ·{" "}
+              <a href={landmark.licenseUrl} target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-white">
+                {landmark.license}
+              </a>{" "}
+              ·{" "}
+              <a href={landmark.sourcePage} target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-white">
+                원본
+              </a>{" "}
+              via Wikimedia Commons
+            </div>
           </>
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-[var(--hero-track)]">사진 준비 중</div>

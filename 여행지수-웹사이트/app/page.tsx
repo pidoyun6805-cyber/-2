@@ -10,6 +10,7 @@ import { Hero } from "@/app/components/Hero";
 import { MetricCards } from "@/app/components/MetricCards";
 import { TopDestinations } from "@/app/components/TopDestinations";
 import { ScoreGauge } from "@/app/components/ScoreGauge";
+import { DataSources } from "@/app/components/DataSources";
 import { eligibilityNotice, type RankingEligibility } from "@/lib/rankingEligibility";
 
 const AVIASALES_WIDGET_SRC =
@@ -222,6 +223,8 @@ export default function Home() {
         )}
 
         {!heroResult && !topError && <p className="text-sm text-[var(--muted)]">오늘의 추천을 계산하는 중이에요...</p>}
+
+        <DataSources />
       </main>
     </div>
   );
