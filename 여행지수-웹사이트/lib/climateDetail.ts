@@ -1,4 +1,5 @@
 import type { WeatherCondition } from "./scoring.ts";
+import { openMeteoFetch } from "./openMeteoFetch.ts";
 
 export interface ClimateDayDetail {
   date: string; // YYYY-MM-DD
@@ -68,8 +69,8 @@ export async function getPeriodClimateDaily(
         `&daily=temperature_2m_mean,temperature_2m_min,temperature_2m_max,relative_humidity_2m_mean,` +
         `cloud_cover_mean,precipitation_sum,wind_speed_10m_max,weathercode&timezone=auto`;
 
-      const res = await fetch(url);
-      if (!res.ok) return null;
+      const res = await openMeteoFetch(url);
+      if (!res || !res.ok) return null;
       const json = await res.json();
       return {
         temp: json?.daily?.temperature_2m_mean as (number | null)[] | undefined,
@@ -127,8 +128,8 @@ export async function getClimateBaseline10y(
         `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}` +
         `&start_date=${fmt(shiftedStart)}&end_date=${fmt(shiftedEnd)}&daily=temperature_2m_mean&timezone=auto`;
 
-      const res = await fetch(url);
-      if (!res.ok) return null;
+      const res = await openMeteoFetch(url);
+      if (!res || !res.ok) return null;
       const json = await res.json();
       return averageValid((json?.daily?.temperature_2m_mean as (number | null)[] | undefined) ?? []);
     })
