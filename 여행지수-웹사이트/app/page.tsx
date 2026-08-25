@@ -53,6 +53,10 @@ export default function Home() {
 
   const selectedResult = topData?.results.find((r) => r.destinationKey === selectedKey) ?? null;
 
+  // topData.results의 순서는 rankingScore(환율 제외) 순 — 히어로 1위 선정은 그 편향 방지 순서를 그대로 쓴다.
+  // 반면 목록은 화면에 점수를 그대로 보여주므로, 보이는 숫자와 순서가 어긋나 보이지 않게 totalScore로 다시 정렬한다.
+  const listResults = topData ? [...topData.results].sort((a, b) => b.totalScore - a.totalScore) : [];
+
   // --- 기존 "계산하기" 검색 패널 — 로직/동작 변경 없음, 레이아웃만 이동 ---
   const destinationKeys = Object.keys(DESTINATIONS);
   const [destinationKey, setDestinationKey] = useState(destinationKeys[0]);
@@ -150,7 +154,7 @@ export default function Home() {
             <div className="mt-8 mb-3.5">
               <h2 className="font-serif text-[19px] font-bold">등록된 목적지 (17곳)</h2>
             </div>
-            <DestinationList results={topData.results} selectedKey={selectedResult.destinationKey} onSelect={setSelectedKey} />
+            <DestinationList results={listResults} selectedKey={selectedResult.destinationKey} onSelect={setSelectedKey} />
           </>
         )}
 

@@ -43,7 +43,11 @@ function FlightCard({ result }: { result: DestinationResult }) {
         <>
           <LineChart points={points} highlight="min" colorVar="--chart" />
           <p className="mt-2 text-xs text-[var(--muted)]">
-            {avg !== null && today ? `최근 30일 평균 ${avg.toFixed(1)}만원보다 ${pct}% ${dir} ${today.y.toFixed(1)}만원대예요.` : "가격 데이터가 더 쌓이는 중이에요."}
+            {/* 이력이 이제 막 쌓이는 중이라 표본은 최대 30일이지 30일이 아니다 — 실제 표본 일수를 그대로 쓴다.
+                3일 미만이면 평균 비교가 사실상 의미 없어서 비교 문구 없이 현재가만 알린다. */}
+            {points.length >= 3 && avg !== null
+              ? `최근 ${points.length}일 평균 ${avg.toFixed(1)}만원보다 ${pct}% ${dir} ${today.y.toFixed(1)}만원대예요.`
+              : `지금 ${today.y.toFixed(1)}만원대예요. 비교할 가격 이력이 더 쌓이는 중이에요.`}
           </p>
         </>
       ) : (
@@ -123,16 +127,19 @@ function ClimateCard({ result }: { result: DestinationResult }) {
   const lo = Math.min(...days.map((d) => d.tempMinC ?? Infinity).filter(Number.isFinite));
   const hi = Math.max(...days.map((d) => d.tempMaxC ?? -Infinity).filter(Number.isFinite));
   const delta = avgTemp !== null && result.climateBaseline10y !== null ? avgTemp - result.climateBaseline10y : null;
-  const avgHumidity = days.length > 0 ? days.reduce((s, d) => s + (d.relHumidity ?? 0), 0) / days.length : null;
-  const avgWind = days.length > 0 ? days.reduce((s, d) => s + (d.windKmh ?? 0), 0) / days.length : null;
+  // null을 0으로 세어 평균 내면 값이 없을 때 "습도 0%"처럼 없는 데이터를 있는 것처럼 보여주게 된다 — 유효값만 평균낸다.
+  const validHumidity = days.map((d) => d.relHumidity).filter((v) => v !== null);
+  const validWind = days.map((d) => d.windKmh).filter((v) => v !== null);
+  const avgHumidity = validHumidity.length > 0 ? validHumidity.reduce((s, v) => s + v, 0) / validHumidity.length : null;
+  const avgWind = validWind.length > 0 ? validWind.reduce((s, v) => s + v, 0) / validWind.length : null;
 
   return (
     <CardShell band={bandFromScore(score)} icon="🌤️" label="기후쾌적지수" score={score}>
       {avgTemp !== null ? (
         <p className="text-xs text-[var(--muted)]">
           평균기온 {avgTemp.toFixed(1)}℃({Number.isFinite(lo) ? `최저 ${lo.toFixed(0)}℃·최고 ${hi.toFixed(0)}℃` : "일자별 상세 없음"})
-          {delta !== null && `, 평년보다 ${Math.abs(delta).toFixed(1)}℃ ${delta >= 0 ? "높아요" : "낮아요"}`}. 습도 {avgHumidity?.toFixed(0) ?? "-"}% · 풍속{" "}
-          {avgWind?.toFixed(1) ?? "-"}m/s예요.
+          {delta !== null && `, 평년보다 ${Math.abs(delta).toFixed(1)}℃ ${delta >= 0 ? "높아요" : "낮아요"}`}. 습도{" "}
+          {avgHumidity !== null ? `${avgHumidity.toFixed(0)}%` : "정보 없음"} · 풍속 {avgWind !== null ? `${avgWind.toFixed(1)}m/s` : "정보 없음"}
         </p>
       ) : (
         <p className="text-xs text-[var(--muted)]">기후 데이터가 아직 없어요.</p>

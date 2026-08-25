@@ -17,7 +17,8 @@ export function Hero({ result, computedAt }: { result: DestinationResult; comput
 
   return (
     <div className="relative grid overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--hero-bg-2)] to-[var(--hero-bg-1)] shadow-xl sm:grid-cols-[1.15fr_0.85fr]">
-      <div className="absolute top-5 right-5 rounded-xl bg-[var(--accent)] px-3.5 py-2 text-center text-[11px] font-bold text-[var(--accent-ink)]">
+      {/* z-10 없으면 뒤에 오는 랜드마크 사진(<img>)이 위로 덮어써서 배지가 안 보인다. */}
+      <div className="absolute top-5 right-5 z-10 rounded-xl bg-[var(--accent)] px-3.5 py-2 text-center text-[11px] font-bold text-[var(--accent-ink)]">
         오늘 기준
         <span className="mt-0.5 block text-[9.5px] font-medium opacity-85">{computedDate.getMonth() + 1}월 {computedDate.getDate()}일 계산</span>
       </div>
