@@ -10,6 +10,7 @@ import { Hero } from "@/app/components/Hero";
 import { MetricCards } from "@/app/components/MetricCards";
 import { TopDestinations } from "@/app/components/TopDestinations";
 import { ScoreGauge } from "@/app/components/ScoreGauge";
+import { eligibilityNotice, type RankingEligibility } from "@/lib/rankingEligibility";
 
 const AVIASALES_WIDGET_SRC =
   "https://tpwgt.com/content?currency=krw&trs=565302&shmarker=768270&show_hotels=true&powered_by=true&locale=ko&searchUrl=www.aviasales.com%2Fsearch&primary_override=%2332a8dd&color_button=%2332a8dd&color_icons=%2332a8dd&dark=%23262626&light=%23FFFFFF&secondary=%23FFFFFF&special=%23C4C4C4&color_focused=%2332a8dd&border_radius=0&plain=false&promo_id=7879&campaign_id=100";
@@ -31,6 +32,7 @@ interface TopDestinationsPayload {
   computedAt: string;
   results: DestinationResult[];
   peakSeasonYearCurve: PeakSeasonCurvePoint[];
+  rankingEligibility: RankingEligibility;
 }
 
 function formatKRW(n: number) {
@@ -77,6 +79,9 @@ export default function Home() {
   const heroResult = topData?.results[0] ?? null;
   // 목록은 화면에 점수를 그대로 보여주므로, 보이는 숫자와 순서가 어긋나지 않게 totalScore로 정렬한다.
   const topList = topData ? [...topData.results].sort((a, b) => b.totalScore - a.totalScore).slice(0, TOP_N) : [];
+  const rankingNotice = topData
+    ? eligibilityNotice(topData.rankingEligibility, (key) => DESTINATIONS[key]?.label ?? key)
+    : null;
 
   // --- 검색 패널 (3번) + 검색 결과 (4·5번). 위 상태와 절대 섞지 않는다. ---
   const destinationKeys = Object.keys(DESTINATIONS);
@@ -211,6 +216,8 @@ export default function Home() {
             {/* 6) 목적지 목록 — 상위 5곳, 읽기 전용 */}
             <SectionHeading title={`오늘의 추천 목적지 TOP ${TOP_N}`} sub="오늘 계산 기준 종합 점수가 높은 순서예요" />
             <TopDestinations results={topList} />
+            {/* 랭킹에서 뺀 목적지/지수가 있으면 반드시 밝힌다 — 조용히 빼면 그것도 거짓말이다. */}
+            {rankingNotice && <p className="mt-2.5 text-[11.5px] leading-relaxed text-[var(--muted)]">{rankingNotice}</p>}
           </>
         )}
 

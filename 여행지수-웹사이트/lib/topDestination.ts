@@ -5,6 +5,7 @@ import { lookupPeakCategory } from "./peakSeason.ts";
 import { getPeriodClimate, getExchangeRateHistory } from "./externalApi.ts";
 import { getAllRoutes } from "./routes.ts";
 import { loadRoutePriceMap, type RoutePriceMapEntry } from "./currentFlightPrice.ts";
+import { computeRankingEligibility, sortByRanking, type RankingEligibility } from "./rankingEligibility.ts";
 import { getHistoricalPricesNearDate, type FlightPriceRecord } from "./flightHistory.ts";
 import { deriveTopChips, type TopChip } from "./topChips.ts";
 import { buildPeakSeasonYearCurve, findCurveIndexForDate, type PeakSeasonCurvePoint } from "./peakSeasonCurve.ts";
@@ -77,6 +78,8 @@ export interface TopDestinationsPayload {
   computedAt: string;
   results: DestinationResult[];
   peakSeasonYearCurve: PeakSeasonCurvePoint[];
+  /** 데이터 결손 때문에 랭킹에서 뺀 지수/목적지. 화면에 그대로 밝힌다. */
+  rankingEligibility: RankingEligibility;
 }
 
 async function computeOneDestination(
@@ -85,7 +88,7 @@ async function computeOneDestination(
   windows: CandidateWindow[],
   peakSeasonYearCurve: PeakSeasonCurvePoint[],
   routePriceMap: Map<string, RoutePriceMapEntry>
-): Promise<{ result: DestinationResult; rankingScore: number }> {
+): Promise<DestinationResult> {
   const hotel = (hotels as Record<string, { avgPrice: number; currentPrice: number }>)[destinationKey];
   const hotelDeviationPct = (hotel.currentPrice - hotel.avgPrice) / hotel.avgPrice;
 
@@ -134,19 +137,6 @@ async function computeOneDestination(
 
   const best = evaluated.reduce((a, b) => (b.travelIndex.totalScore > a.travelIndex.totalScore ? b : a));
 
-  // 순위용 점수: best와 동일한 4개 실측 입력(flightScore/hotelDeviationPct/peakCategory/climateDays)에
-  // exchangeRateScore만 강제로 null로 넣어 재계산한다. Frankfurter가 TWD/VND(타이베이/다낭)를 지원하지
-  // 않아 이 두 목적지만 항상 exchangeRateScore=null이 되고, calcTravelIndex가 그만큼 가중치를 나머지
-  // 요소로 재분배해 구조적으로 유리해지는 문제를 막기 위해 — 모든 목적지에 동일하게 환율을 제외한
-  // 점수로만 순위를 매긴다. 화면에 표시되는 실제 totalScore/grade/breakdown은 그대로 실측값을 쓴다.
-  const rankingTravelIndex = calcTravelIndex({
-    flightScore: best.flightScore,
-    hotelDeviationPct,
-    exchangeRateScore: null,
-    peakCategory: best.peakCategory,
-    climateDays: best.climateDays,
-  });
-
   const [climateDaily, climateBaseline10y] = await Promise.all([
     getPeriodClimateDaily(destination.lat, destination.lon, best.window.departDate, best.window.returnDate),
     getClimateBaseline10y(destination.lat, destination.lon, best.window.departDate, best.window.returnDate),
@@ -155,7 +145,6 @@ async function computeOneDestination(
   const sortedHistory = [...routeHistory].sort((a, b) => a.date.localeCompare(b.date));
 
   return {
-    result: {
       destinationKey,
       label: destination.label,
       totalScore: best.travelIndex.totalScore,
@@ -172,8 +161,6 @@ async function computeOneDestination(
       flightPriceHistory30d: sortedHistory.slice(-30),
       exchangeRateSeries: exchangeRateHistory,
       peakMarkerIndex: findCurveIndexForDate(peakSeasonYearCurve, best.window.departDate),
-    },
-    rankingScore: rankingTravelIndex.totalScore,
   };
 }
 
@@ -194,7 +181,7 @@ export async function computeResultForWindow(
 
   const peakSeasonYearCurve = buildPeakSeasonYearCurve();
   const routePriceMap = await loadRoutePriceMap();
-  const { result } = await computeOneDestination(destinationKey, destination, [{ departDate, returnDate }], peakSeasonYearCurve, routePriceMap);
+  const result = await computeOneDestination(destinationKey, destination, [{ departDate, returnDate }], peakSeasonYearCurve, routePriceMap);
   return { result, peakSeasonYearCurve };
 }
 
@@ -212,10 +199,10 @@ export async function computeAllDestinationResults(): Promise<TopDestinationsPay
     )
   );
 
-  // 정렬은 환율을 제외한 rankingScore로 하고(위 computeOneDestination 설명 참고), 반환하는 결과에는
-  // 실측 totalScore가 담긴 DestinationResult만 노출한다 — rankingScore는 정렬 전용 내부 값이라 버린다.
-  computed.sort((a, b) => b.rankingScore - a.rankingScore);
-  const results = computed.map((c) => c.result);
+  // 데이터 결손이 랭킹을 왜곡하는 문제는 rankingEligibility 한 곳에서만 다룬다.
+  // 화면에 보이는 totalScore/breakdown은 실측값 그대로 두고, 순서만 규칙에 따라 정한다.
+  const rankingEligibility = computeRankingEligibility(computed);
+  const results = sortByRanking(computed, rankingEligibility);
 
-  return { computedAt: new Date().toISOString(), results, peakSeasonYearCurve };
+  return { computedAt: new Date().toISOString(), results, peakSeasonYearCurve, rankingEligibility };
 }
