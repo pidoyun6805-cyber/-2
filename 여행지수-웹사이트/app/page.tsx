@@ -1,79 +1,98 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DESTINATIONS } from "@/lib/destinations";
 import type { Grade } from "@/lib/scoring";
+import type { DestinationResult } from "@/lib/topDestination";
+import type { PeakSeasonCurvePoint } from "@/lib/peakSeasonCurve";
 import { useTravelpayoutsWidget } from "@/hooks/useTravelpayoutsWidget";
+import { Hero } from "@/app/components/Hero";
+import { MetricCards } from "@/app/components/MetricCards";
+import { TopDestinations } from "@/app/components/TopDestinations";
 import { ScoreGauge } from "@/app/components/ScoreGauge";
-import { PriceHistoryChart, type PriceHistoryPoint } from "@/app/components/PriceHistoryChart";
-import { SERIES_COLORS } from "@/app/components/palette";
+import { DataSources } from "@/app/components/DataSources";
+import { eligibilityNotice, type RankingEligibility } from "@/lib/rankingEligibility";
 
 const AVIASALES_WIDGET_SRC =
   "https://tpwgt.com/content?currency=krw&trs=565302&shmarker=768270&show_hotels=true&powered_by=true&locale=ko&searchUrl=www.aviasales.com%2Fsearch&primary_override=%2332a8dd&color_button=%2332a8dd&color_icons=%2332a8dd&dark=%23262626&light=%23FFFFFF&secondary=%23FFFFFF&special=%23C4C4C4&color_focused=%2332a8dd&border_radius=0&plain=false&promo_id=7879&campaign_id=100";
 
+const TOP_N = 5; // 목적지 목록은 상위 5곳만 (17곳은 읽기 부담)
+
 interface IndexResponse {
-  travelIndex: {
-    totalScore: number;
-    grade: Grade;
-    breakdown: {
-      flight: number | null;
-      hotel: number;
-      exchangeRate: number | null;
-      peakSeason: number;
-      climateComfort: number | null;
-    };
-  };
-  totalCost: {
-    flightTotal: number;
-    hotelTotal: number;
-    dailyCostTotal: number;
-    grandTotal: number;
-  };
+  travelIndex: { totalScore: number; grade: Grade; breakdown: Record<string, number | null> };
+  // 항공권 실가격을 못 받은 노선은 총경비를 계산할 수 없어 null로 온다(고정값으로 메우지 않는다).
+  totalCost: { flightTotal: number; hotelTotal: number; dailyCostTotal: number; grandTotal: number } | null;
   nights: number;
-  peakCategory: string;
-  seasonalWeather: { avgTempC: number | null; condition: string | null };
-  reasons: {
-    flight: string | null;
-    hotel: string;
-    exchangeRate: string | null;
-    peakSeason: string;
-    climateComfort: string | null;
-  };
-  exchangeRateDetail: { currentRate: number; baseline: number } | null;
-  flightPriceHistory: PriceHistoryPoint[];
-  cheapestFlightRecord: PriceHistoryPoint | null;
+  // 검색 결과로도 지수 카드 5개를 그리기 위한 상세 데이터
+  result: DestinationResult;
+  peakSeasonYearCurve: PeakSeasonCurvePoint[];
   error?: string;
 }
 
-const GRADE_COLOR: Record<Grade, string> = {
-  최적기: "text-emerald-600 dark:text-emerald-400",
-  좋음: "text-lime-600 dark:text-lime-400",
-  보통: "text-amber-600 dark:text-amber-400",
-  비추천: "text-orange-600 dark:text-orange-400",
-  최악: "text-red-600 dark:text-red-400",
-};
-
-const GRADE_GRADIENT: Record<Grade, string> = {
-  최적기: "from-emerald-400 to-emerald-600",
-  좋음: "from-lime-400 to-lime-600",
-  보통: "from-amber-400 to-amber-500",
-  비추천: "from-orange-400 to-orange-600",
-  최악: "from-red-400 to-red-600",
-};
+interface TopDestinationsPayload {
+  computedAt: string;
+  results: DestinationResult[];
+  peakSeasonYearCurve: PeakSeasonCurvePoint[];
+  rankingEligibility: RankingEligibility;
+}
 
 function formatKRW(n: number) {
   return n.toLocaleString("ko-KR") + "원";
 }
 
+/** "9월 8일~10일 기준" — 같은 달이면 뒤쪽 월을 생략한다. */
+function formatWindowLabel(departDate: string, returnDate: string) {
+  const a = new Date(departDate);
+  const b = new Date(returnDate);
+  const head = `${a.getMonth() + 1}월 ${a.getDate()}일`;
+  const tail = a.getMonth() === b.getMonth() ? `${b.getDate()}일` : `${b.getMonth() + 1}월 ${b.getDate()}일`;
+  return `${head}~${tail} 기준`;
+}
+
+function SectionHeading({ title, sub }: { title: string; sub: string }) {
+  return (
+    <div className="mt-9 mb-3.5">
+      <h2 className="font-serif text-[19px] font-bold">{title}</h2>
+      <div className="mt-1 text-[11.5px] text-[var(--muted)]">{sub}</div>
+    </div>
+  );
+}
+
 export default function Home() {
+  // --- 오늘의 1위 (히어로 + 2번 지수 카드 세트). 검색과 완전히 독립된 상태다. ---
+  const [topData, setTopData] = useState<TopDestinationsPayload | null>(null);
+  const [topError, setTopError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/top-destinations")
+      .then(async (res) => {
+        if (!res.ok) {
+          const data = await res.json();
+          setTopError(data.error ?? "불러오지 못했어요.");
+          return;
+        }
+        setTopData(await res.json());
+      })
+      .catch(() => setTopError("서버와 통신할 수 없습니다."));
+  }, []);
+
+  // results의 순서는 rankingScore(환율 제외) 순 — 1위 선정은 그 편향 방지 순서를 그대로 쓴다.
+  const heroResult = topData?.results[0] ?? null;
+  // 목록은 화면에 점수를 그대로 보여주므로, 보이는 숫자와 순서가 어긋나지 않게 totalScore로 정렬한다.
+  const topList = topData ? [...topData.results].sort((a, b) => b.totalScore - a.totalScore).slice(0, TOP_N) : [];
+  const rankingNotice = topData
+    ? eligibilityNotice(topData.rankingEligibility, (key) => DESTINATIONS[key]?.label ?? key)
+    : null;
+
+  // --- 검색 패널 (3번) + 검색 결과 (4·5번). 위 상태와 절대 섞지 않는다. ---
   const destinationKeys = Object.keys(DESTINATIONS);
   const [destinationKey, setDestinationKey] = useState(destinationKeys[0]);
   const [departDate, setDepartDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
   const [people, setPeople] = useState(2);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<IndexResponse | null>(null);
-  const [resultKey, setResultKey] = useState(0);
+  const [searched, setSearched] = useState<IndexResponse | null>(null);
+  const [searchedPeople, setSearchedPeople] = useState(2);
   const [error, setError] = useState<string | null>(null);
   const aviasalesWidgetRef = useRef<HTMLDivElement>(null);
   useTravelpayoutsWidget(AVIASALES_WIDGET_SRC, aviasalesWidgetRef);
@@ -82,8 +101,7 @@ export default function Home() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setResult(null);
-
+    setSearched(null);
     try {
       const res = await fetch("/api/index", {
         method: "POST",
@@ -91,11 +109,10 @@ export default function Home() {
         body: JSON.stringify({ destinationKey, departDate, returnDate, people }),
       });
       const data: IndexResponse = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "계산에 실패했습니다.");
-      } else {
-        setResult(data);
-        setResultKey((k) => k + 1);
+      if (!res.ok) setError(data.error ?? "계산에 실패했습니다.");
+      else {
+        setSearched(data);
+        setSearchedPeople(people); // 결과 문구가 계산 당시 인원수를 쓰도록 고정
       }
     } catch {
       setError("서버와 통신할 수 없습니다.");
@@ -105,183 +122,109 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 py-16 px-4">
-      <main className="mx-auto max-w-xl">
-        <h1 className="mb-2 text-3xl font-bold text-zinc-900">여행지수</h1>
-        <p className="mb-8 text-zinc-500">출발지·목적지·날짜·인원수만 입력하면 지금이 여행 가기 좋은 때인지, 총 경비는 얼마쯤 드는지 알려드려요.</p>
+    <div className="min-h-screen bg-[var(--page)] px-4 py-8">
+      <main className="mx-auto max-w-[1040px]">
+        <div className="mb-6">
+          <div className="font-serif text-lg font-bold">여행지수</div>
+          <div className="text-[11px] text-[var(--muted)]">실제 데이터로 계산하는 다음 여행</div>
+        </div>
 
-        <div ref={aviasalesWidgetRef} className="mb-8 rounded-xl bg-white p-6 shadow-sm" />
+        {topError && <p className="mb-6 text-sm text-[var(--muted)]">{topError}</p>}
 
-        <form onSubmit={handleSubmit} className="mb-8 flex flex-col gap-4 rounded-xl bg-white p-6 shadow-sm">
-          <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">출발지</label>
-            <input value="부산 (김해공항, PUS)" disabled className="w-full rounded-md border border-zinc-200 bg-zinc-100 px-3 py-2 text-zinc-500" />
-          </div>
+        {heroResult && topData && (
+          <>
+            {/* 1) 히어로 — 등록된 목적지 전체 중 오늘의 1위 */}
+            <Hero result={heroResult} computedAt={topData.computedAt} />
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">목적지</label>
-            <select
-              value={destinationKey}
-              onChange={(e) => setDestinationKey(e.target.value)}
-              className="w-full rounded-md border border-zinc-300 px-3 py-2"
-            >
-              {destinationKeys.map((key) => (
-                <option key={key} value={key}>
-                  {DESTINATIONS[key].label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <label className="mb-1 block text-sm font-medium text-zinc-700">가는 날</label>
-              <input
-                type="date"
-                required
-                value={departDate}
-                onChange={(e) => setDepartDate(e.target.value)}
-                className="w-full rounded-md border border-zinc-300 px-3 py-2"
-              />
-            </div>
-            <div className="flex-1">
-              <label className="mb-1 block text-sm font-medium text-zinc-700">오는 날</label>
-              <input
-                type="date"
-                required
-                value={returnDate}
-                onChange={(e) => setReturnDate(e.target.value)}
-                className="w-full rounded-md border border-zinc-300 px-3 py-2"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">인원수</label>
-            <input
-              type="number"
-              min={1}
-              required
-              value={people}
-              onChange={(e) => setPeople(Number(e.target.value))}
-              className="w-full rounded-md border border-zinc-300 px-3 py-2"
+            {/* 2) 오늘의 1위 목적지 지수 카드 — 히어로에 표시된 추천 날짜 기준이라 그 날짜를 함께 적는다 */}
+            <SectionHeading
+              title={`${heroResult.label}는 지금 왜 좋은가요`}
+              sub={formatWindowLabel(heroResult.departDate, heroResult.returnDate)}
             />
-          </div>
+            <MetricCards result={heroResult} peakSeasonYearCurve={topData.peakSeasonYearCurve} />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-2 rounded-md bg-zinc-900 px-4 py-2 font-medium text-white hover:bg-zinc-700 disabled:opacity-50"
-          >
-            {loading ? "계산 중..." : "계산하기"}
-          </button>
-        </form>
-
-        {error && <p className="mb-8 text-red-600">{error}</p>}
-
-        {result && (
-          <div
-            key={resultKey}
-            className="card-reveal flex flex-col gap-6 rounded-xl bg-white p-6 shadow-xl shadow-zinc-200/70 ring-1 ring-zinc-900/5 dark:bg-zinc-900 dark:shadow-black/40 dark:ring-white/10"
-          >
-            <div className="flex flex-col items-center gap-2">
-              <div
-                className={`flex h-32 w-32 flex-col items-center justify-center rounded-full bg-gradient-to-br shadow-lg shadow-black/10 sm:h-36 sm:w-36 ${GRADE_GRADIENT[result.travelIndex.grade]}`}
-              >
-                <span className="text-5xl leading-none font-extrabold text-white">
-                  {result.travelIndex.totalScore}
-                </span>
-                <span className="mt-1 text-sm font-medium text-white/90">점</span>
+            {/* 3) 검색 패널 */}
+            <SectionHeading title="직접 계산해보기" sub="목적지와 날짜를 고르면 그 기간의 여행지수를 계산해드려요" />
+            <div ref={aviasalesWidgetRef} className="mb-4 rounded-xl bg-[var(--surface)] p-4 shadow-sm empty:hidden" />
+            <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+              <div className="min-w-[180px] flex-[1.6]">
+                <label htmlFor="dest" className="mb-1.5 block text-[11.5px] font-semibold text-[var(--ink-2)]">목적지</label>
+                <select id="dest" value={destinationKey} onChange={(e) => setDestinationKey(e.target.value)} className="w-full cursor-pointer rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 text-sm">
+                  {destinationKeys.map((key) => (
+                    <option key={key} value={key}>
+                      {DESTINATIONS[key].label}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div className={`text-xl font-bold ${GRADE_COLOR[result.travelIndex.grade]}`}>
-                {result.travelIndex.grade}
+              <div className="min-w-[140px] flex-1">
+                <label htmlFor="depart" className="mb-1.5 block text-[11.5px] font-semibold text-[var(--ink-2)]">가는 날</label>
+                <input id="depart" type="date" required value={departDate} onChange={(e) => setDepartDate(e.target.value)} className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 text-sm" />
               </div>
-            </div>
-
-            <div className="flex flex-col gap-5">
-              <ScoreGauge
-                label="항공권"
-                score={result.travelIndex.breakdown.flight}
-                reason={result.reasons.flight}
-                emptyText="가격 데이터 수집 중"
-                colorLight={SERIES_COLORS.flight.light}
-                colorDark={SERIES_COLORS.flight.dark}
-              />
-              <ScoreGauge
-                label="호텔"
-                score={result.travelIndex.breakdown.hotel}
-                reason={result.reasons.hotel}
-                emptyText="-"
-                colorLight={SERIES_COLORS.hotel.light}
-                colorDark={SERIES_COLORS.hotel.dark}
-              />
-              <ScoreGauge
-                label="환율"
-                score={result.travelIndex.breakdown.exchangeRate}
-                reason={result.reasons.exchangeRate}
-                emptyText="환율 정보 없음"
-                colorLight={SERIES_COLORS.exchangeRate.light}
-                colorDark={SERIES_COLORS.exchangeRate.dark}
-                badge={
-                  result.travelIndex.breakdown.exchangeRate !== null && (
-                    <span
-                      className="ml-1.5 rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
-                      title="여행일의 환율은 미리 알 수 없어서 오늘 환율을 대신 써요. 단기~중기 환율은 오늘 값이 가장 나은 예측치라는 연구(Meese-Rogoff)에 따른 설계예요."
-                    >
-                      📅 오늘 기준
-                    </span>
-                  )
-                }
-              />
-              <ScoreGauge
-                label="성수기"
-                score={result.travelIndex.breakdown.peakSeason}
-                reason={result.reasons.peakSeason}
-                emptyText="-"
-                colorLight={SERIES_COLORS.peakSeason.light}
-                colorDark={SERIES_COLORS.peakSeason.dark}
-              />
-              <ScoreGauge
-                label="기후쾌적지수"
-                score={result.travelIndex.breakdown.climateComfort}
-                reason={result.reasons.climateComfort}
-                emptyText="기후 데이터 없음"
-                colorLight={SERIES_COLORS.climateComfort.light}
-                colorDark={SERIES_COLORS.climateComfort.dark}
-              />
-            </div>
-
-            <hr className="border-zinc-100 dark:border-zinc-800" />
-
-            <div>
-              <h2 className="mb-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                항공권 가격 추이
-              </h2>
-              <PriceHistoryChart
-                history={result.flightPriceHistory}
-                cheapest={result.cheapestFlightRecord}
-                colorLight={SERIES_COLORS.flight.light}
-                colorDark={SERIES_COLORS.flight.dark}
-              />
-            </div>
-
-            <hr className="border-zinc-100 dark:border-zinc-800" />
-
-            <div>
-              <h2 className="mb-2 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                예상 총 경비 ({result.nights}박 {people}인)
-              </h2>
-              <ul className="flex flex-col gap-1 text-zinc-600 dark:text-zinc-400">
-                <li>항공권: {formatKRW(result.totalCost.flightTotal)}</li>
-                <li>숙박: {formatKRW(result.totalCost.hotelTotal)}</li>
-                <li>현지 체류비(식비/교통/잡비): {formatKRW(result.totalCost.dailyCostTotal)}</li>
-              </ul>
-              <div className="mt-2 text-xl font-bold text-zinc-900 dark:text-zinc-100">
-                총 {formatKRW(result.totalCost.grandTotal)}
+              <div className="min-w-[140px] flex-1">
+                <label htmlFor="return" className="mb-1.5 block text-[11.5px] font-semibold text-[var(--ink-2)]">오는 날</label>
+                <input id="return" type="date" required value={returnDate} onChange={(e) => setReturnDate(e.target.value)} className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 text-sm" />
               </div>
-            </div>
-          </div>
+              <div className="min-w-[90px] flex-[0.6]">
+                <label htmlFor="people" className="mb-1.5 block text-[11.5px] font-semibold text-[var(--ink-2)]">인원수</label>
+                <input id="people" type="number" min={1} required value={people} onChange={(e) => setPeople(Number(e.target.value))} className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 text-sm" />
+              </div>
+              <button type="submit" disabled={loading} className="cursor-pointer rounded-lg bg-[var(--hero-bg-2)] px-5 py-2.5 text-[13.5px] font-bold text-[var(--hero-ink)] disabled:opacity-50">
+                {loading ? "계산 중..." : "여행지수 계산하기"}
+              </button>
+            </form>
+
+            {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+
+            {/* 4·5) 검색 결과 — 계산 전에는 안내만 띄운다(빈 카드/0점을 그리지 않는다) */}
+            {!searched && !error && (
+              <p className="mt-4 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface)] px-5 py-6 text-center text-[12.5px] text-[var(--muted)]">
+                목적지와 날짜를 선택하면 그 기간의 지수를 계산해드려요.
+              </p>
+            )}
+
+            {searched && (
+              <>
+                {/* 4) 검색 결과 종합 점수 — 히어로와 같은 게이지를 쓴다 */}
+                <div className="mt-4 flex flex-wrap items-center gap-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+                  <ScoreGauge score={searched.result.totalScore} band={searched.result.band} />
+                  <div>
+                    <div className="text-[11px] font-semibold text-[var(--muted)]">
+                      내가 고른 일정 · {searched.nights}박 {searched.nights + 1}일 · {searchedPeople}인
+                    </div>
+                    <div className="mt-0.5 text-[17px] font-bold">
+                      {searched.result.label} · {formatWindowLabel(searched.result.departDate, searched.result.returnDate).replace(" 기준", "")}
+                    </div>
+                    <div className="mt-1 text-[13px] font-semibold text-[var(--ink-2)]">
+                      {searched.result.grade}
+                      {searched.totalCost ? ` · 총 ${formatKRW(searched.totalCost.grandTotal)}` : ""}
+                    </div>
+                    {!searched.totalCost && (
+                      <div className="mt-1 text-[11.5px] text-[var(--muted)]">항공권 실시간 가격을 못 받아서 총경비는 계산하지 못했어요.</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 5) 검색한 목적지·날짜 기준 지수 카드 — 2)번과 같은 컴포넌트를 재사용한다 */}
+                <SectionHeading
+                  title={`${searched.result.label}는 그때 왜 좋은가요`}
+                  sub={formatWindowLabel(searched.result.departDate, searched.result.returnDate)}
+                />
+                <MetricCards result={searched.result} peakSeasonYearCurve={searched.peakSeasonYearCurve} />
+              </>
+            )}
+
+            {/* 6) 목적지 목록 — 상위 5곳, 읽기 전용 */}
+            <SectionHeading title={`오늘의 추천 목적지 TOP ${TOP_N}`} sub="오늘 계산 기준 종합 점수가 높은 순서예요" />
+            <TopDestinations results={topList} />
+            {/* 랭킹에서 뺀 목적지/지수가 있으면 반드시 밝힌다 — 조용히 빼면 그것도 거짓말이다. */}
+            {rankingNotice && <p className="mt-2.5 text-[11.5px] leading-relaxed text-[var(--muted)]">{rankingNotice}</p>}
+          </>
         )}
+
+        {!heroResult && !topError && <p className="text-sm text-[var(--muted)]">오늘의 추천을 계산하는 중이에요...</p>}
+
+        <DataSources />
       </main>
     </div>
   );

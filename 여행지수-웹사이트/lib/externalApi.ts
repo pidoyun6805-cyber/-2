@@ -1,4 +1,5 @@
 import type { ClimateDay, WeatherCondition } from "./scoring";
+import { openMeteoFetch } from "./openMeteoFetch.ts";
 
 // 환율: Frankfurter.app (무료, 키 불필요). 오늘 환율과 최근 2년(730일)치 일별 환율을 가져온다.
 // exchangeRateScore()의 z-score 채점에 넘길 원본 데이터.
@@ -56,8 +57,8 @@ export async function getSeasonalWeather(
       const url =
         `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}` +
         `&start_date=${dateStr}&end_date=${dateStr}&daily=temperature_2m_mean,weathercode&timezone=auto`;
-      const res = await fetch(url);
-      if (!res.ok) return null;
+      const res = await openMeteoFetch(url);
+      if (!res || !res.ok) return null;
       const json = await res.json();
       const temp = json?.daily?.temperature_2m_mean?.[0];
       const code = json?.daily?.weathercode?.[0];
@@ -115,8 +116,8 @@ export async function getPeriodClimate(
         `&daily=temperature_2m_mean,relative_humidity_2m_mean,cloud_cover_mean,precipitation_sum,wind_speed_10m_max` +
         `&timezone=auto`;
 
-      const res = await fetch(url);
-      if (!res.ok) return null;
+      const res = await openMeteoFetch(url);
+      if (!res || !res.ok) return null;
       const json = await res.json();
       return {
         temp: json?.daily?.temperature_2m_mean as (number | null)[] | undefined,

@@ -1,4 +1,4 @@
-import peakSeasonData from "@/data/peakSeason.json";
+import peakSeasonData from "../data/peakSeason.json" with { type: "json" };
 import type { PeakCategory } from "./scoring";
 
 const CATEGORY_RANK: Record<PeakCategory, number> = {

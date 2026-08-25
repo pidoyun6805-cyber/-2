@@ -1,0 +1,138 @@
+{
+  "오사카": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Osaka_Castle_01bs3200.jpg/1280px-Osaka_Castle_01bs3200.jpg",
+    "landmarkLabel": "오사카성",
+    "author": "663highland",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Osaka_Castle_01bs3200.jpg"
+  },
+  "후쿠오카": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Fukuoka_Tower_October_2011_01.jpg/1280px-Fukuoka_Tower_October_2011_01.jpg",
+    "landmarkLabel": "후쿠오카 타워",
+    "author": "STA3816",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Fukuoka_Tower_October_2011_01.jpg"
+  },
+  "도쿄": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Tokyo_Tower_from_bottom.JPG/1280px-Tokyo_Tower_from_bottom.JPG",
+    "landmarkLabel": "도쿄 타워",
+    "author": "Sahmeditor",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Tokyo_Tower_from_bottom.JPG"
+  },
+  "삿포로": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Sapporo_Clock_Tower_Hokkaido_Japan.jpg/1280px-Sapporo_Clock_Tower_Hokkaido_Japan.jpg",
+    "landmarkLabel": "삿포로 시계탑",
+    "author": "ほくなん",
+    "license": "Public Domain",
+    "licenseUrl": "https://en.wikipedia.org/wiki/Public_domain",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Sapporo_Clock_Tower_Hokkaido_Japan.jpg"
+  },
+  "오키나와": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Okinawa_Churaumi_Aquarium_from_west.JPG/1280px-Okinawa_Churaumi_Aquarium_from_west.JPG",
+    "landmarkLabel": "추라우미 수족관",
+    "author": "そらみみ",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Okinawa_Churaumi_Aquarium_from_west.JPG"
+  },
+  "타이베이": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Taipei_101.JPG/1280px-Taipei_101.JPG",
+    "landmarkLabel": "타이베이 101",
+    "author": "Firelam",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Taipei_101.JPG"
+  },
+  "홍콩": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Central_Skyline_with_IFC_building_from_Star_Ferry_in_Victoria_Harbour%2C_Hong_Kong_2.jpg/1280px-Central_Skyline_with_IFC_building_from_Star_Ferry_in_Victoria_Harbour%2C_Hong_Kong_2.jpg",
+    "landmarkLabel": "빅토리아 하버 · IFC 스카이라인",
+    "author": "Daniel Case",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Central_Skyline_with_IFC_building_from_Star_Ferry_in_Victoria_Harbour,_Hong_Kong_2.jpg"
+  },
+  "칭다오": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Zhanqiao_pier_with_Little_Qingdao_Isle.jpg/1280px-Zhanqiao_pier_with_Little_Qingdao_Isle.jpg",
+    "landmarkLabel": "잔교(栈桥)",
+    "author": "K.Y.K.Z.K.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Zhanqiao_pier_with_Little_Qingdao_Isle.jpg"
+  },
+  "다낭": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Dragon_Bridge%2C_Da_Nang_at_night_-_20230819.jpg/1280px-Dragon_Bridge%2C_Da_Nang_at_night_-_20230819.jpg",
+    "landmarkLabel": "용다리 (Dragon Bridge)",
+    "author": "Somerset999",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Dragon_Bridge,_Da_Nang_at_night_-_20230819.jpg"
+  },
+  "세부": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Magellan%27s_Cross_of_Cebu_City.jpg/1280px-Magellan%27s_Cross_of_Cebu_City.jpg",
+    "landmarkLabel": "마젤란 십자가",
+    "author": "Ranieljosecastaneda",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Magellan's_Cross_of_Cebu_City.jpg"
+  },
+  "방콕": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Wat_Arun_from_Chao_Phraya_River.jpg/1280px-Wat_Arun_from_Chao_Phraya_River.jpg",
+    "landmarkLabel": "왓아룬 (새벽사원)",
+    "author": "Diliff",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Wat_Arun_from_Chao_Phraya_River.jpg"
+  },
+  "마닐라": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Entrance_of_Fort_Santiago%2C_Intramuros%2C_Manila_-_panoramio.jpg/1280px-Entrance_of_Fort_Santiago%2C_Intramuros%2C_Manila_-_panoramio.jpg",
+    "landmarkLabel": "포트 산티아고 · 인트라무로스",
+    "author": "André Héroux",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Entrance_of_Fort_Santiago,_Intramuros,_Manila_-_panoramio.jpg"
+  },
+  "싱가포르": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Merlion_singapore_merlion_park.jpg/1280px-Merlion_singapore_merlion_park.jpg",
+    "landmarkLabel": "멀라이언",
+    "author": "Irwan Shah Bin Abdullah",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Merlion_singapore_merlion_park.jpg"
+  },
+  "쿠알라룸푸르": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/The_Petronas_Twin_Towers_in_Kuala_Lumpur_%28Malaysia%29.JPG/1280px-The_Petronas_Twin_Towers_in_Kuala_Lumpur_%28Malaysia%29.JPG",
+    "landmarkLabel": "페트로나스 트윈 타워",
+    "author": "Dudva",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:The_Petronas_Twin_Towers_in_Kuala_Lumpur_(Malaysia).JPG"
+  },
+  "발리": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Pura_Tanah_Lot%2C_Bali%2C_Indonesia%2C_20220827_1029_1193.jpg/1280px-Pura_Tanah_Lot%2C_Bali%2C_Indonesia%2C_20220827_1029_1193.jpg",
+    "landmarkLabel": "타나롯 사원",
+    "author": "Jakub Hałun",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Pura_Tanah_Lot,_Bali,_Indonesia,_20220827_1029_1193.jpg"
+  },
+  "괌": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Puntan_Dos_Amantes_%28Two_Lovers_Point%29_in_Guam_in_June_2017.jpg/1280px-Puntan_Dos_Amantes_%28Two_Lovers_Point%29_in_Guam_in_June_2017.jpg",
+    "landmarkLabel": "투 러버스 포인트",
+    "author": "Eddy23",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Puntan_Dos_Amantes_(Two_Lovers_Point)_in_Guam_in_June_2017.jpg"
+  },
+  "사이판": {
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Ma%C3%B1agaha_Island.jpg/1280px-Ma%C3%B1agaha_Island.jpg",
+    "landmarkLabel": "마나가하 섬",
+    "author": "Gage Skidmore",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Ma%C3%B1agaha_Island.jpg"
+  }
+}

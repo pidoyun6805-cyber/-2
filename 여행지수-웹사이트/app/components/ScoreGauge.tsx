@@ -1,48 +1,35 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import type { Band } from "@/lib/topDestination";
 
-export interface ScoreGaugeProps {
-  label: string;
-  score: number | null;
-  reason: string | null;
-  colorLight: string;
-  colorDark: string;
-  emptyText: string;
-  badge?: ReactNode;
-}
+const RING_CIRCUMFERENCE = 213.6; // r=34인 원의 둘레(2*PI*34), 시안과 동일
 
-// 0~100점을 채워지는 막대(meter)로 보여준다. 트랙은 채움색의 옅은 워시(color-mix)라
-// "같은 색 계열의 밝은 단계"라는 메터 스펙을 팔레트 값을 늘리지 않고 만족시킨다.
-// 채움 애니메이션은 JS state가 아니라 순수 CSS @keyframes(globals.css의 .gauge-fill)로
-// 처리한다 — score가 바뀔 때마다 부모(app/page.tsx)가 이 div에 새 key를 줘서 리마운트시키고,
-// 그때마다 0%에서 목표 width까지 다시 자라난다.
-export function ScoreGauge({ label, score, reason, colorLight, colorDark, emptyText, badge }: ScoreGaugeProps) {
-  const target = score === null ? 0 : Math.max(0, Math.min(100, score));
-  const style = { "--viz-light": colorLight, "--viz-dark": colorDark } as CSSProperties;
+// 히어로("오늘의 1위")와 검색 결과가 같은 시각 언어를 쓰도록 게이지를 공용화한다.
+// tone="dark"는 어두운 히어로 배경 위, "light"는 밝은 카드 위.
+export function ScoreGauge({ score, band, tone = "light", size = 80 }: { score: number; band: Band; tone?: "dark" | "light"; size?: number }) {
+  const offset = RING_CIRCUMFERENCE * (1 - score / 100);
+  const track = tone === "dark" ? "var(--hero-track)" : "var(--grid)";
 
   return (
-    <div className="viz-accent flex flex-col gap-1.5" style={style}>
-      <div className="flex items-baseline justify-between gap-2">
-        <span className="flex items-center text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          {label}
-          {badge}
-        </span>
-        <span className="shrink-0 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-          {score === null ? emptyText : `${Math.round(score)}점`}
-        </span>
-      </div>
-      <div
-        className="h-3 w-full overflow-hidden rounded-full"
-        style={{ background: "color-mix(in oklab, var(--viz-color) 16%, transparent)" }}
-      >
-        <div
-          key={target}
-          className="gauge-fill h-full rounded-full"
-          style={{ "--gauge-target": `${target}%`, background: "var(--viz-color)" } as CSSProperties}
+    <div className="relative shrink-0" style={{ width: size, height: size }}>
+      <svg viewBox="0 0 84 84" className="h-full w-full -rotate-90">
+        <circle cx="42" cy="42" r="34" fill="none" stroke={track} strokeWidth="8" />
+        <circle
+          cx="42"
+          cy="42"
+          r="34"
+          fill="none"
+          strokeWidth="8"
+          strokeLinecap="round"
+          stroke={`var(--${band})`}
+          strokeDasharray={RING_CIRCUMFERENCE}
+          strokeDashoffset={offset}
         />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-xl font-extrabold">{score}</span>
+        <span className="text-[9px] font-semibold opacity-70">점</span>
       </div>
-      {reason && <p className="text-xs text-zinc-500 dark:text-zinc-400">{reason}</p>}
     </div>
   );
 }

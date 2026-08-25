@@ -1,0 +1,208 @@
+import type { Grade } from "./scoring";
+import { DESTINATIONS, type DestinationConfig } from "./destinations.ts";
+import { calcTravelIndex, getFlightPriceScore, exchangeRateScore, type RoutePriceSample, type TravelIndexResult } from "./scoring.ts";
+import { lookupPeakCategory } from "./peakSeason.ts";
+import { getPeriodClimate, getExchangeRateHistory } from "./externalApi.ts";
+import { getAllRoutes } from "./routes.ts";
+import { loadRoutePriceMap, type RoutePriceMapEntry } from "./currentFlightPrice.ts";
+import { computeRankingEligibility, sortByRanking, type RankingEligibility } from "./rankingEligibility.ts";
+import { getHistoricalPricesNearDate, type FlightPriceRecord } from "./flightHistory.ts";
+import { deriveTopChips, type TopChip } from "./topChips.ts";
+import { buildPeakSeasonYearCurve, findCurveIndexForDate, type PeakSeasonCurvePoint } from "./peakSeasonCurve.ts";
+import { getPeriodClimateDaily, getClimateBaseline10y, type ClimateDayDetail } from "./climateDetail.ts";
+import hotels from "../data/hotels.json" with { type: "json" };
+
+export type Band = "good" | "warning" | "serious";
+
+const GRADE_BAND: Record<Grade, Band> = {
+  최적기: "good",
+  좋음: "good",
+  보통: "warning",
+  비추천: "serious",
+  최악: "serious",
+};
+
+export function bandFromGrade(grade: Grade): Band {
+  return GRADE_BAND[grade];
+}
+
+export interface CandidateWindow {
+  departDate: string;
+  returnDate: string;
+}
+
+const TRIP_NIGHTS = 2; // 2박3일 고정 (사용자 확정값)
+const CANDIDATE_OFFSET_DAYS = [14, 30, 45]; // 사용자 확정값 — 이보다 늘리지 않는다(API 부하)
+
+function fmt(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
+
+export function nightsBetween(departDate: string, returnDate: string): number {
+  const ms = new Date(returnDate).getTime() - new Date(departDate).getTime();
+  return Math.max(1, Math.round(ms / (1000 * 60 * 60 * 24)));
+}
+
+// 오늘 기준 +14/+30/+45일 시점을 출발일로 하는 3개 고정 후보 구간(각 2박3일)을 만든다.
+export function candidateWindows(today: Date = new Date()): CandidateWindow[] {
+  return CANDIDATE_OFFSET_DAYS.map((offset) => {
+    const depart = new Date(today);
+    depart.setUTCDate(depart.getUTCDate() + offset);
+    const ret = new Date(depart);
+    ret.setUTCDate(ret.getUTCDate() + TRIP_NIGHTS);
+    return { departDate: fmt(depart), returnDate: fmt(ret) };
+  });
+}
+
+// ---- Part B: 17개 목적지 배치 오케스트레이션 ----
+
+export interface DestinationResult {
+  destinationKey: string;
+  label: string;
+  totalScore: number;
+  grade: TravelIndexResult["grade"];
+  band: Band;
+  departDate: string;
+  returnDate: string;
+  nights: number;
+  breakdown: TravelIndexResult["breakdown"];
+  topChips: TopChip[];
+  climateDaily: ClimateDayDetail[];
+  climateBaseline10y: number | null;
+  flightPriceHistory30d: FlightPriceRecord[];
+  exchangeRateSeries: { currentRate: number; historicalRates: number[] } | null;
+  peakMarkerIndex: number;
+}
+
+export interface TopDestinationsPayload {
+  computedAt: string;
+  results: DestinationResult[];
+  peakSeasonYearCurve: PeakSeasonCurvePoint[];
+  /** 데이터 결손 때문에 랭킹에서 뺀 지수/목적지. 화면에 그대로 밝힌다. */
+  rankingEligibility: RankingEligibility;
+}
+
+async function computeOneDestination(
+  destinationKey: string,
+  destination: DestinationConfig,
+  windows: CandidateWindow[],
+  peakSeasonYearCurve: PeakSeasonCurvePoint[],
+  routePriceMap: Map<string, RoutePriceMapEntry>
+): Promise<DestinationResult> {
+  const hotel = (hotels as Record<string, { avgPrice: number; currentPrice: number }>)[destinationKey];
+  const hotelDeviationPct = (hotel.currentPrice - hotel.avgPrice) / hotel.avgPrice;
+
+  const exchangeRateHistory = await getExchangeRateHistory(destination.currency).catch(() => null);
+  const exchangeScore = exchangeRateHistory
+    ? exchangeRateScore(exchangeRateHistory.currentRate, exchangeRateHistory.historicalRates)
+    : null;
+
+  // 항공권 가격은 flights.json 고정 추정치가 아니라 매일 수집한 실데이터에서 온다.
+  // 실데이터가 없는 노선(캐시가 비어있는 괌·사이판 등)은 price가 null이고,
+  // 그러면 flightScore도 null이 되어 화면에 "정보 없음"으로 정직하게 빠진다.
+  const own = routePriceMap.get(destination.flightRouteKey);
+  const routeHistory = own?.history ?? [];
+  const currentRoute = getAllRoutes().find((r) => r.routeKey === destination.flightRouteKey);
+  const allRoutePrices: RoutePriceSample[] = [...routePriceMap.values()]
+    .filter((e): e is RoutePriceMapEntry & { price: number } => e.price !== null)
+    .map((e) => ({ price: e.price, distanceKm: e.distanceKm }));
+
+  const evaluated = await Promise.all(
+    windows.map(async (window) => {
+      const climateDays = await getPeriodClimate(destination.lat, destination.lon, window.departDate, window.returnDate);
+      const month = Number(window.departDate.slice(5, 7));
+      const day = Number(window.departDate.slice(8, 10));
+      const peakCategory = lookupPeakCategory(month, day);
+      const historicalPrices = getHistoricalPricesNearDate(routeHistory, window.departDate);
+      const flightScore =
+        currentRoute && own?.price != null
+          ? getFlightPriceScore({
+              currentPrice: own.price,
+              distanceKm: currentRoute.distanceKm,
+              historicalPrices,
+              allRoutes: allRoutePrices,
+            })
+          : null;
+
+      const travelIndex = calcTravelIndex({
+        flightScore,
+        hotelDeviationPct,
+        exchangeRateScore: exchangeScore,
+        peakCategory,
+        climateDays,
+      });
+      return { window, travelIndex, flightScore, peakCategory, climateDays };
+    })
+  );
+
+  const best = evaluated.reduce((a, b) => (b.travelIndex.totalScore > a.travelIndex.totalScore ? b : a));
+
+  const [climateDaily, climateBaseline10y] = await Promise.all([
+    getPeriodClimateDaily(destination.lat, destination.lon, best.window.departDate, best.window.returnDate),
+    getClimateBaseline10y(destination.lat, destination.lon, best.window.departDate, best.window.returnDate),
+  ]);
+
+  const sortedHistory = [...routeHistory].sort((a, b) => a.date.localeCompare(b.date));
+
+  return {
+      destinationKey,
+      label: destination.label,
+      totalScore: best.travelIndex.totalScore,
+      grade: best.travelIndex.grade,
+      band: bandFromGrade(best.travelIndex.grade),
+      departDate: best.window.departDate,
+      returnDate: best.window.returnDate,
+      // 배치 후보 구간은 항상 2박이지만, 검색 패널은 임의 날짜를 넣으므로 구간에서 직접 계산한다.
+      nights: nightsBetween(best.window.departDate, best.window.returnDate),
+      breakdown: best.travelIndex.breakdown,
+      topChips: deriveTopChips(best.travelIndex.breakdown),
+      climateDaily,
+      climateBaseline10y,
+      flightPriceHistory30d: sortedHistory.slice(-30),
+      exchangeRateSeries: exchangeRateHistory,
+      peakMarkerIndex: findCurveIndexForDate(peakSeasonYearCurve, best.window.departDate),
+  };
+}
+
+// 17개 목적지 전체를 배치로 계산한다. 하루 1번 크론에서만 호출 — 무거운 연산(약 85회 외부 API 호출).
+// 목적지 하나가 실패해도(예: 환율 미지원 통화) 전체가 죽지 않도록 destination별로 격리하지는 않는다 —
+// 이미 destination 내부의 각 외부 호출이 자체적으로 null/폴백 처리를 하므로(exchangeRateHistory.catch 등),
+// Promise.all 레벨에서 흡수할 예외는 남아있지 않다는 전제(계획 리뷰에서 이 전제를 검증할 것).
+// 검색 패널용 — 사용자가 지정한 단일 구간으로 DestinationResult를 만든다.
+// 후보 구간을 1개만 넘겨 computeOneDestination을 그대로 재사용하므로, 배치 크론과
+// 완전히 같은 계산 경로를 탄다(한쪽만 고쳐지는 사고가 안 난다).
+export async function computeResultForWindow(
+  destinationKey: string,
+  departDate: string,
+  returnDate: string
+): Promise<{ result: DestinationResult; peakSeasonYearCurve: PeakSeasonCurvePoint[] }> {
+  const destination = DESTINATIONS[destinationKey];
+  if (!destination) throw new Error(`지원하지 않는 목적지: ${destinationKey}`);
+
+  const peakSeasonYearCurve = buildPeakSeasonYearCurve();
+  const routePriceMap = await loadRoutePriceMap();
+  const result = await computeOneDestination(destinationKey, destination, [{ departDate, returnDate }], peakSeasonYearCurve, routePriceMap);
+  return { result, peakSeasonYearCurve };
+}
+
+export async function computeAllDestinationResults(): Promise<TopDestinationsPayload> {
+  const peakSeasonYearCurve = buildPeakSeasonYearCurve();
+  const windows = candidateWindows();
+
+  // 노선별 실데이터 시세를 한 번만 읽어 모든 목적지 계산에 공유한다
+  // (목적지마다 읽으면 거리대 폴백 때문에 17x17번 읽게 된다).
+  const routePriceMap = await loadRoutePriceMap();
+
+  const computed = await Promise.all(
+    Object.entries(DESTINATIONS).map(([destinationKey, destination]) =>
+      computeOneDestination(destinationKey, destination, windows, peakSeasonYearCurve, routePriceMap)
+    )
+  );
+
+  // 데이터 결손이 랭킹을 왜곡하는 문제는 rankingEligibility 한 곳에서만 다룬다.
+  // 화면에 보이는 totalScore/breakdown은 실측값 그대로 두고, 순서만 규칙에 따라 정한다.
+  const rankingEligibility = computeRankingEligibility(computed);
+  const results = sortByRanking(computed, rankingEligibility);
+
+  return { computedAt: new Date().toISOString(), results, peakSeasonYearCurve, rankingEligibility };
+}

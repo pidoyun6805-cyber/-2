@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/collect-flight-prices",
       "schedule": "0 21 * * *"
+    },
+    {
+      "path": "/api/cron/compute-top-destinations",
+      "schedule": "0 22 * * *"
     }
   ]
 }
