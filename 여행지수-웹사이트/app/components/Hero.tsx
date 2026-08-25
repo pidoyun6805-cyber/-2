@@ -2,8 +2,7 @@
 
 import landmarks from "@/data/landmarks.json" with { type: "json" };
 import type { DestinationResult } from "@/lib/topDestination";
-
-const RING_CIRCUMFERENCE = 213.6; // r=34인 원의 둘레(2*PI*34), 시안과 동일
+import { ScoreGauge } from "./ScoreGauge";
 
 function formatMonthDay(dateStr: string) {
   const d = new Date(dateStr);
@@ -13,7 +12,6 @@ function formatMonthDay(dateStr: string) {
 export function Hero({ result, computedAt }: { result: DestinationResult; computedAt: string }) {
   const landmark = (landmarks as Record<string, { imageUrl: string; landmarkLabel: string; credit: string }>)[result.destinationKey];
   const computedDate = new Date(computedAt);
-  const offset = RING_CIRCUMFERENCE * (1 - result.totalScore / 100);
 
   return (
     <div className="relative grid overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--hero-bg-2)] to-[var(--hero-bg-1)] shadow-xl sm:grid-cols-[1.15fr_0.85fr]">
@@ -36,26 +34,7 @@ export function Hero({ result, computedAt }: { result: DestinationResult; comput
         </p>
 
         <div className="flex items-center gap-4">
-          <div className="relative h-20 w-20 shrink-0">
-            <svg viewBox="0 0 84 84" className="h-full w-full -rotate-90">
-              <circle cx="42" cy="42" r="34" fill="none" stroke="var(--hero-track)" strokeWidth="8" />
-              <circle
-                cx="42"
-                cy="42"
-                r="34"
-                fill="none"
-                strokeWidth="8"
-                strokeLinecap="round"
-                stroke={`var(--${result.band})`}
-                strokeDasharray={RING_CIRCUMFERENCE}
-                strokeDashoffset={offset}
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xl font-extrabold">{result.totalScore}</span>
-              <span className="text-[9px] font-semibold opacity-70">점</span>
-            </div>
-          </div>
+          <ScoreGauge score={result.totalScore} band={result.band} tone="dark" />
           <div>
             <div className="mb-0.5 text-[11px] font-semibold opacity-80">다음 추천 여행 · {result.nights}박 {result.nights + 1}일</div>
             <div className="mb-2 text-[15.5px] font-bold">

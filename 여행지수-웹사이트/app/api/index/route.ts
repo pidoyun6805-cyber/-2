@@ -6,6 +6,7 @@ import { lookupPeakCategory } from "@/lib/peakSeason";
 import { getExchangeRateHistory, getSeasonalWeather, getPeriodClimate } from "@/lib/externalApi";
 import { getHistoricalPricesNearDate } from "@/lib/flightHistory";
 import { getAllRoutes } from "@/lib/routes";
+import { computeResultForWindow } from "@/lib/topDestination";
 import { kvFlightHistoryStore } from "@/lib/kvFlightHistoryStore";
 import flights from "@/data/flights.json";
 import hotels from "@/data/hotels.json";
@@ -86,6 +87,11 @@ export async function POST(req: NextRequest) {
     climateDays,
   });
 
+  // 검색 결과에도 지수 카드 5개를 그려야 하는데, 카드는 그래프용 상세 데이터
+  // (일자별 기후/항공권 이력/환율 시계열/성수기 마커)를 필요로 한다. 배치 크론과 같은
+  // 계산 경로(computeOneDestination)를 재사용해서 두 벌이 어긋나지 않게 한다.
+  const { result: cardResult, peakSeasonYearCurve } = await computeResultForWindow(destinationKey, departDate, returnDate);
+
   const totalCost = calcTotalCost({
     flightPricePerPerson: flight.currentPrice,
     hotelPricePerNight: hotel.currentPrice,
@@ -100,5 +106,8 @@ export async function POST(req: NextRequest) {
     nights,
     peakCategory,
     seasonalWeather,
+    // 지수 카드 5개를 검색 결과로도 그리기 위한 상세 데이터
+    result: cardResult,
+    peakSeasonYearCurve,
   });
 }

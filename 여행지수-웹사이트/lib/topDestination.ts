@@ -38,6 +38,11 @@ function fmt(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
+export function nightsBetween(departDate: string, returnDate: string): number {
+  const ms = new Date(returnDate).getTime() - new Date(departDate).getTime();
+  return Math.max(1, Math.round(ms / (1000 * 60 * 60 * 24)));
+}
+
 // 오늘 기준 +14/+30/+45일 시점을 출발일로 하는 3개 고정 후보 구간(각 2박3일)을 만든다.
 export function candidateWindows(today: Date = new Date()): CandidateWindow[] {
   return CANDIDATE_OFFSET_DAYS.map((offset) => {
@@ -159,7 +164,8 @@ async function computeOneDestination(
       band: bandFromGrade(best.travelIndex.grade),
       departDate: best.window.departDate,
       returnDate: best.window.returnDate,
-      nights: TRIP_NIGHTS,
+      // 배치 후보 구간은 항상 2박이지만, 검색 패널은 임의 날짜를 넣으므로 구간에서 직접 계산한다.
+      nights: nightsBetween(best.window.departDate, best.window.returnDate),
       breakdown: best.travelIndex.breakdown,
       topChips: deriveTopChips(best.travelIndex.breakdown),
       climateDaily,
@@ -176,6 +182,22 @@ async function computeOneDestination(
 // 목적지 하나가 실패해도(예: 환율 미지원 통화) 전체가 죽지 않도록 destination별로 격리하지는 않는다 —
 // 이미 destination 내부의 각 외부 호출이 자체적으로 null/폴백 처리를 하므로(exchangeRateHistory.catch 등),
 // Promise.all 레벨에서 흡수할 예외는 남아있지 않다는 전제(계획 리뷰에서 이 전제를 검증할 것).
+// 검색 패널용 — 사용자가 지정한 단일 구간으로 DestinationResult를 만든다.
+// 후보 구간을 1개만 넘겨 computeOneDestination을 그대로 재사용하므로, 배치 크론과
+// 완전히 같은 계산 경로를 탄다(한쪽만 고쳐지는 사고가 안 난다).
+export async function computeResultForWindow(
+  destinationKey: string,
+  departDate: string,
+  returnDate: string
+): Promise<{ result: DestinationResult; peakSeasonYearCurve: PeakSeasonCurvePoint[] }> {
+  const destination = DESTINATIONS[destinationKey];
+  if (!destination) throw new Error(`지원하지 않는 목적지: ${destinationKey}`);
+
+  const peakSeasonYearCurve = buildPeakSeasonYearCurve();
+  const { result } = await computeOneDestination(destinationKey, destination, [{ departDate, returnDate }], peakSeasonYearCurve);
+  return { result, peakSeasonYearCurve };
+}
+
 export async function computeAllDestinationResults(): Promise<TopDestinationsPayload> {
   const peakSeasonYearCurve = buildPeakSeasonYearCurve();
   const windows = candidateWindows();
