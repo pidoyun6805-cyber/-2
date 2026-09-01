@@ -40,3 +40,13 @@
   1. [단계] → 검증: [확인 방법]
   2. [단계] → 검증: [확인 방법]
   ```
+
+## Notion 작업 로그
+
+의미 있는 대화/작업 세션이 끝나면 (사소한 질문 답변 제외), Notion "작업 로그" DB에 요약을 자동으로 기록한다.
+
+- 인증 정보: `C:\Users\PC\.claude\notion_credentials.json` (token, work_log_database_id) — 저장소 밖에 있으므로 git에 커밋되지 않음
+- 기록 방법: Notion API `POST https://api.notion.com/v1/pages`로 새 행 추가
+  - `parent.database_id` = credentials 파일의 `work_log_database_id`
+  - properties: `이름`(title, 한 줄 제목), `날짜`(date, 오늘 날짜), `프로젝트`(select, 관련 스킬/폴더 이름), `요약`(rich_text, 무엇을 했는지 1~3문장), `상태`(status, "완료")
+  - 한글이 깨지지 않도록 요청 본문은 파일로 만들어서 `curl --data-binary @file`로 전송할 것 (쉘에 직접 -d로 넘기면 인코딩 깨짐)
