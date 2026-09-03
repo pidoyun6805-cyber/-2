@@ -3,7 +3,7 @@
 //
 // 봇차단 방지 정책
 //  - 순차 1개씩만 요청 (병렬 없음)
-//  - 기본 대기 15~25초, 25~40개마다 3~6분 긴 휴식
+//  - 기본 대기 7~12초, 40~60개마다 50~90초 휴식
 //  - 적응형 템포: 응답이 느려지거나 실패/빈본문이 나오면 대기시간을 배로 늘리고,
 //    깨끗하게 30개 연속 성공하면 조금씩 원래 속도로 회복
 //  - 로그인 요구/캡차/접근제한 문구가 보이면 즉시 중단
@@ -26,7 +26,7 @@ const stamp = () => new Date().toLocaleTimeString('ko-KR');
   const items = [...INDEX].reverse(); // 오래된 글부터
   let done = 0, skipped = 0, failStreak = 0, cleanStreak = 0;
   let slowFactor = 1;              // 적응형 배율
-  let nextRestAt = rand(25, 40);   // 다음 긴 휴식까지 남은 저장 수
+  let nextRestAt = rand(40, 60);   // 다음 긴 휴식까지 남은 저장 수
   const loadTimes = [];
   const started = Date.now();
 
@@ -125,12 +125,12 @@ const stamp = () => new Date().toLocaleTimeString('ko-KR');
     }
 
     if (--nextRestAt <= 0) {
-      const restMs = rand(180000, 360000);
-      console.log(`${stamp()}    ...${Math.round(restMs / 60000)}분 휴식`);
+      const restMs = rand(50000, 90000);
+      console.log(`${stamp()}    ...${Math.round(restMs / 1000)}초 휴식`);
       await sleep(restMs);
-      nextRestAt = rand(25, 40);
+      nextRestAt = rand(40, 60);
     }
-    await sleep(rand(15000, 25000) * slowFactor);
+    await sleep(rand(7000, 12000) * slowFactor);
   }
   const totalMin = ((Date.now() - started) / 60000).toFixed(0);
   console.log(`\n${stamp()} 완료: 저장 ${done} / 기존 ${skipped} / 총 ${totalMin}분`);
