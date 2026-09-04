@@ -28,7 +28,8 @@ function walk(dir, out = []) {
 }
 
 function meta(file) {
-  const raw = fs.readFileSync(file, 'utf8');
+  // git이 체크아웃할 때 줄바꿈을 CRLF로 바꿔놓으므로 읽는 쪽에서 LF로 맞춘다.
+  const raw = fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
   const m = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   const fm = m ? m[1] : '';
   const get = k => (fm.match(new RegExp(`^${k}:\\s*"?(.*?)"?$`, 'm')) || [, ''])[1];
